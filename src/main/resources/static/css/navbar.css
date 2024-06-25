@@ -1,0 +1,55 @@
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+}
+
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #2d2d2d;
+    color: white;
+    padding: 10px 20px;
+}
+
+.navbar-left {
+    display: flex;
+    align-items: center;
+}
+
+.menu-button {
+    font-size: 24px;
+    background: none;
+    border: none;
+    color: white;
+    margin-right: 10px;
+    cursor: pointer;
+}
+
+.navbar h1 {
+    margin: 0;
+    font-size: 24px;
+}
+
+.navbar-center input {
+    padding: 5px;
+    font-size: 16px;
+}
+
+.navbar-right {
+    display: flex;
+    align-items: center;
+}
+
+.add-task {
+    font-size: 24px;
+    padding: 5px 10px;
+    margin-right: 10px;
+    cursor: pointer;
+}
+
+.profile-photo {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+}
