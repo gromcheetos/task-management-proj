@@ -1,8 +1,15 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.w3.org/1999/xhtml">
-<head th:replace="fragments/header-fragment :: head"></head>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.w3.org/1999/xhtml">
+<head th:replace="~{fragments/header-fragment.html :: head}">
 <body>
-<div th:replace="fragments/navbar-fragment :: navigation"></div>
-
+<div th:replace="~{fragments/navbar-fragment.html :: navigation}"></div>
+    <div class="content">
+        <div th:replace="~{fragments/sidebar-fragment.html :: sidebar}"></div>
+            <div class="main-content">
+            <h1>Welcome!</h1>
+            <p>Pick up where you left off. To see your tasks for today, please log in or sign up.</p>
+            </div>
+    </div>
 </body>
 </html>

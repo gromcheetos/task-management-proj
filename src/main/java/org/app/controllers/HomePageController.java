@@ -15,13 +15,9 @@ public class HomePageController {
     public String home(Model model) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         log.info("Authentication: " + auth.toString());
-        if (auth != null) {
-            System.out.println("Authentication: " + auth);
-            if (auth.isAuthenticated() && !(auth.getPrincipal() instanceof String && auth.getPrincipal().equals("anonymousUser"))) {
-                log.info("User is authenticated.");
-            }
-        } else {
-            log.info("Authentication is null");
+
+        if (auth.isAuthenticated() && !(auth.getPrincipal() instanceof String && auth.getPrincipal().equals("anonymousUser"))) {
+            log.info("User is authenticated.");
         }
         return "home";
     }
