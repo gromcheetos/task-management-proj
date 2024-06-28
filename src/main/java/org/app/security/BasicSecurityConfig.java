@@ -25,7 +25,7 @@ public class BasicSecurityConfig {
             )
             .formLogin(form -> form
 //                .loginPage("/login") // This line is optional; Spring Boot uses a default login page if not specified.
-                .defaultSuccessUrl("/home", true) // Redirect to /home after successful login.
+                .defaultSuccessUrl("/index", true) // Redirect to /index after successful login.
                 .permitAll()
             )
             .logout(logout -> logout

@@ -5,21 +5,21 @@
 <div th:fragment="sidebar" class="sidebar">
     <div class="sidebar">
         <div class="sidebar-menu">
-            <h2 sec:authorize="isAuthenticated()">Board</h2>
+            <a sec:authorize="isAuthenticated()">Board</a>
             <ul sec:authorize="isAuthenticated()">
                 <li>IT helpdesk</li>
                 <li>IT helpdesk</li>
                 <li>Q4 IT project roadmap</li>
             </ul>
-            <h2 sec:authorize="isAuthenticated()">Work Space</h2>
-            <h2 sec:authorize="isAuthenticated()">My page</h2>
-            <h2 th:href="@{/users/register}" sec:authorize="isAnonymous()">
-                Sign up</h2>
-            <h2 th:href="@{/users/login}" sec:authorize="!isAuthenticated()">
-                Log in</h2>
+            <a sec:authorize="isAuthenticated()">Work Space</a>
+            <a sec:authorize="isAuthenticated()">My page</a>
+            <a th:href="@{/signup}" sec:authorize="isAnonymous()">
+                Sign up</a>
+            <a th:href="@{/users/login}" sec:authorize="!isAuthenticated()">
+                Log in</a>
             <form th:action="@{/users/logout}" method="post" sec:authorize="isAuthenticated()">
                 <input hidden type="submit" value="Log out"/>
-                <h2>Log out</h2>
+                <a th:href="@{/users/logout}">Log out</a>
             </form>
 
             </div>
