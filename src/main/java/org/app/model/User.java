@@ -33,6 +33,8 @@ public class User implements UserDetails {
     private String username;
     private String password;
 
+    // TODO: change this below to list of boards
+    // SO that user has a list of boards and each board has a list of tasks
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private List<TodoTask> tasks;
 
