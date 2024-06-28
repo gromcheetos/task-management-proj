@@ -1,15 +1,16 @@
 body {
     margin: 0;
-    font-family: Arial, sans-serif;
+    font-family: 'Roboto', Arial, sans-serif;
 }
 
 .navbar {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    background-color: #2d2d2d;
+    background-color: #bfa9ea;
     color: white;
     padding: 10px 20px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
 .navbar-left {
@@ -24,16 +25,24 @@ body {
     color: white;
     margin-right: 10px;
     cursor: pointer;
+    transition: color 0.3s;
+}
+
+.menu-button:hover {
+    color: #ffeb3b;
 }
 
 .navbar h1 {
     margin: 0;
     font-size: 24px;
+    color: white;
 }
 
 .navbar-center input {
     padding: 5px;
     font-size: 16px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
 }
 
 .navbar-right {
@@ -46,10 +55,16 @@ body {
     padding: 5px 10px;
     margin-right: 10px;
     cursor: pointer;
+    transition: color 0.3s;
+}
+
+.add-task:hover {
+    color: #ffeb3b;
 }
 
 .profile-photo {
     width: 40px;
     height: 40px;
     border-radius: 50%;
+    border: 2px solid white;
 }

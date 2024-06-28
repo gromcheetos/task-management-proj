@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/header-fragment :: head"></head>
+<div th:fragment="sidebar" class="sidebar">
+    <div class="sidebar">
+        <div class="sidebar-menu">
+            <h2 sec:authorize="isAuthenticated()">Board</h2>
+            <ul sec:authorize="isAuthenticated()">
+                <li>IT helpdesk</li>
+                <li>IT helpdesk</li>
+                <li>Q4 IT project roadmap</li>
+            </ul>
+            <h2 sec:authorize="isAuthenticated()">Work Space</h2>
+            <h2 sec:authorize="isAuthenticated()">My page</h2>
+            <h2 th:href="@{/users/register}" sec:authorize="isAnonymous()">
+                Sign up</h2>
+            <h2 th:href="@{/users/login}" sec:authorize="!isAuthenticated()">
+                Log in</h2>
+            <form th:action="@{/users/logout}" method="post" sec:authorize="isAuthenticated()">
+                <input hidden type="submit" value="Log out"/>
+                <h2>Log out</h2>
+            </form>
+
+            </div>
+        </div>
+    </div>
+</html>
