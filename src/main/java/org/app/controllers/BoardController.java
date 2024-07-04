@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import java.time.LocalDate;
+import java.util.Arrays;
 import java.util.List;
 
 @Controller
@@ -35,11 +36,12 @@ public class BoardController {
     @GetMapping("/home")
     public String getUserBoards(Model model) throws UserNotFoundException {
 
-        // Load default boards
+// Load default boards
         List<Board> boards = boardService.getAllDefaultBoards();
         model.addAttribute("boards", boards);
+        log.info("Default Boards: " + Arrays.toString(boards.toArray()));
 
-        // Get the current authenticated user
+// Get the current authenticated user
         User currentUser = getCurrentUser();
         if (currentUser == null) {
             log.info("No authenticated user found");
@@ -47,11 +49,11 @@ public class BoardController {
         }
         List<Board> userBoards = boardService.findBoardsByUserId(currentUser.getId());
         model.addAttribute("userBoards", userBoards);
-
+        log.info("User boards: " + Arrays.toString(userBoards.toArray()));
         return "home";
     }
     @PostMapping("/board/create")
-    public ResponseEntity<Board> createBoard(@RequestParam("name") String boardName,
+    public ResponseEntity<Board> createBoard(@RequestParam("boarName") String boardName,
                                                @RequestParam("description") String description){
         User currentUser = getCurrentUser();
         if (currentUser == null) {
@@ -65,7 +67,7 @@ public class BoardController {
     @PostMapping("/board/update")
     public ResponseEntity<Board> updateBoard(
             @RequestParam("boardId") Integer boardId,
-            @RequestParam("name") String boardName,
+            @RequestParam("boarName") String boardName,
             @RequestParam("description") String description) {
         try {
             Board updateBoard = boardService.updateBoard(boardId, boardName, description);

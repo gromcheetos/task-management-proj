@@ -7,11 +7,9 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
-
 import org.app.model.Board;
 import org.app.model.TodoTask;
 import org.app.model.User;
-import org.app.model.enums.BoardStatus;
 import org.app.model.enums.Priority;
 import org.app.model.enums.Status;
 import org.app.repository.BoardRepository;
@@ -19,14 +17,13 @@ import org.app.service.BoardService;
 import org.app.service.TodoTaskService;
 import org.app.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 
 @Component
 public class MockData {
 
     @Autowired
-    private TodoTaskService service;
+    private TodoTaskService taskService;
 
     @Autowired
     private UserService userService;
@@ -39,40 +36,42 @@ public class MockData {
 
     @PostConstruct
     public void createMockData() {
-        User mockUser = new User("Lara Kroft", "lara@gmail.com","lara");
-        testUser = userService.createUser(mockUser,"pass");
+        User mockUser = new User("Lara Kroft", "lara@gmail.com", "lara");
+        testUser = userService.createUser(mockUser, "pass");
 
         List<Board> boards = new ArrayList<>();
-        for (BoardStatus status : BoardStatus.values()) {
-            Board board = new Board();
-            board.setBoardName(status.toString());
-            board.setDescription("This is a " + status.toString().toLowerCase() + " board.");
-            board.setUser(mockUser);
+         for (Status status : Status.values()) {
+        Board board = new Board();
+        board.setBoardName(status.toString());
+        board.setDescription("This is a " + status.toString().toLowerCase() + " board.");
+        board.setUser(mockUser);
 
-            List<TodoTask> tasks = createTasksForBoard(mockUser);
-            board.setTasks(tasks);
-            for (TodoTask task : tasks) {
-                task.setBoard(board);
-            }
-
-            boards.add(board);
+        List<TodoTask> tasks = createTasksForBoard(status);
+        board.setTasks(tasks);
+        for (TodoTask task : tasks) {
+            task.setBoard(board);
         }
-
+        boards.add(board);
+ }
         boardService.saveAll(boards);
     }
 
-    private List<TodoTask> createTasksForBoard(User user) {
+    private List<TodoTask> createTasksForBoard(Status status) {
         List<TodoTask> tasks = new ArrayList<>();
-        Random random = new Random();
-        int numberOfTasks = random.nextInt(5) + 3;
+// Random random = new Random();
+// int numberOfTasks = random.nextInt(5) + 3;
+
+        int numberOfTasks = 3;
 
         for (int i = 0; i < numberOfTasks; i++) {
-            tasks.add(createTask(user));
+            TodoTask task = createTask(status);
+            tasks.add(task);
         }
 
         return tasks;
     }
-    private TodoTask createTask(User user) {
+
+    private TodoTask createTask(Status status) {
         List<String> titles = List.of(
                 "Complete Project Proposal",
                 "Schedule Meeting with Team",
@@ -82,7 +81,6 @@ public class MockData {
                 "Update Presentation Slides",
                 "Organize Files and Folders",
                 "Send Follow-Up Emails"
-
         );
         List<String> descriptions = List.of(
                 "Write and finalize the project proposal document.",
@@ -104,18 +102,19 @@ public class MockData {
         );
 
         Random random = new Random();
-        LocalDate today = LocalDate.now();
-        LocalDate deadline = today.plusDays(random.nextInt(10));
-
         int index = random.nextInt(titles.size());
         int priorityIndex = random.nextInt(priorities.size());
-        Status[] statuses = Status.values();
-        int statusIndex = random.nextInt(statuses.length);
-        Status randomStatus = statuses[statusIndex];
-        TodoTask task = new TodoTask(titles.get(index), descriptions.get(index), priorities.get(priorityIndex), deadline, randomStatus);
+
+        TodoTask task = new TodoTask(titles.get(index), descriptions.get(index), priorities.get(priorityIndex),
+                setRandomDeadLine(), status);
         task.setUser(testUser);
         return task;
     }
 
 
+    private LocalDate setRandomDeadLine(){
+        Random random = new Random();
+        LocalDate today = LocalDate.now();
+        return today.plusDays(random.nextInt(10));
+    }
 }
