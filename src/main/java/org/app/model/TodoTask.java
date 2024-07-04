@@ -29,6 +29,10 @@ public class TodoTask {
     private Status status;
 
     @ManyToOne
+    @JoinColumn(name = "board_id")
+    private Board board;
+
+    @ManyToOne
     @JoinColumn(name = "user_id")
     @JsonIgnore
     private User user;

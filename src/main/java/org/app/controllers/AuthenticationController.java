@@ -36,7 +36,7 @@ public class AuthenticationController {
         log.info("Request received to register the user");
         User newUser = new User(name, userEmail, username);
         userService.createUser(newUser, password);
-        return "redirect:/users/login";
+        return "redirect:/home";
     }
 
 //    @PostMapping("/login")

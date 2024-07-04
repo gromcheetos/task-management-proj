@@ -1,5 +1,6 @@
 package org.app.security;
 
+import org.app.exceptions.UserNotFoundException;
 import org.app.model.User;
 import org.app.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,4 +25,5 @@ public class AuthenticationService implements UserDetailsService {
             throw new UsernameNotFoundException("User with username " + username + " was not found!");
         }
         return user;    }
+
 }

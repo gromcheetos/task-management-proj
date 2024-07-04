@@ -4,15 +4,22 @@ import static org.app.model.enums.Priority.*;
 
 import jakarta.annotation.PostConstruct;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
+
+import org.app.model.Board;
 import org.app.model.TodoTask;
 import org.app.model.User;
+import org.app.model.enums.BoardStatus;
 import org.app.model.enums.Priority;
 import org.app.model.enums.Status;
+import org.app.repository.BoardRepository;
+import org.app.service.BoardService;
 import org.app.service.TodoTaskService;
 import org.app.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -24,6 +31,10 @@ public class MockData {
     @Autowired
     private UserService userService;
 
+    @Autowired
+    private BoardService boardService;
+
+    private BoardRepository boardRepository;
     private User testUser;
 
     @PostConstruct
@@ -31,12 +42,37 @@ public class MockData {
         User mockUser = new User("Lara Kroft", "lara@gmail.com","lara");
         testUser = userService.createUser(mockUser,"pass");
 
-        for (int i = 0; i < 10; i++) {
-            service.insertTask(createTask());
+        List<Board> boards = new ArrayList<>();
+        for (BoardStatus status : BoardStatus.values()) {
+            Board board = new Board();
+            board.setBoardName(status.toString());
+            board.setDescription("This is a " + status.toString().toLowerCase() + " board.");
+            board.setUser(mockUser);
+
+            List<TodoTask> tasks = createTasksForBoard(mockUser);
+            board.setTasks(tasks);
+            for (TodoTask task : tasks) {
+                task.setBoard(board);
+            }
+
+            boards.add(board);
         }
+
+        boardService.saveAll(boards);
     }
 
-    private TodoTask createTask() {
+    private List<TodoTask> createTasksForBoard(User user) {
+        List<TodoTask> tasks = new ArrayList<>();
+        Random random = new Random();
+        int numberOfTasks = random.nextInt(5) + 3;
+
+        for (int i = 0; i < numberOfTasks; i++) {
+            tasks.add(createTask(user));
+        }
+
+        return tasks;
+    }
+    private TodoTask createTask(User user) {
         List<String> titles = List.of(
                 "Complete Project Proposal",
                 "Schedule Meeting with Team",
@@ -45,19 +81,8 @@ public class MockData {
                 "Review Client Feedback",
                 "Update Presentation Slides",
                 "Organize Files and Folders",
-                "Send Follow-Up Emails",
-                "Brainstorm Ideas for Campaign",
-                "Plan Social Media Content",
-                "Test Software Updates",
-                "Revise Marketing Strategy",
-                "Conduct User Surveys",
-                "Analyze Competitor Data",
-                "Prepare for Weekly Meeting",
-                "Attend Training Session",
-                "Create Task Checklist",
-                "Solve Technical Issue",
-                "Arrange Product Demo",
-                "Delegate Tasks to Team Members"
+                "Send Follow-Up Emails"
+
         );
         List<String> descriptions = List.of(
                 "Write and finalize the project proposal document.",
@@ -72,14 +97,7 @@ public class MockData {
                 "Outline and schedule social media posts.",
                 "Test updates for software or systems.",
                 "Review and update the marketing strategy.",
-                "Conduct surveys to gather user feedback.",
-                "Analyze data related to competitors.",
-                "Prepare materials for the weekly meeting.",
-                "Participate in a training session.",
-                "Create a checklist of tasks to be done.",
-                "Resolve a technical issue or problem.",
-                "Arrange a demonstration of a product.",
-                "Assign tasks to members of the team."
+                "Conduct surveys to gather user feedback."
         );
         List<Priority> priorities = List.of(
                 HIGH, MEDIUM, LOW

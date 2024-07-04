@@ -9,10 +9,17 @@ body {
 }
 
 .content {
-    display: flex;
-    flex-grow: 1;
-    overflow: hidden;
+        display: flex;
+        flex-grow: 1;
+        overflow: hidden;
+
 }
+@media screen and (max-width: 768px) {
+    .content {
+        flex-direction: column;
+    }
+}
+
 
 .main-content {
     flex-grow: 1;
@@ -23,7 +30,34 @@ body {
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     margin: 10px;
 }
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
 
+.header h1 {
+    margin: 0;
+    font-size: 24px;
+}
+
+.header .add-task-btn {
+    /*font-size: 24px;
+    padding: 5px 10px;
+    cursor: pointer;
+    transition: color 0.3s;*/
+        justify-content: flex-start;
+        width: 150px;
+        padding: 12px;
+        border-radius: 12px;
+        background-color: #ffffff3d;
+        font-size: 20px;
+}
+
+.header .add-task:hover {
+    color: #ffeb3b;
+}
 .board {
     display: flex;
     gap: 20px;

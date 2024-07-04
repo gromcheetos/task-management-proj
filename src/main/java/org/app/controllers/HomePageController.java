@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 @Slf4j
 public class HomePageController {
 
-    @GetMapping("/home")
+    @GetMapping("/homepage")
     public String home(Model model) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         log.info("Authentication: " + auth.toString());

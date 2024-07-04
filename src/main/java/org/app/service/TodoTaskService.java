@@ -1,9 +1,13 @@
 package org.app.service;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
+
 import org.app.exceptions.TaskNotFoundException;
 import org.app.model.TodoTask;
+import org.app.model.User;
 import org.app.model.enums.Priority;
 import org.app.model.enums.Status;
 import org.app.repository.TaskRepository;
@@ -66,4 +70,5 @@ public class TodoTaskService {
    public long getCount(){
         return taskRepository.count();
    }
+
 }
