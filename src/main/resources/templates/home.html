@@ -3,13 +3,81 @@
       xmlns:sec="http://www.w3.org/1999/xhtml">
 <head th:replace="~{fragments/header-fragment.html :: head}">
 <body>
-<div th:replace="~{fragments/navbar-fragment.html :: navigation}"></div>
+<div th:replace="~{fragments/navbar-fragment :: navigation}"></div>
     <div class="content">
-        <div th:replace="~{fragments/sidebar-fragment.html :: sidebar}"></div>
+        <div th:replace="~{fragments/sidebar-fragment :: sidebar}" class="sidebar"></div>
             <div class="main-content">
-            <h1>Welcome!</h1>
-            <p>Pick up where you left off. To see your tasks for today, please log in or sign up.</p>
+                <div sec:authorize="!isAuthenticated()">
+                    <h1>Welcome!</h1>
+                    <p>Pick up where you left off. To see your tasks for today, please log in or sign up.</p>
+                </div>
+                <div sec:authorize="isAuthenticated()">
+                    <div class="header">
+                        <h1>Your project name</h1>
+                        <button class="add-task-btn" data-toggle="modal" data-target="#addTaskModal">+ Add tasks</button>
+                    </div>
+                    <div class="board">
+                        <div class="column new-requests">
+                            <h3>Todo</h3>
+                            <div th:each="board : ${userBoards}">
+                                <div th:if="${board.name == 'TODO'}">
+                                    <div th:each="task : ${board.tasks}">
+                                        <div class="task" th:if="${task.status.userStatus == 'To Do'}">
+                                            <p th:text="${task.title}"></p>
+                                            <span class="tag" th:class="'tag ' + ${task.priority.toString().toLowerCase()}"></span>
+                                            <span class="date" th:text="${task.deadline}"></span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="column in-progress">
+                            <h3>In Progress</h3>
+                            <div th:each="board : ${userBoards}">
+                                <div th:if="${board.name == 'IN_PROGRESS'}">
+                                    <div th:each="task : ${board.tasks}">
+                                        <div class="task" th:if="${task.status.userStatus == 'In Progress'}">
+                                            <p th:text="${task.title}"></p>
+                                            <span class="tag" th:class="'tag ' + ${task.priority.toString().toLowerCase()}"></span>
+                                            <span class="date" th:text="${task.deadline}"></span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="column completed">
+                            <h3>Completed</h3>
+                            <div th:each="board : ${userBoards}">
+                                <div th:if="${board.name == 'DONE'}">
+                                    <div th:each="task : ${board.tasks}">
+                                        <div class="task" th:if="${task.status.userStatus == 'Done'}">
+                                            <p th:text="${task.title}"></p>
+                                            <span class="tag" th:class="'tag ' + ${task.priority.toString().toLowerCase()}"></span>
+                                            <span class="date" th:text="${task.deadline}"></span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="column deferred">
+                            <h3>Deferred</h3>
+                            <div th:each="board : ${userBoards}">
+                                <div th:if="${board.name == 'DEFERRED'}">
+                                    <div th:each="task : ${board.tasks}">
+                                        <div class="task" th:if="${task.status.userStatus == 'Deferred'}">
+                                            <p th:text="${task.title}"></p>
+                                            <span class="tag" th:class="'tag ' + ${task.priority.toString().toLowerCase()}"></span>
+                                            <span class="date" th:text="${task.deadline}"></span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
     </div>
+<!--<div th:replace="~{fragments/addtask-fragment :: addtask}" style="display: none;"></div>-->
+
 </body>
 </html>
