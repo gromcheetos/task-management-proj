@@ -17,6 +17,7 @@ import java.util.Optional;
 
 @Service
 public class BoardService {
+
     @Autowired
     BoardRepository boardRepository;
 
@@ -25,25 +26,27 @@ public class BoardService {
     @Autowired
     UserRepository userRepository;
 
-    public Board createBoard(Board board){
+    public Board createBoard(Board board) {
         return boardRepository.save(board);
 
     }
 
     public Board updateBoard(int boardId, String boardName, String description) throws BoardNotFoundException {
-        Board toUpdateBoard = boardRepository.findById(boardId).orElseThrow(() -> new BoardNotFoundException("No Found Board"));
+        Board toUpdateBoard = boardRepository.findById(boardId)
+            .orElseThrow(() -> new BoardNotFoundException("No Found Board"));
         toUpdateBoard.setBoardName(boardName);
         toUpdateBoard.setDescription(description);
 
         return boardRepository.save(toUpdateBoard);
     }
-    public List<Board> findBoardsByUserId(Integer userId) throws UserNotFoundException{
+
+    public List<Board> findBoardsByUserId(Integer userId) throws UserNotFoundException {
         return boardRepository.findBoardsByUserId(userId);
     }
-    public List<Board> getAllDefaultBoards(){
-        return (List<Board>)boardRepository.findAll();
-    }
 
+    public List<Board> getAllDefaultBoards() {
+        return boardRepository.findAllByIsDefault(true);
+    }
 
     public Board deleteBoardById(Integer boardId) throws BoardNotFoundException {
         Optional<Board> boardOpt = boardRepository.findById(boardId);

@@ -34,7 +34,7 @@ public class User implements UserDetails {
     private String password;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    private List<TodoTask> boards;
+    private List<Board> boards;
 
     public User(String name, String email, String username, String password){
         this.name = name;
