@@ -1,11 +1,13 @@
-$(document).ready(function () {
-    // Hide the modal when the document is ready
-    $('#addTaskModal').modal('hide');
+document.addEventListener('DOMContentLoaded', (event) => {
+    const addTaskButton = document.getElementById('add-task-btn');
+    const addTaskModal = document.getElementsByClassName('addTaskModal');
 
-    // Show the modal when the "Add tasks" button is clicked
-    $('.add-task-btn').click(function () {
-        $('#addTaskModal').modal('show');
+    $(document).ready(function () {
+        $('#addTaskModal').modal('hide');
+
+        $('.add-task-btn').click(function () {
+            $('#addTaskModal').modal('show');
+        });
     });
-
-
 });
+
