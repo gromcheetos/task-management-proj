@@ -36,12 +36,7 @@ public class BoardController {
     @GetMapping("/home")
     public String getUserBoards(Model model) throws UserNotFoundException {
 
-// Load default boards
-        List<Board> boards = boardService.getAllDefaultBoards();
-        model.addAttribute("boards", boards);
-        log.info("Default Boards: " + Arrays.toString(boards.toArray()));
 
-// Get the current authenticated user
         User currentUser = getCurrentUser();
         if (currentUser == null) {
             log.info("No authenticated user found");
