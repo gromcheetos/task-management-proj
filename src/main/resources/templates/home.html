@@ -20,9 +20,9 @@
                         <div class="column new-requests">
                             <h3>Todo</h3>
                             <div th:each="board : ${userBoards}">
-                                <div th:if="${board.name == 'TODO'}">
+                                <div th:if="${board.boardName == 'TO_DO'}">
                                     <div th:each="task : ${board.tasks}">
-                                        <div class="task" th:if="${task.status.userStatus == 'To Do'}">
+                                        <div class="task">
                                             <p th:text="${task.title}"></p>
                                             <span class="tag" th:class="'tag ' + ${task.priority.toString().toLowerCase()}"></span>
                                             <span class="date" th:text="${task.deadline}"></span>
@@ -34,9 +34,9 @@
                         <div class="column in-progress">
                             <h3>In Progress</h3>
                             <div th:each="board : ${userBoards}">
-                                <div th:if="${board.name == 'IN_PROGRESS'}">
+                                <div th:if="${board.boardName == 'IN_PROGRESS'}">
                                     <div th:each="task : ${board.tasks}">
-                                        <div class="task" th:if="${task.status.userStatus == 'In Progress'}">
+                                        <div class="task">
                                             <p th:text="${task.title}"></p>
                                             <span class="tag" th:class="'tag ' + ${task.priority.toString().toLowerCase()}"></span>
                                             <span class="date" th:text="${task.deadline}"></span>
@@ -48,9 +48,9 @@
                         <div class="column completed">
                             <h3>Completed</h3>
                             <div th:each="board : ${userBoards}">
-                                <div th:if="${board.name == 'DONE'}">
+                                <div th:if="${board.boardName == 'DONE'}">
                                     <div th:each="task : ${board.tasks}">
-                                        <div class="task" th:if="${task.status.userStatus == 'Done'}">
+                                        <div class="task">
                                             <p th:text="${task.title}"></p>
                                             <span class="tag" th:class="'tag ' + ${task.priority.toString().toLowerCase()}"></span>
                                             <span class="date" th:text="${task.deadline}"></span>
@@ -62,9 +62,9 @@
                         <div class="column deferred">
                             <h3>Deferred</h3>
                             <div th:each="board : ${userBoards}">
-                                <div th:if="${board.name == 'DEFERRED'}">
+                                <div th:if="${board.boardName == 'DEFERRED'}">
                                     <div th:each="task : ${board.tasks}">
-                                        <div class="task" th:if="${task.status.userStatus == 'Deferred'}">
+                                        <div class="task">
                                             <p th:text="${task.title}"></p>
                                             <span class="tag" th:class="'tag ' + ${task.priority.toString().toLowerCase()}"></span>
                                             <span class="date" th:text="${task.deadline}"></span>
@@ -77,7 +77,23 @@
                 </div>
             </div>
     </div>
-<!--<div th:replace="~{fragments/addtask-fragment :: addtask}" style="display: none;"></div>-->
+<div th:replace="~{fragments/addtask-fragment :: addtask}"></div>
 
+
+<script>
+    document.addEventListener('DOMContentLoaded', (event) => {
+        const addTaskButton = document.getElementById('add-task-btn');
+        const addTaskModal = document.getElementsByClassName('addTaskModal');
+
+        $(document).ready(function () {
+            $('#addTaskModal').modal('hide');
+
+            $('.add-task-btn').click(function () {
+                $('#addTaskModal').modal('show');
+            });
+        });
+    });
+
+</script>
 </body>
 </html>
