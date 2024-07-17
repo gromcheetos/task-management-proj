@@ -42,6 +42,9 @@ public class UserController {
     public ResponseEntity<?> deleteUser(@RequestParam("userId") Integer userId) {
         try {
             User userToBeDeleted = userService.getUserById(userId);
+            if (userToBeDeleted == null) {
+                throw new UserNotFoundException("User not found with id: " + userId);
+            }
             userService.deleteUserById(userId);
             return ResponseEntity.ok("Deleted user:" + userToBeDeleted);
         } catch (UserNotFoundException exception) {

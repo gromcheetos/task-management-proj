@@ -1,5 +1,6 @@
 package org.app.controllers;
 
+import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.app.exceptions.TaskNotFoundException;
 import org.app.service.TodoTaskService;
@@ -15,11 +16,10 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @Slf4j
+@AllArgsConstructor
 public class TaskListController {
 
-
-    @Autowired
-    private TodoTaskService taskService;
+    private final TodoTaskService taskService;
 
     @GetMapping("/task/list")
     public String getAllTasks(Model model) {

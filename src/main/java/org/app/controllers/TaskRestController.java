@@ -1,5 +1,6 @@
 package org.app.controllers;
 
+import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.app.exceptions.BoardNotFoundException;
 import org.app.exceptions.TaskNotFoundException;
@@ -19,17 +20,15 @@ import org.springframework.web.bind.annotation.*;
 import java.time.LocalDate;
 import java.util.List;
 
-
 @Slf4j
 @RestController
 @RequestMapping("/tasks")
+@AllArgsConstructor
 public class TaskRestController {
-    @Autowired
-    private TodoTaskService taskService;
-    @Autowired
-    private UserService userService;
-    @Autowired
-    private BoardService boardService;
+    
+    private final TodoTaskService taskService;
+    private final UserService userService;
+    private final BoardService boardService;
 
     @PostMapping("/create") //endpoint
     public ResponseEntity<TodoTask> createTask(@RequestParam("title") String title,
@@ -38,10 +37,11 @@ public class TaskRestController {
         @RequestParam("deadline") String deadline,
         @RequestParam("status") String status,
         @RequestParam("userId") int userId,
-       @RequestParam("boardId") int boardId) throws UserNotFoundException, BoardNotFoundException {
+        @RequestParam("boardId") int boardId) throws UserNotFoundException, BoardNotFoundException {
 
-        log.info("Creating task with title: {}, description: {}, priority: {}, deadline: {}, status: {}, userId: {}, boardId: {}",
-                title, description, priority, deadline, status, userId, boardId);
+        log.info(
+            "Creating task with title: {}, description: {}, priority: {}, deadline: {}, status: {}, userId: {}, boardId: {}",
+            title, description, priority, deadline, status, userId, boardId);
 
         User user = userService.getUserById(userId);
         if (user == null) {
@@ -56,7 +56,7 @@ public class TaskRestController {
         LocalDate convertedDeadline = LocalDate.parse(deadline);
 
         TodoTask todoTask = new TodoTask(title, description, Priority.valueOf(priority), convertedDeadline,
-                Status.valueOf(status));
+            Status.valueOf(status));
         log.info("After creating TodoTask");
         todoTask.setUser(user);
         todoTask.setBoard(board);
@@ -67,10 +67,10 @@ public class TaskRestController {
     public ResponseEntity<TodoTask> updateTasks(@PathVariable("taskId") Integer taskId,
         @RequestBody TodoTask task) {
         log.info("Received RequestBody: {}", task);
-        try{
+        try {
             TodoTask todoTask = taskService.updateTask(taskId, task);
             return ResponseEntity.ok(todoTask);
-        }catch(TaskNotFoundException exception){
+        } catch (TaskNotFoundException exception) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
@@ -82,55 +82,55 @@ public class TaskRestController {
 
     @GetMapping("/")
     public ResponseEntity<TodoTask> getTaskById(@RequestParam("id") Integer taskId) {
-        try{
+        try {
             return ResponseEntity.ok(taskService.getTaskById(taskId));
-        }catch(TaskNotFoundException exception){
+        } catch (TaskNotFoundException exception) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
 
     @DeleteMapping("/remove")
     public ResponseEntity<?> removeTask(@RequestParam("id") Integer taskId) {
-        try{
+        try {
             taskService.deleteTaskById(taskId);
             return ResponseEntity.noContent().build();
-        }catch(TaskNotFoundException exception){
+        } catch (TaskNotFoundException exception) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
 
     @GetMapping("/filter/priority")
     public ResponseEntity<List<TodoTask>> getTaskByPriority(@RequestParam("priority") Priority priority) {
-        try{
+        try {
             return ResponseEntity.ok(taskService.getTaskByPriority(priority));
-        }catch(TaskNotFoundException exception){
+        } catch (TaskNotFoundException exception) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
 
     @GetMapping("/filter/deadline")
     public ResponseEntity<List<TodoTask>> getTaskByDeadline(@RequestParam("deadline") LocalDate deadline) {
-        try{
+        try {
             return ResponseEntity.ok(taskService.getTaskByDeadline(deadline));
-        }catch(TaskNotFoundException exception){
+        } catch (TaskNotFoundException exception) {
             return ResponseEntity.notFound().build();
         }
     }
 
     @GetMapping("/filter/status")
     public ResponseEntity<List<TodoTask>> getTaskByStatus(@RequestParam("status") String status) {
-        try{
+        try {
             return ResponseEntity.ok(taskService.getTaskByStatus(Status.valueOf(status)));
-        }catch(TaskNotFoundException exception){
+        } catch (TaskNotFoundException exception) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
 
     @GetMapping("/filter/user")
     public ResponseEntity<List<TodoTask>> getAllTasksByUserId(@RequestParam("userId") int userId) {
-        try{
+        try {
             return ResponseEntity.ok(userService.getTasksByUserId(userId));
-        }catch(UserNotFoundException exception){
+        } catch (UserNotFoundException exception) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }

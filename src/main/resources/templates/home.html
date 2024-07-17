@@ -19,7 +19,9 @@
                         <div class="column" th:each="board : ${userBoards}">
                             <div class="column-header">
                                 <h3 th:text="${board.boardName}"></h3>
-                                <button class="delete-board-btn" th:attr="data-board-id=${board.boardId}">x</button>
+                                <form th:action="@{/board/delete/{id}(id=${board.boardId})}" method="post" class="delete-board-form">
+                                    <button type="submit" class="delete-board-btn">x</button>
+                                </form>
                             </div>
                                 <div th:each="task : ${board.tasks}">
                                     <div th:if="${board.boardName == task.status.name()}">
@@ -52,31 +54,31 @@
             });
         });
 
-        deleteButtons.forEach(button => {
-        button.addEventListener('click', function () {
-            const boardId = this.getAttribute('data-board-id');
-
-            if (confirm("Are you sure you want to delete this board? All the tasks in the board will be deleted.")) {
-                fetch(`/board/delete?boardId=${boardId}`, {
-                    method: 'DELETE',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    }
-                })
-                .then(response => {
-                    if (response.ok) {
-                        location.reload();
-                    } else {
-                        response.text().then(text => alert("Failed to delete board: " + text));
-                    }
-                })
-                .catch(error => {
-                    console.error('Error:', error);
-                    alert("Failed to delete board.");
-                });
-            }
-        });
-    });
+    //     deleteButtons.forEach(button => {
+    //     button.addEventListener('click', function () {
+    //         const boardId = this.getAttribute('data-board-id');
+    //
+    //         if (confirm("Are you sure you want to delete this board? All the tasks in the board will be deleted.")) {
+    //             fetch(`/board/delete?boardId=${boardId}`, {
+    //                 method: 'DELETE',
+    //                 headers: {
+    //                     'Content-Type': 'application/json',
+    //                 }
+    //             })
+    //             .then(response => {
+    //                 if (response.ok) {
+    //                     location.reload();
+    //                 } else {
+    //                     response.text().then(text => alert("Failed to delete board: " + text));
+    //                 }
+    //             })
+    //             .catch(error => {
+    //                 console.error('Error:', error);
+    //                 alert("Failed to delete board.");
+    //             });
+    //         }
+    //     });
+    // });
 
 });
 

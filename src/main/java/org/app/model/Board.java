@@ -1,6 +1,7 @@
 package org.app.model;
 
 import jakarta.persistence.*;
+import java.util.Objects;
 import lombok.*;
 
 import java.util.List;
@@ -45,4 +46,26 @@ public class Board {
         this.description = description;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (!(o instanceof Board board)) {
+            return false;
+        }
+        return boardId == board.boardId && Objects.equals(boardName, board.boardName);
+    }
+
+    @Override
+    public String toString() {
+        return "Board{" +
+            "boardId=" + boardId +
+            ", boardName='" + boardName + '\'' +
+            ", description='" + description + '\'' +
+            ", isDefault=" + isDefault +
+            ", status=" + status +
+            ", tasks=" + tasks +
+            '}';
+    }
 }
