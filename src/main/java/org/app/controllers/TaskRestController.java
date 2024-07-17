@@ -25,13 +25,13 @@ import java.util.List;
 @RequestMapping("/tasks")
 @AllArgsConstructor
 public class TaskRestController {
-    
+
     private final TodoTaskService taskService;
     private final UserService userService;
     private final BoardService boardService;
 
     @PostMapping("/create") //endpoint
-    public ResponseEntity<TodoTask> createTask(@RequestParam("title") String title,
+    public String createTask(@RequestParam("title") String title,
         @RequestParam("description") String description,
         @RequestParam("priority") String priority,
         @RequestParam("deadline") String deadline,
@@ -43,24 +43,17 @@ public class TaskRestController {
             "Creating task with title: {}, description: {}, priority: {}, deadline: {}, status: {}, userId: {}, boardId: {}",
             title, description, priority, deadline, status, userId, boardId);
 
-        User user = userService.getUserById(userId);
-        if (user == null) {
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        }
-
+        User user = userService.getCurrentUser();
         Board board = boardService.findBoardById(boardId);
-        if (board == null) {
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        }
 
         LocalDate convertedDeadline = LocalDate.parse(deadline);
 
         TodoTask todoTask = new TodoTask(title, description, Priority.valueOf(priority), convertedDeadline,
-            Status.valueOf(status));
+            Status.valueOf(board.getBoardName()));
         log.info("After creating TodoTask");
         todoTask.setUser(user);
         todoTask.setBoard(board);
-        return ResponseEntity.ok(taskService.insertTask(todoTask));
+        return "redirect:/home";
     }
 
     @PostMapping("/update/{taskId}")
