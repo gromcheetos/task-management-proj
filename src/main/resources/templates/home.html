@@ -13,15 +13,16 @@
                 </div>
                 <div sec:authorize="isAuthenticated()">
                     <div class="header">
-                        <h1>Your project name</h1>
                         <button class="add-task-btn" data-toggle="modal" data-target="#addTaskModal">+ Add tasks</button>
                     </div>
                     <div class="board">
-                        <div class="column new-requests">
-                            <h3>Todo</h3>
-                            <div th:each="board : ${userBoards}">
-                                <div th:if="${board.boardName == 'TO_DO'}">
-                                    <div th:each="task : ${board.tasks}">
+                        <div class="column" th:each="board : ${userBoards}">
+                            <div class="column-header">
+                                <h3 th:text="${board.boardName}"></h3>
+                                <button class="delete-board-btn" th:attr="data-board-id=${board.boardId}">x</button>
+                            </div>
+                                <div th:each="task : ${board.tasks}">
+                                    <div th:if="${board.boardName == task.status.name()}">
                                         <div class="task">
                                             <p th:text="${task.title}"></p>
                                             <span class="tag" th:class="'tag ' + ${task.priority.toString().toLowerCase()}"></span>
@@ -29,49 +30,6 @@
                                         </div>
                                     </div>
                                 </div>
-                            </div>
-                        </div>
-                        <div class="column in-progress">
-                            <h3>In Progress</h3>
-                            <div th:each="board : ${userBoards}">
-                                <div th:if="${board.boardName == 'IN_PROGRESS'}">
-                                    <div th:each="task : ${board.tasks}">
-                                        <div class="task">
-                                            <p th:text="${task.title}"></p>
-                                            <span class="tag" th:class="'tag ' + ${task.priority.toString().toLowerCase()}"></span>
-                                            <span class="date" th:text="${task.deadline}"></span>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="column completed">
-                            <h3>Completed</h3>
-                            <div th:each="board : ${userBoards}">
-                                <div th:if="${board.boardName == 'DONE'}">
-                                    <div th:each="task : ${board.tasks}">
-                                        <div class="task">
-                                            <p th:text="${task.title}"></p>
-                                            <span class="tag" th:class="'tag ' + ${task.priority.toString().toLowerCase()}"></span>
-                                            <span class="date" th:text="${task.deadline}"></span>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="column deferred">
-                            <h3>Deferred</h3>
-                            <div th:each="board : ${userBoards}">
-                                <div th:if="${board.boardName == 'DEFERRED'}">
-                                    <div th:each="task : ${board.tasks}">
-                                        <div class="task">
-                                            <p th:text="${task.title}"></p>
-                                            <span class="tag" th:class="'tag ' + ${task.priority.toString().toLowerCase()}"></span>
-                                            <span class="date" th:text="${task.deadline}"></span>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
                         </div>
                     </div>
                 </div>
@@ -84,6 +42,7 @@
     document.addEventListener('DOMContentLoaded', (event) => {
         const addTaskButton = document.getElementById('add-task-btn');
         const addTaskModal = document.getElementsByClassName('addTaskModal');
+        const deleteButtons = document.querySelectorAll('.delete-board-btn');
 
         $(document).ready(function () {
             $('#addTaskModal').modal('hide');
@@ -92,7 +51,34 @@
                 $('#addTaskModal').modal('show');
             });
         });
+
+        deleteButtons.forEach(button => {
+        button.addEventListener('click', function () {
+            const boardId = this.getAttribute('data-board-id');
+
+            if (confirm("Are you sure you want to delete this board? All the tasks in the board will be deleted.")) {
+                fetch(`/board/delete?boardId=${boardId}`, {
+                    method: 'DELETE',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    }
+                })
+                .then(response => {
+                    if (response.ok) {
+                        location.reload();
+                    } else {
+                        response.text().then(text => alert("Failed to delete board: " + text));
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert("Failed to delete board.");
+                });
+            }
+        });
     });
+
+});
 
 </script>
 </body>

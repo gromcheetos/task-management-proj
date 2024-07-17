@@ -2,6 +2,7 @@ package org.app.controllers;
 
 import lombok.extern.slf4j.Slf4j;
 import org.app.model.User;
+import org.app.service.BoardService;
 import org.app.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -18,13 +19,11 @@ public class AuthenticationController {
     @Autowired
     private UserService userService;
 
-    @Autowired
-    private AuthenticationManager authenticationManager;
+    private BoardService boardService;
 
     @Autowired
     public AuthenticationController(UserService userService, AuthenticationManager authenticationManager) {
         this.userService = userService;
-        this.authenticationManager = authenticationManager;
     }
 
     @PostMapping("/register")
@@ -35,6 +34,7 @@ public class AuthenticationController {
         @RequestParam("password") String password) {
         log.info("Request received to register the user");
         User newUser = new User(name, userEmail, username);
+        newUser.setBoards(boardService.getAllDefaultBoards());
         userService.createUser(newUser, password);
         return "redirect:/home";
     }

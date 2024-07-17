@@ -1,13 +1,18 @@
 package org.app.model.enums;
 
-public enum Status {
-    IN_PROGRESS("In Progress"), DONE("Done"), TO_DO("To Do"), DEFERRED("Deferred");
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.Setter;
 
-    private final String userStatus;
-    private Status(final String userStatus) {
-        this.userStatus = userStatus;
-    }
-    public String getUserStatus(){
-        return userStatus;
-    }
+@Getter
+@AllArgsConstructor
+public enum Status {
+
+    TO_DO("To Do"),
+    IN_PROGRESS("In Progress"),
+    DONE("Done"),
+    DEFERRED("Deferred");
+
+    private final String value;
+
 }
