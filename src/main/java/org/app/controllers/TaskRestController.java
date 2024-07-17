@@ -1,12 +1,15 @@
 package org.app.controllers;
 
 import lombok.extern.slf4j.Slf4j;
+import org.app.exceptions.BoardNotFoundException;
 import org.app.exceptions.TaskNotFoundException;
 import org.app.exceptions.UserNotFoundException;
+import org.app.model.Board;
 import org.app.model.TodoTask;
 import org.app.model.User;
 import org.app.model.enums.Priority;
 import org.app.model.enums.Status;
+import org.app.service.BoardService;
 import org.app.service.TodoTaskService;
 import org.app.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,6 +28,8 @@ public class TaskRestController {
     private TodoTaskService taskService;
     @Autowired
     private UserService userService;
+    @Autowired
+    private BoardService boardService;
 
     @PostMapping("/create") //endpoint
     public ResponseEntity<TodoTask> createTask(@RequestParam("title") String title,
@@ -32,18 +37,29 @@ public class TaskRestController {
         @RequestParam("priority") String priority,
         @RequestParam("deadline") String deadline,
         @RequestParam("status") String status,
-        @RequestParam("userId") int userId) throws UserNotFoundException {
-        log.info("Received request with status: {} ", status);
+        @RequestParam("userId") int userId,
+       @RequestParam("boardId") int boardId) throws UserNotFoundException, BoardNotFoundException {
+
+        log.info("Creating task with title: {}, description: {}, priority: {}, deadline: {}, status: {}, userId: {}, boardId: {}",
+                title, description, priority, deadline, status, userId, boardId);
+
         User user = userService.getUserById(userId);
         if (user == null) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
+
+        Board board = boardService.findBoardById(boardId);
+        if (board == null) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+
         LocalDate convertedDeadline = LocalDate.parse(deadline);
-        log.info("Before creating TodoTask");
+
         TodoTask todoTask = new TodoTask(title, description, Priority.valueOf(priority), convertedDeadline,
-            Status.valueOf(status));
+                Status.valueOf(status));
         log.info("After creating TodoTask");
         todoTask.setUser(user);
+        todoTask.setBoard(board);
         return ResponseEntity.ok(taskService.insertTask(todoTask));
     }
 

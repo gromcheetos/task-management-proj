@@ -6,7 +6,7 @@ import org.app.exceptions.UserNotFoundException;
 import org.app.model.Board;
 import org.app.model.User;
 import org.app.service.BoardService;
-import org.app.service.TodoTaskService;
+
 import org.app.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -20,7 +20,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import java.time.LocalDate;
+
 import java.util.Arrays;
 import java.util.List;
 
@@ -36,7 +36,6 @@ public class BoardController {
     @GetMapping("/home")
     public String getUserBoards(Model model) throws UserNotFoundException {
 
-        // Get the current authenticated user
         User currentUser = getCurrentUser();
         if (currentUser == null) {
             log.info("No authenticated user found");
@@ -49,8 +48,10 @@ public class BoardController {
             boards = boardService.getAllDefaultBoards();
         } else {
             boards = boardService.findBoardsByUserId(currentUser.getId());
-            model.addAttribute("userBoards", boards);
         }
+        model.addAttribute("userBoards", boards);
+        model.addAttribute("currentUser", currentUser);
+
         return "home";
     }
     @PostMapping("/board/create")
@@ -86,20 +87,20 @@ public class BoardController {
         return userService.getUserByUsername(username);
     }
     @DeleteMapping("/board/delete")
-    public ResponseEntity<?> deleteBoard(@RequestParam("boardId") Integer boardId,
-                                         @RequestParam("userId") Integer userId) {
+    public ResponseEntity<?> deleteBoard(@RequestParam("boardId") Integer boardId) {
+        log.info("Received request to delete board with ID: {}", boardId);
         try {
-            User user = userService.getUserById(userId);
-            if (user == null) {
-                throw new UserNotFoundException("User not found with id: " + userId);
+            User currentUser = getCurrentUser();
+            if (currentUser == null) {
+                log.error("Current user not found.");
+                throw new UserNotFoundException("User not found.");
             }
 
-            Board boardToBeDeleted = boardService.deleteBoardById(boardId);
-            if (boardToBeDeleted == null) {
-                throw new BoardNotFoundException("Board not found with id: " + boardId);
-            }
+            log.info("Current user: {}", currentUser.getId());
 
-            return ResponseEntity.ok("Deleted Board: " + boardToBeDeleted);
+            boardService.deleteBoardById(boardId);
+            log.info("Deleted Board with ID: {}", boardId);
+            return ResponseEntity.ok("Deleted Board with ID: " + boardId);
         } catch (UserNotFoundException | BoardNotFoundException exception) {
             return new ResponseEntity<>(exception.getMessage(), HttpStatus.NOT_FOUND);
         }

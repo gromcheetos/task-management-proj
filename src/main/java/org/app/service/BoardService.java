@@ -2,9 +2,11 @@ package org.app.service;
 
 import org.app.exceptions.BoardNotFoundException;
 
+import org.app.exceptions.TaskNotFoundException;
 import org.app.exceptions.UserNotFoundException;
 import org.app.model.Board;
 
+import org.app.model.TodoTask;
 import org.app.repository.BoardRepository;
 import org.app.repository.TaskRepository;
 import org.app.repository.UserRepository;
@@ -44,19 +46,19 @@ public class BoardService {
         return boardRepository.findBoardsByUserId(userId);
     }
 
+    public Board findBoardById(Integer boardId) throws BoardNotFoundException {
+        return boardRepository.findById(boardId).orElseThrow(() -> new BoardNotFoundException("No Found Board"));
+    }
+
     public List<Board> getAllDefaultBoards() {
         return boardRepository.findAllByIsDefault(true);
     }
 
-    public Board deleteBoardById(Integer boardId) throws BoardNotFoundException {
-        Optional<Board> boardOpt = boardRepository.findById(boardId);
-        if (boardOpt.isPresent()) {
-            Board board = boardOpt.get();
-            boardRepository.delete(board);
-            return board;
-        } else {
-            throw new BoardNotFoundException("Board not found with id: " + boardId);
+    public void deleteBoardById(Integer boardId) throws BoardNotFoundException {
+        if(boardRepository.findById(boardId).isEmpty()){
+            throw new BoardNotFoundException("No found board");
         }
+        boardRepository.deleteById(boardId);
     }
 
 

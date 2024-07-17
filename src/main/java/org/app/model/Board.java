@@ -18,6 +18,9 @@ public class Board {
     private String description;
     private boolean isDefault;
 
+    @Enumerated(EnumType.STRING)
+    private Status status;
+
     @OneToMany(mappedBy = "board", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<TodoTask> tasks;
 
@@ -41,4 +44,5 @@ public class Board {
         this.boardName = boardName;
         this.description = description;
     }
+
 }
