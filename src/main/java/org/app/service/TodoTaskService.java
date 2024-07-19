@@ -5,7 +5,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
+import org.app.exceptions.BoardNotFoundException;
 import org.app.exceptions.TaskNotFoundException;
+import org.app.model.Board;
 import org.app.model.TodoTask;
 import org.app.model.User;
 import org.app.model.enums.Priority;
@@ -40,12 +42,14 @@ public class TodoTaskService {
     public List<TodoTask> getAllTasks(){
         return (List<TodoTask>)taskRepository.findAll();
     }
-    public void deleteTaskById(Integer taskId)  throws TaskNotFoundException {
+    public void deleteTaskById(Integer userId, Integer taskId)  throws TaskNotFoundException {
         if(taskRepository.findById(taskId).isEmpty()){
             throw new TaskNotFoundException("No Found Task");
         }
         taskRepository.deleteById(taskId);
+
     }
+
     public List<TodoTask> getTaskByPriority(Priority priority) throws TaskNotFoundException{
         List<TodoTask> tasks = taskRepository.findByPriority(priority);
         if(tasks.isEmpty()){

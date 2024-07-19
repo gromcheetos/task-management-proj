@@ -1,5 +1,7 @@
 package org.app.service;
 
+import jakarta.persistence.criteria.CriteriaBuilder.In;
+import jakarta.transaction.Transactional;
 import org.app.exceptions.BoardNotFoundException;
 
 import org.app.exceptions.TaskNotFoundException;
@@ -7,6 +9,7 @@ import org.app.exceptions.UserNotFoundException;
 import org.app.model.Board;
 
 import org.app.model.TodoTask;
+import org.app.model.User;
 import org.app.repository.BoardRepository;
 import org.app.repository.TaskRepository;
 import org.app.repository.UserRepository;
@@ -22,7 +25,6 @@ public class BoardService {
 
     @Autowired
     BoardRepository boardRepository;
-
     @Autowired
     TaskRepository taskRepository;
     @Autowired
@@ -42,7 +44,7 @@ public class BoardService {
         return boardRepository.save(toUpdateBoard);
     }
 
-    public List<Board> findBoardsByUserId(Integer userId) throws UserNotFoundException {
+    public List<Board> findBoardsByUserId(Integer userId) {
         return boardRepository.findBoardsByUserId(userId);
     }
 
@@ -54,11 +56,16 @@ public class BoardService {
         return boardRepository.findAllByIsDefault(true);
     }
 
-    public void deleteBoardById(Integer boardId) throws BoardNotFoundException {
-        if(boardRepository.findById(boardId).isEmpty()){
+    @Transactional
+    public void deleteBoardById(Integer userId, Integer boardId) throws BoardNotFoundException {
+        Board board = boardRepository.findById(boardId).orElse(null);
+        if (board == null) {
             throw new BoardNotFoundException("No found board");
         }
         boardRepository.deleteById(boardId);
+        User user = userRepository.findById(userId).get();
+        user.getBoards().remove(board);
+        userRepository.save(user);
     }
 
 
