@@ -72,12 +72,10 @@ public class BoardController {
 
     @PostMapping("/board/delete/{id}")
     public String deleteBoard(@PathVariable("id") Integer boardId) {
-        log.info("Received request to delete board with ID: {}", boardId);
         try {
             User currentUser = userService.getCurrentUser();
-            log.info("Current user: {}", currentUser.getId());
+
             boardService.deleteBoardById(currentUser.getId(), boardId);
-            log.info("Deleted Board with ID: {}", boardId);
         } catch (UserNotFoundException | BoardNotFoundException exception) {
             // fix this
         }

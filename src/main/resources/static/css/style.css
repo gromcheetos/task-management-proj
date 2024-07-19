@@ -98,20 +98,19 @@ body {
 .delete-board-btn {
     padding: 2px 8px;
     border: none;
-    border-radius: 12px;
-    background-color: #ffffff3d;
+    border-radius: 7px;
+    background-color: #fff;
     cursor: pointer;
     font-size: 14px;
     margin-bottom: 40px;
 }
 
 .delete-board-btn:hover {
-    background-color: #ff3333;
+    background-color: #28587B;
 }
 
-
 .task {
-    background-color: #ffffff;
+    background-color: #fff;
     padding: 15px;
     border-radius: 10px;
     margin-bottom: 15px;
@@ -120,17 +119,34 @@ body {
     transition: transform 0.2s;
 }
 
+.date-and-delete {
+    display: flex;
+    align-items: center;
+    margin-top: 10px; /* Adjust as needed */
+}
+
+.date {
+    margin-right: 10px;
+}
+
+.task p{
+    margin-top: revert;
+}
 .task:hover {
     transform: translateY(-3px);
 }
 
 .task .tag {
-    font-size: 12px;
-    padding: 5px 10px;
+    font-size: 7px;
+    padding: 2px 4px;
     border-radius: 3px;
     position: absolute;
     top: 10px;
     right: 10px;
+    display: inline-block; /* Ensures the tag stays inline and text fits within */
+    text-align: center; /* Centers the text within the tag */
+    min-width: 5px; /* Ensures a minimum width for consistency */
+    white-space: nowrap; /* Prevents text from wrapping */
 }
 
 .task .tag.high {
@@ -147,4 +163,12 @@ body {
     background-color: #52c41a;
     color: white;
 }
-
+.delete-task-btn{
+    padding: 2px 8px;
+    border: none;
+    border-radius: 7px;
+    background-color: ##9FB4C7;
+    cursor: pointer;
+    font-size: 14px;
+    margin-left: 30px;
+}

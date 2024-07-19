@@ -25,7 +25,6 @@ public class BoardService {
 
     @Autowired
     BoardRepository boardRepository;
-
     @Autowired
     TaskRepository taskRepository;
     @Autowired

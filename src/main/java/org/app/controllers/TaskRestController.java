@@ -39,10 +39,6 @@ public class TaskRestController {
         @RequestParam("userId") int userId,
         @RequestParam("boardId") int boardId) throws UserNotFoundException, BoardNotFoundException {
 
-        log.info(
-            "Creating task with title: {}, description: {}, priority: {}, deadline: {}, status: {}, userId: {}, boardId: {}",
-            title, description, priority, deadline, status, userId, boardId);
-
         User user = userService.getCurrentUser();
         Board board = boardService.findBoardById(boardId);
 
@@ -53,6 +49,7 @@ public class TaskRestController {
         log.info("After creating TodoTask");
         todoTask.setUser(user);
         todoTask.setBoard(board);
+        taskService.insertTask(todoTask);
         return "redirect:/home";
     }
 
@@ -82,15 +79,17 @@ public class TaskRestController {
         }
     }
 
-    @DeleteMapping("/remove")
-    public ResponseEntity<?> removeTask(@RequestParam("id") Integer taskId) {
+    @PostMapping("/remove/{id}")
+    public String removeTask(@PathVariable("id") Integer taskId) {
         try {
-            taskService.deleteTaskById(taskId);
-            return ResponseEntity.noContent().build();
-        } catch (TaskNotFoundException exception) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            User currentUser = userService.getCurrentUser();
+            taskService.deleteTaskById(currentUser.getId(), taskId);
+        } catch (TaskNotFoundException | UserNotFoundException exception) {
+            //
         }
+        return "redirect:/home";
     }
+
 
     @GetMapping("/filter/priority")
     public ResponseEntity<List<TodoTask>> getTaskByPriority(@RequestParam("priority") Priority priority) {

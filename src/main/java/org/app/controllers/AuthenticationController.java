@@ -1,5 +1,6 @@
 package org.app.controllers;
 
+import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.app.model.User;
 import org.app.service.BoardService;
@@ -14,10 +15,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 @Controller
 @RequestMapping("/users")
 @Slf4j
+@AllArgsConstructor
 public class AuthenticationController {
 
-    @Autowired
-    private UserService userService;
+    private final UserService userService;
 
     private BoardService boardService;
 

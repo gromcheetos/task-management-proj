@@ -27,8 +27,14 @@
                                     <div th:if="${board.boardName == task.status.name()}">
                                         <div class="task">
                                             <p th:text="${task.title}"></p>
-                                            <span class="tag" th:class="'tag ' + ${task.priority.toString().toLowerCase()}"></span>
-                                            <span class="date" th:text="${task.deadline}"></span>
+                                            <span class="tag" th:class="'tag ' + ${task.priority.toString().toLowerCase()}"
+                                                  th:text="${task.priority.toString().toUpperCase()}"></span>
+                                            <div class="date-and-delete">
+                                                <span class="date" th:text="${task.deadline}"></span>
+                                                <form th:action="@{/tasks/remove/{id}(id=${task.Id})}" method="post" class="delete-task">
+                                                    <button type="submit" class="delete-task-btn">x</button>
+                                                </form>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
