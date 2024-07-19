@@ -4,61 +4,59 @@
 <head th:replace="~{fragments/header-fragment.html :: head}">
 <body>
 <div th:replace="~{fragments/navbar-fragment :: navigation}"></div>
-    <div class="content">
-        <div th:replace="~{fragments/sidebar-fragment :: sidebar}" class="sidebar"></div>
-            <div class="main-content">
-                <div sec:authorize="!isAuthenticated()">
-                    <h1>Welcome!</h1>
-                    <p>Pick up where you left off. To see your tasks for today, please log in or sign up.</p>
-                </div>
-                <div sec:authorize="isAuthenticated()">
-                    <div class="header">
-                        <button class="add-task-btn" data-toggle="modal" data-target="#addTaskModal">+ Add tasks</button>
-                    </div>
-                    <div class="board">
-                        <div class="column" th:each="board : ${userBoards}">
-                            <div class="column-header">
-                                <h3 th:text="${board.boardName}"></h3>
-                                <form th:action="@{/board/delete/{id}(id=${board.boardId})}" method="post" class="delete-board-form">
-                                    <button type="submit" class="delete-board-btn">x</button>
-                                </form>
-                            </div>
-                                <div th:each="task : ${board.tasks}">
-                                    <div th:if="${board.boardName == task.status.name()}">
-                                        <div class="task">
-                                            <p th:text="${task.title}"></p>
-                                            <span class="tag" th:class="'tag ' + ${task.priority.toString().toLowerCase()}"
-                                                  th:text="${task.priority.toString().toUpperCase()}"></span>
-                                            <div class="date-and-delete">
-                                                <span class="date" th:text="${task.deadline}"></span>
-                                                <form th:action="@{/tasks/remove/{id}(id=${task.Id})}" method="post" class="delete-task">
-                                                    <button type="submit" class="delete-task-btn">x</button>
-                                                </form>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
+<div class="content">
+  <div th:replace="~{fragments/sidebar-fragment :: sidebar}" class="sidebar"></div>
+  <div class="main-content">
+    <div sec:authorize="!isAuthenticated()">
+      <h1>Welcome!</h1>
+      <p>Pick up where you left off. To see your tasks for today, please log in or sign up.</p>
     </div>
+    <div sec:authorize="isAuthenticated()">
+      <div class="header">
+        <button class="add-task-btn" data-toggle="modal" data-target="#addTaskModal">+ Add tasks</button>
+      </div>
+      <div class="board">
+        <div class="column" th:each="board : ${userBoards}">
+          <div class="column-header">
+            <h3 th:text="${board.boardName}"></h3>
+            <form th:action="@{/board/delete/{id}(id=${board.boardId})}" method="post" class="delete-board-form">
+              <button type="submit" class="delete-board-btn">x</button>
+            </form>
+          </div>
+          <div th:each="task : ${board.tasks}">
+            <div class="task">
+              <p th:text="${task.title}"></p>
+              <span class="tag" th:class="'tag ' + ${task.priority.toString().toLowerCase()}"
+                    th:text="${task.priority.toString().toUpperCase()}"></span>
+              <div class="date-and-delete">
+                <span class="date" th:text="${task.deadline}"></span>
+                <form th:action="@{/tasks/remove/{id}(id=${task.Id})}" method="post" class="delete-task">
+                  <button type="submit" class="delete-task-btn">x</button>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
 <div th:replace="~{fragments/addtask-fragment :: addtask}"></div>
 
 
 <script>
-    document.addEventListener('DOMContentLoaded', (event) => {
-        const addTaskButton = document.getElementById('add-task-btn');
-        const addTaskModal = document.getElementsByClassName('addTaskModal');
-        const deleteButtons = document.querySelectorAll('.delete-board-btn');
+  document.addEventListener('DOMContentLoaded', (event) => {
+    const addTaskButton = document.getElementById('add-task-btn');
+    const addTaskModal = document.getElementsByClassName('addTaskModal');
+    const deleteButtons = document.querySelectorAll('.delete-board-btn');
 
-        $(document).ready(function () {
-            $('#addTaskModal').modal('hide');
+    $(document).ready(function () {
+      $('#addTaskModal').modal('hide');
 
-            $('.add-task-btn').click(function () {
-                $('#addTaskModal').modal('show');
-            });
-        });
+      $('.add-task-btn').click(function () {
+        $('#addTaskModal').modal('show');
+      });
+    });
 
     //     deleteButtons.forEach(button => {
     //     button.addEventListener('click', function () {
@@ -86,7 +84,7 @@
     //     });
     // });
 
-});
+  });
 
 </script>
 </body>

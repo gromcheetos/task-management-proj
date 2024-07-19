@@ -2,6 +2,7 @@ package org.app.service;
 
 import jakarta.persistence.criteria.CriteriaBuilder.In;
 import jakarta.transaction.Transactional;
+import java.util.ArrayList;
 import org.app.exceptions.BoardNotFoundException;
 
 import org.app.exceptions.TaskNotFoundException;
@@ -32,7 +33,6 @@ public class BoardService {
 
     public Board createBoard(Board board) {
         return boardRepository.save(board);
-
     }
 
     public Board updateBoard(int boardId, String boardName, String description) throws BoardNotFoundException {
@@ -40,7 +40,6 @@ public class BoardService {
             .orElseThrow(() -> new BoardNotFoundException("No Found Board"));
         toUpdateBoard.setBoardName(boardName);
         toUpdateBoard.setDescription(description);
-
         return boardRepository.save(toUpdateBoard);
     }
 
@@ -53,7 +52,14 @@ public class BoardService {
     }
 
     public List<Board> getAllDefaultBoards() {
-        return boardRepository.findAllByIsDefault(true);
+        List<Board> filteredList = new ArrayList<>();
+        List<Board> allBoards = (List<Board>) boardRepository.findAll();
+        for (Board board : allBoards) {
+            if (board.isDefault()) {
+                filteredList.add(board);
+            }
+        }
+        return filteredList;
     }
 
     @Transactional
@@ -73,3 +79,5 @@ public class BoardService {
         boardRepository.saveAll(boards);
     }
 }
+
+
