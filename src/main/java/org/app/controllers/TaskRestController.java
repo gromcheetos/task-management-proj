@@ -1,6 +1,5 @@
 package org.app.controllers;
 
-import ch.qos.logback.core.model.Model;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.app.exceptions.BoardNotFoundException;
@@ -25,8 +24,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
-
-import static org.app.model.enums.Status.DONE;
 
 @Slf4j
 @Controller
@@ -146,8 +143,8 @@ public class TaskRestController {
         }
     }
 
-    @GetMapping("/filter/status")
-    public ResponseEntity<Map<String, Integer>> getTaskByStatus() {
+    @GetMapping("/filter/completed")
+    public ResponseEntity<Map<String, Integer>> getTaskByStatusDone() {
         try {
             List<TodoTask> allTasks = taskService.getAllTasks();
             List<TodoTask> doneTasks = taskService.getTaskByStatus(Status.DONE);

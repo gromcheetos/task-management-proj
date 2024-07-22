@@ -5,11 +5,12 @@ import lombok.AllArgsConstructor;
 import java.util.ArrayList;
 import org.app.exceptions.BoardNotFoundException;
 import org.app.model.Board;
+import org.app.model.TodoTask;
 import org.app.model.User;
+import org.app.model.enums.Status;
 import org.app.repository.BoardRepository;
 import org.app.repository.TaskRepository;
 import org.app.repository.UserRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.util.List;
 
@@ -69,6 +70,19 @@ public class BoardService {
         userRepository.save(user);
     }
 
+    public List<Board> filterBoardTasksByStatuses(List<Status> statuses, Integer userId) {
+        List<Board> allBoards = findBoardsByUserId(userId);
+
+        for (Board board : allBoards) {
+            List<TodoTask> allTasksForBoard = board.getTasks();
+            for (TodoTask todoTask : allTasksForBoard) {
+                if (!statuses.contains(todoTask)) {
+                    allTasksForBoard.remove(todoTask);
+                }
+            }
+        }
+        return allBoards;
+    }
 
     public void saveAll(List<Board> boards) {
         boardRepository.saveAll(boards);

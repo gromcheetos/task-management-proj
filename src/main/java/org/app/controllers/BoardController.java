@@ -15,37 +15,20 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import java.util.List;
 
 @Controller
 @Slf4j
 @AllArgsConstructor
+@RequestMapping("/board")
 public class BoardController {
 
     private final BoardService boardService;
     private final UserService userService;
 
-    @GetMapping("/home")
-    public String getUserBoards(Model model) throws UserNotFoundException {
-
-        User currentUser = userService.getCurrentUser();
-        List<Board> boards;
-
-        if (currentUser.getBoards().isEmpty()) {
-            log.info("No boards found, loading a default board");
-            boards = boardService.getAllDefaultBoards();
-        } else {
-            boards = boardService.findBoardsByUserId(currentUser.getId());
-            log.info("Found {} boards", boards);
-        }
-        model.addAttribute("userBoards", boards);
-        model.addAttribute("currentUser", currentUser);
-
-        return "home";
-    }
-
-    @PostMapping("/board/create")
+    @PostMapping("/create")
     public ResponseEntity<Board> createBoard(@RequestParam("boarName") String boardName,
         @RequestParam("description") String description) {
         try {
@@ -58,7 +41,7 @@ public class BoardController {
         }
     }
 
-    @PostMapping("/board/update")
+    @PostMapping("/update")
     public ResponseEntity<Board> updateBoard(
         @RequestParam("boardId") Integer boardId,
         @RequestParam("boarName") String boardName,
@@ -71,7 +54,7 @@ public class BoardController {
         }
     }
 
-    @PostMapping("/board/delete/{id}")
+    @PostMapping("/delete/{id}")
     public String deleteBoard(@PathVariable("id") Integer boardId) {
         try {
             User currentUser = userService.getCurrentUser();
