@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
+import lombok.AllArgsConstructor;
 import org.app.exceptions.BoardNotFoundException;
 import org.app.exceptions.TaskNotFoundException;
 import org.app.model.Board;
@@ -17,12 +18,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
+@AllArgsConstructor
 public class TodoTaskService {
-    @Autowired // creates and destroys objects for you, you don't need to instantiate them
-    private TaskRepository taskRepository;
+    //@Autowired  creates and destroys objects for you, you don't need to instantiate them
+    private final TaskRepository taskRepository;
 
-    @Autowired
-    private UserService userService;
+    private final  UserService userService;
 
     public TodoTask insertTask(TodoTask task){
         return taskRepository.save(task); //runs the insert into table todo_tasks values(...)

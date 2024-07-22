@@ -2,6 +2,7 @@ package org.app.service;
 
 import jakarta.persistence.criteria.CriteriaBuilder.In;
 import jakarta.transaction.Transactional;
+import lombok.AllArgsConstructor;
 import org.app.exceptions.BoardNotFoundException;
 
 import org.app.exceptions.TaskNotFoundException;
@@ -21,14 +22,15 @@ import java.util.Optional;
 
 
 @Service
+@AllArgsConstructor
 public class BoardService {
 
-    @Autowired
-    BoardRepository boardRepository;
-    @Autowired
-    TaskRepository taskRepository;
-    @Autowired
-    UserRepository userRepository;
+
+    private final BoardRepository boardRepository;
+
+    private final TaskRepository taskRepository;
+
+    private final UserRepository userRepository;
 
     public Board createBoard(Board board) {
         return boardRepository.save(board);
