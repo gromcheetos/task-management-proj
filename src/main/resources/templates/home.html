@@ -50,7 +50,6 @@
                                 </form>
                             </div>
                                 <div th:each="task : ${board.tasks}">
-                                    <div th:if="${board.boardName == task.status.name()}">
                                         <div class="task">
                                             <p th:text="${task.title}"></p>
                                             <span class="tag" th:class="'tag ' + ${task.priority.toString().toLowerCase()}"
@@ -62,7 +61,6 @@
                                                 </form>
                                             </div>
                                         </div>
-                                    </div>
                                 </div>
                         </div>
                     </div>
