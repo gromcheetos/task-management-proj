@@ -37,26 +37,43 @@ body {
     margin-bottom: 20px;
 }
 
+.header-content {
+    display: flex;
+    align-items: center;
+}
 .header h1 {
     margin: 0;
     font-size: 24px;
 }
 
 .header .add-task-btn {
-    /*font-size: 24px;
-    padding: 5px 10px;
-    cursor: pointer;
-    transition: color 0.3s;*/
         justify-content: flex-start;
         width: 150px;
         padding: 12px;
         border-radius: 12px;
         background-color: #ffffff3d;
         font-size: 20px;
+        margin-right: 50px;
 }
 
 .header .add-task:hover {
     color: #ffeb3b;
+}
+
+.progress {
+    width: 700px; /* Adjust width as needed */
+    height: 25px;
+    background-color: #e9ecef;
+    border-radius: 5px;
+    overflow: hidden;
+}
+
+.progress-bar {
+    background-color: #28a745;
+    text-align: center;
+    color: white;
+    white-space: nowrap;
+    padding: 0 10px;
 }
 .board {
     display: flex;
@@ -171,4 +188,15 @@ body {
     cursor: pointer;
     font-size: 14px;
     margin-left: 30px;
+}
+
+.header-filters {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+.filter {
+    padding: 5px 10px;
+    font-size: 14px;
 }

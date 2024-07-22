@@ -37,6 +37,7 @@ public class BoardController {
             boards = boardService.getAllDefaultBoards();
         } else {
             boards = boardService.findBoardsByUserId(currentUser.getId());
+            log.info("Found {} boards", boards);
         }
         model.addAttribute("userBoards", boards);
         model.addAttribute("currentUser", currentUser);

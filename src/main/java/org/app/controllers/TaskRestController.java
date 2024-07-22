@@ -1,5 +1,6 @@
 package org.app.controllers;
 
+import ch.qos.logback.core.model.Model;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.app.exceptions.BoardNotFoundException;
@@ -17,8 +18,15 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
 import java.time.LocalDate;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
+
+import static org.app.model.enums.Status.DONE;
 
 @Slf4j
 @Controller
@@ -92,13 +100,42 @@ public class TaskRestController {
 
 
     @GetMapping("/filter/priority")
-    public ResponseEntity<List<TodoTask>> getTaskByPriority(@RequestParam("priority") Priority priority) {
+    public String getTaskByPriority(@RequestParam("priority") Priority priority,
+                                            @RequestParam("userId") int userId,
+                                            RedirectAttributes redirectAttributes) {
         try {
-            return ResponseEntity.ok(taskService.getTaskByPriority(priority));
-        } catch (TaskNotFoundException exception) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            User currentUser = userService.getUserById(userId);
+            List<TodoTask> tasks = taskService.getTaskByPriority(priority);
+            redirectAttributes.addFlashAttribute("tasks", tasks);
+            redirectAttributes.addFlashAttribute("currentUser", currentUser);
+            redirectAttributes.addFlashAttribute("selectedPriority", priority);
+            return "redirect:/home";
+        } catch (UserNotFoundException | TaskNotFoundException exception) {
+//
         }
+        return "redirect:/home";
     }
+    @GetMapping("/filter/boardName")
+    public String getTasksByBoardName(@RequestParam(required = false) String boardName,
+                                      @RequestParam("userId") int userId,
+                                      RedirectAttributes redirectAttributes){
+        try{
+            User currentUser = userService.getCurrentUser();
+            List<Board> boards = boardService.findBoardsByUserId(currentUser.getId());
+            if (boardName != null && !boardName.isEmpty()) {
+                boards = boards.stream()
+                        .filter(board -> board.getBoardName().equals(boardName))
+                        .collect(Collectors.toList());
+            }
+            redirectAttributes.addFlashAttribute("userBoards", boards);
+            redirectAttributes.addFlashAttribute("currentUser", currentUser);
+            redirectAttributes.addFlashAttribute("selectedBoardName", boardName);
+        }catch (UserNotFoundException exception){
+            //
+        }
+        return "redirect:/home";
+    }
+
 
     @GetMapping("/filter/deadline")
     public ResponseEntity<List<TodoTask>> getTaskByDeadline(@RequestParam("deadline") LocalDate deadline) {
@@ -110,9 +147,20 @@ public class TaskRestController {
     }
 
     @GetMapping("/filter/status")
-    public ResponseEntity<List<TodoTask>> getTaskByStatus(@RequestParam("status") String status) {
+    public ResponseEntity<Map<String, Integer>> getTaskByStatus() {
         try {
-            return ResponseEntity.ok(taskService.getTaskByStatus(Status.valueOf(status)));
+            List<TodoTask> allTasks = taskService.getAllTasks();
+            List<TodoTask> doneTasks = taskService.getTaskByStatus(Status.DONE);
+            int totalTasks = allTasks.size();
+            int completedTasks = doneTasks.size();
+            int progressPercentage = (completedTasks/totalTasks) * 100;
+
+            Map<String, Integer> progressData = new HashMap<>();
+            progressData.put("completed", progressPercentage);
+            progressData.put("totalTasks", totalTasks);
+            progressData.put("completedTasks", completedTasks);
+            return ResponseEntity.ok(progressData);
+
         } catch (TaskNotFoundException exception) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }

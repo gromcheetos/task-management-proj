@@ -37,14 +37,19 @@ public class MockData {
         userService.createUser(defaultUser, "pass");
 
         List<Board> boards = new ArrayList<>();
-        for (Status status : Status.values()) {
-            Board board = new Board();
-            board.setBoardName(status.toString());
-            board.setDescription("This is a " + status.toString().toLowerCase() + " board.");
-            board.setUser(mockUser);
 
+        for (Status status : Status.values()) {
             List<TodoTask> tasks = createTasksForBoard(status);
-            board.setTasks(tasks);
+
+            Board board = Board.builder()
+                .boardName(status.getValue())
+                .description("This is a " + status.toString().toLowerCase() + " board.")
+                .isDefault(false)
+                .user(mockUser)
+                .status(status)
+                .tasks(tasks)
+                .build();
+
             for (TodoTask task : tasks) {
                 task.setBoard(board);
             }
