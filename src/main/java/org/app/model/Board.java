@@ -10,6 +10,7 @@ import org.app.model.enums.Status;
 @Entity
 @Data
 @AllArgsConstructor
+@Builder
 public class Board {
 
     @Id
@@ -31,19 +32,24 @@ public class Board {
 
     public Board() {
         this.isDefault = true;
-        this.description = "";
+        this.description = "This is a to_do board.";
         this.boardName = Status.TO_DO.getValue();
-    }
-
-    public Board(int boardId, String boardName, String description) {
-        this.boardId = boardId;
-        this.boardName = boardName;
-        this.description = description;
+        this.status = Status.TO_DO;
     }
 
     public Board(String boardName, String description) {
         this.boardName = boardName;
         this.description = description;
+    }
+
+    public Board(String boardName, String description, boolean isDefault,
+        Status status, List<TodoTask> tasks, User user) {
+        this.boardName = boardName;
+        this.description = description;
+        this.isDefault = isDefault;
+        this.status = status;
+        this.tasks = tasks;
+        this.user = user;
     }
 
     @Override
