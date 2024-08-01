@@ -1,5 +1,6 @@
 package org.app.controllers;
 
+import ch.qos.logback.core.model.Model;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.app.exceptions.BoardNotFoundException;
@@ -25,6 +26,7 @@ import java.util.List;
 import java.time.LocalDate;
 import java.util.stream.Collectors;
 import static org.app.model.enums.Status.DONE;
+
 
 @Slf4j
 @Controller

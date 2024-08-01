@@ -78,19 +78,20 @@
     </div>
 <div th:replace="~{fragments/addtask-fragment :: addtask}"></div>
 
+
 <script>
-    document.addEventListener('DOMContentLoaded', (event) => {
-        const addTaskButton = document.getElementById('add-task-btn');
-        const addTaskModal = document.getElementsByClassName('addTaskModal');
-        const deleteButtons = document.querySelectorAll('.delete-board-btn');
+  document.addEventListener('DOMContentLoaded', (event) => {
+    const addTaskButton = document.getElementById('add-task-btn');
+    const addTaskModal = document.getElementsByClassName('addTaskModal');
+    const deleteButtons = document.querySelectorAll('.delete-board-btn');
 
-        $(document).ready(function () {
-            $('#addTaskModal').modal('hide');
+    $(document).ready(function () {
+      $('#addTaskModal').modal('hide');
 
-            $('.add-task-btn').click(function () {
-                $('#addTaskModal').modal('show');
-            });
-        });
+      $('.add-task-btn').click(function () {
+        $('#addTaskModal').modal('show');
+      });
+    });
 
 });
 

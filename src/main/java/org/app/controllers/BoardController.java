@@ -5,9 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.app.exceptions.BoardNotFoundException;
 import org.app.exceptions.UserNotFoundException;
 import org.app.model.Board;
-import org.app.model.TodoTask;
 import org.app.model.User;
-import org.app.model.enums.Status;
 import org.app.service.BoardService;
 import org.app.service.UserService;
 import org.springframework.http.HttpStatus;
@@ -17,12 +15,14 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import java.util.List;
 
 @Controller
 @Slf4j
 @AllArgsConstructor
+@RequestMapping("/board")
 public class BoardController {
 
     private final BoardService boardService;
@@ -54,6 +54,7 @@ public class BoardController {
     }
 
     @PostMapping("/board/create")
+    @PostMapping("/create")
     public ResponseEntity<Board> createBoard(@RequestParam("boarName") String boardName,
         @RequestParam("description") String description) {
         try {
@@ -66,7 +67,7 @@ public class BoardController {
         }
     }
 
-    @PostMapping("/board/update")
+    @PostMapping("/update")
     public ResponseEntity<Board> updateBoard(
         @RequestParam("boardId") Integer boardId,
         @RequestParam("boarName") String boardName,
@@ -79,7 +80,7 @@ public class BoardController {
         }
     }
 
-    @PostMapping("/board/delete/{id}")
+    @PostMapping("/delete/{id}")
     public String deleteBoard(@PathVariable("id") Integer boardId) {
         try {
             User currentUser = userService.getCurrentUser();

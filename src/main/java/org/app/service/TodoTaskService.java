@@ -76,4 +76,11 @@ public class TodoTaskService {
         return taskRepository.count();
    }
 
+    public List<TodoTask> getTodosByStatuses(List<Status> statuses) {
+        if (statuses == null || statuses.isEmpty()) {
+            return (List<TodoTask>) taskRepository.findAll();
+        }
+        return taskRepository.findByStatusIn(statuses);
+    }
+
 }
