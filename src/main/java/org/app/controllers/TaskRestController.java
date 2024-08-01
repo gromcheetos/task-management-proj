@@ -1,6 +1,5 @@
 package org.app.controllers;
 
-import ch.qos.logback.core.model.Model;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.app.exceptions.BoardNotFoundException;
@@ -19,13 +18,12 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-
-import java.time.LocalDate;
-import java.util.HashMap;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.stereotype.Controller;
 import java.util.List;
-import java.util.Map;
+import java.time.LocalDate;
 import java.util.stream.Collectors;
-
 import static org.app.model.enums.Status.DONE;
 
 @Slf4j
@@ -146,25 +144,33 @@ public class TaskRestController {
         }
     }
 
-    @GetMapping("/filter/status")
-    public ResponseEntity<Map<String, Integer>> getTaskByStatus() {
+   /* @GetMapping("/filter/completed")
+    public String getTaskByStatus(Model model) throws UserNotFoundException {
+        int completedTasks = 0;
+        int totalTasks = 0;
+
         try {
-            List<TodoTask> allTasks = taskService.getAllTasks();
-            List<TodoTask> doneTasks = taskService.getTaskByStatus(Status.DONE);
-            int totalTasks = allTasks.size();
-            int completedTasks = doneTasks.size();
-            int progressPercentage = (completedTasks/totalTasks) * 100;
+            User currentUser = userService.getCurrentUser();
+            List<TodoTask> allTasks = userService.getTasksByUserId(currentUser.getId());
+            List<TodoTask> doneTasks = allTasks.stream()
+                    .filter(task -> task.getStatus() == Status.DONE)
+                    .toList();
+            totalTasks = allTasks.size();
+            completedTasks = doneTasks.size();
 
-            Map<String, Integer> progressData = new HashMap<>();
-            progressData.put("completed", progressPercentage);
-            progressData.put("totalTasks", totalTasks);
-            progressData.put("completedTasks", completedTasks);
-            return ResponseEntity.ok(progressData);
+            log.info("Total Tasks: " + totalTasks);
+            log.info("Completed Tasks: " + completedTasks);
 
-        } catch (TaskNotFoundException exception) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        } catch (Exception exception) {
+            log.error("An error occurred while calculating task completion percentage", exception);
         }
-    }
+
+        model.addAttribute("totalTasks", totalTasks);
+        model.addAttribute("completedTasks", completedTasks);
+
+        return "home";
+    }*/
+
 
     @GetMapping("/filter/user")
     public ResponseEntity<List<TodoTask>> getAllTasksByUserId(@RequestParam("userId") int userId) {

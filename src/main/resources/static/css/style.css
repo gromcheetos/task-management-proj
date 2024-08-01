@@ -30,38 +30,60 @@ body {
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     margin: 10px;
 }
+
 .header {
     display: flex;
-    justify-content: space-between;
-    align-items: center;
+    flex-direction: column;
     margin-bottom: 20px;
 }
 
 .header-content {
     display: flex;
-    align-items: center;
+    flex-direction: column; /* Stack the content vertically */
+    align-items: flex-start;
+    width: 100%;
 }
+
 .header h1 {
     margin: 0;
     font-size: 24px;
 }
 
+.button-and-progress-container {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap; /* Allow wrapping on smaller screens */
+    margin-bottom: 10px; /* Space between button/progress and filters */
+}
+
 .header .add-task-btn {
-        justify-content: flex-start;
         width: 150px;
         padding: 12px;
         border-radius: 12px;
         background-color: #ffffff3d;
         font-size: 20px;
-        margin-right: 50px;
+        margin-right: 20px; /* Space between button and progress container */
+        box-sizing: border-box;
 }
 
 .header .add-task:hover {
     color: #ffeb3b;
 }
+.progress-container {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    margin-top: 10px;
+}
 
+.progress-label {
+    font-size: 16px;
+    font-weight: bold;
+    margin-bottom: 5px;
+    color: #333;
+}
 .progress {
-    width: 700px; /* Adjust width as needed */
+    width: 700px;
     height: 25px;
     background-color: #e9ecef;
     border-radius: 5px;
@@ -74,6 +96,52 @@ body {
     color: white;
     white-space: nowrap;
     padding: 0 10px;
+}
+
+.column-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+
+.header-filters {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 10px; /* Space between progress bar and filters */
+    width: 100%;
+}
+
+.filter {
+    padding: 5px 10px;
+    font-size: 14px;
+    flex-grow: 1; /* Allow filters to take up available space */
+    min-width: 150px; /* Minimum width for each filter */
+}
+@media screen and (max-width: 768px) {
+    .button-and-progress-container {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .progress-container {
+        width: 100%;
+    }
+
+    .add-task-btn {
+        width: 100%;
+        margin-bottom: 30px; /* Space between button and progress bar */
+    }
+
+    .header-filters {
+        flex-direction: column;
+    }
+
+    .filter {
+        width: 100%;
+    }
 }
 .board {
     display: flex;
@@ -105,12 +173,6 @@ body {
     margin-bottom: 20px;
 }
 
-.column-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 10px;
-}
 
 .delete-board-btn {
     padding: 2px 8px;
@@ -188,15 +250,4 @@ body {
     cursor: pointer;
     font-size: 14px;
     margin-left: 30px;
-}
-
-.header-filters {
-    display: flex;
-    gap: 10px;
-    margin-bottom: 20px;
-}
-
-.filter {
-    padding: 5px 10px;
-    font-size: 14px;
 }

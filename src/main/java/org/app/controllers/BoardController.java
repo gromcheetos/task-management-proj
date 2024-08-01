@@ -5,7 +5,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.app.exceptions.BoardNotFoundException;
 import org.app.exceptions.UserNotFoundException;
 import org.app.model.Board;
+import org.app.model.TodoTask;
 import org.app.model.User;
+import org.app.model.enums.Status;
 import org.app.service.BoardService;
 import org.app.service.UserService;
 import org.springframework.http.HttpStatus;
@@ -31,17 +33,23 @@ public class BoardController {
 
         User currentUser = userService.getCurrentUser();
         List<Board> boards;
-
+        int completedTasks = 0;
+        int totalTasks = 0;
         if (currentUser.getBoards().isEmpty()) {
-            log.info("No boards found, loading a default board");
             boards = boardService.getAllDefaultBoards();
         } else {
             boards = boardService.findBoardsByUserId(currentUser.getId());
-            log.info("Found {} boards", boards);
+            List<TodoTask> allTasks = userService.getTasksByUserId(currentUser.getId());
+            List<TodoTask> doneTasks = allTasks.stream()
+                    .filter(task -> task.getStatus() == Status.DONE)
+                    .toList();
+            totalTasks = allTasks.size();
+            completedTasks = doneTasks.size();
         }
         model.addAttribute("userBoards", boards);
         model.addAttribute("currentUser", currentUser);
-
+        model.addAttribute("totalTasks", totalTasks);
+        model.addAttribute("completedTasks", completedTasks);
         return "home";
     }
 
