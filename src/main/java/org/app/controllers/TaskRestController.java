@@ -1,6 +1,5 @@
 package org.app.controllers;
 
-import ch.qos.logback.core.model.Model;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.app.exceptions.BoardNotFoundException;
@@ -18,7 +17,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import java.util.List;
 import java.time.LocalDate;
@@ -97,42 +96,23 @@ public class TaskRestController {
 
 
     @GetMapping("/filter/priority")
-    public String getTaskByPriority(@RequestParam("priority") Priority priority,
-                                            @RequestParam("userId") int userId,
-                                            RedirectAttributes redirectAttributes) {
-        try {
-            User currentUser = userService.getUserById(userId);
-            List<TodoTask> tasks = taskService.getTaskByPriority(priority);
-            redirectAttributes.addFlashAttribute("tasks", tasks);
-            redirectAttributes.addFlashAttribute("currentUser", currentUser);
-            redirectAttributes.addFlashAttribute("selectedPriority", priority);
-            return "redirect:/home";
-        } catch (UserNotFoundException | TaskNotFoundException exception) {
-//
-        }
-        return "redirect:/home";
-    }
-    @GetMapping("/filter/boardName")
-    public String getTasksByBoardName(@RequestParam(required = false) String boardName,
-                                      @RequestParam("userId") int userId,
-                                      RedirectAttributes redirectAttributes){
-        try{
-            User currentUser = userService.getCurrentUser();
-            List<Board> boards = boardService.findBoardsByUserId(currentUser.getId());
-            if (boardName != null && !boardName.isEmpty()) {
-                boards = boards.stream()
-                        .filter(board -> board.getBoardName().equals(boardName))
-                        .collect(Collectors.toList());
-            }
-            redirectAttributes.addFlashAttribute("userBoards", boards);
-            redirectAttributes.addFlashAttribute("currentUser", currentUser);
-            redirectAttributes.addFlashAttribute("selectedBoardName", boardName);
-        }catch (UserNotFoundException exception){
-            //
-        }
-        return "redirect:/home";
-    }
+    public String getTaskByPriority(@RequestParam("priority") List<String> priority,
+                                            @RequestParam("userId") Integer userId,
+                                            Model model) throws UserNotFoundException {
+        List<TodoTask> tasks = userService.getTasksByUserId(userId);
+        List<TodoTask> filteredTasks;
 
+        if (priority.contains("all")) {
+            filteredTasks = tasks;
+        } else {
+            filteredTasks = tasks.stream()
+                    .filter(task -> priority.contains(task.getPriority().name()))
+                    .collect(Collectors.toList());
+        }
+        model.addAttribute("userBoards", filteredTasks);
+
+        return "home :: #boardList";
+    }
 
     @GetMapping("/filter/deadline")
     public ResponseEntity<List<TodoTask>> getTaskByDeadline(@RequestParam("deadline") LocalDate deadline) {
@@ -142,34 +122,6 @@ public class TaskRestController {
             return ResponseEntity.notFound().build();
         }
     }
-
-   /* @GetMapping("/filter/completed")
-    public String getTaskByStatus(Model model) throws UserNotFoundException {
-        int completedTasks = 0;
-        int totalTasks = 0;
-
-        try {
-            User currentUser = userService.getCurrentUser();
-            List<TodoTask> allTasks = userService.getTasksByUserId(currentUser.getId());
-            List<TodoTask> doneTasks = allTasks.stream()
-                    .filter(task -> task.getStatus() == Status.DONE)
-                    .toList();
-            totalTasks = allTasks.size();
-            completedTasks = doneTasks.size();
-
-            log.info("Total Tasks: " + totalTasks);
-            log.info("Completed Tasks: " + completedTasks);
-
-        } catch (Exception exception) {
-            log.error("An error occurred while calculating task completion percentage", exception);
-        }
-
-        model.addAttribute("totalTasks", totalTasks);
-        model.addAttribute("completedTasks", completedTasks);
-
-        return "home";
-    }*/
-
 
     @GetMapping("/filter/user")
     public ResponseEntity<List<TodoTask>> getAllTasksByUserId(@RequestParam("userId") int userId) {

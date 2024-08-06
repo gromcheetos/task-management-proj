@@ -70,7 +70,7 @@ public class BoardService {
         userRepository.save(user);
     }
 
-    public List<Board> filterBoardTasksByStatuses(List<Status> statuses, Integer userId) {
+    public List<Board> filterBoardTasksByStatuses(List<Status> statuses, int userId) {
         List<Board> allBoards = findBoardsByUserId(userId);
 
         for (Board board : allBoards) {

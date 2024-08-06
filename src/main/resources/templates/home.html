@@ -30,27 +30,52 @@
                                 </div>
                             </div>
                             <div class="header-filters">
-                                <form th:action="@{/tasks/filter/boardName}" method="get" id="boardNameFilter">
-                                    <select name="boardName" class="filter" onchange="document.getElementById('boardNameFilter').submit()">
-                                        <option value="">All Boards</option>
-                                        <option th:each="board : ${userBoards}" th:value="${board.boardName}" th:text="${board.boardName}"></option>
-                                    </select>
-                                    <input type="hidden" id="userId-boardname" name="userId" th:value="${currentUser.id}">
-                                </form>
-                                <form th:action="@{/tasks/filter/priority}" method="get" id="priorityFilter">
-                                    <select name="priority" class="filter" onchange="document.getElementById('priorityFilter').submit()">
-                                        <option value="">All Priorities</option>
-                                        <option value="HIGH">High</option>
-                                        <option value="MEDIUM">Medium</option>
-                                        <option value="LOW">Low</option>
-                                    </select>
+                                <form th:action="@{/board/filter/boardName}" method="get" id="boardNameFilter">
+                                    <div class="custom-dropdown">
+                                        <button type="button" class="dropdown-toggle" onclick="toggleDropdown('boardDropdown')">
+                                            Select Board Category
+                                        </button>
+                                        <div id="boardDropdown" class="dropdown-content">
+                                            <label>
+                                                <input type="checkbox" name="boardName" value="all" > All Boards
+                                            </label>
+                                            <div th:each="board : ${userBoards}">
+                                                <label>
+                                                    <input type="checkbox" name="boardName" th:value="${board.boardName}"
+                                                           th:checked="${selectedBoardNames != null and selectedBoardNames.contains(board.boardName)}">
+                                                    <span th:text="${board.boardName}"></span>
+                                                </label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="custom-dropdown">
+                                        <button type="button" class="dropdown-toggle" onclick="toggleDropdown('priorityDropdown')">
+                                            Select Priority
+                                        </button>
+                                        <div id="priorityDropdown" class="dropdown-content">
+                                            <label>
+                                                <input type="checkbox" name="priority" value="all"> All Priorities
+                                            </label>
+                                            <label>
+                                                <input type="checkbox" name="priority" value="HIGH"> High
+                                            </label>
+                                            <label>
+                                                <input type="checkbox" name="priority" value="MEDIUM"> Medium
+                                            </label>
+                                            <label>
+                                                <input type="checkbox" name="priority" value="LOW"> Low
+                                            </label>
+                                        </div>
+                                    </div>
+
                                     <input type="hidden" id="userId" name="userId" th:value="${currentUser.id}">
+                                    <button type="submit">Go</button>
                                 </form>
                             </div>
                         </div>
                     </div>
 
-                    <div class="board">
+                    <div class="board" id="boardList" th:fragment="boardList">
                         <div class="column" th:each="board : ${userBoards}">
                             <div class="column-header">
                                 <h3 th:text="${board.boardName}"></h3>
@@ -80,20 +105,154 @@
 
 
 <script>
-  document.addEventListener('DOMContentLoaded', (event) => {
-    const addTaskButton = document.getElementById('add-task-btn');
-    const addTaskModal = document.getElementsByClassName('addTaskModal');
-    const deleteButtons = document.querySelectorAll('.delete-board-btn');
+    document.addEventListener('DOMContentLoaded', (event) => {
+       $(document).ready(function () {
+         $('#addTaskModal').modal('hide');
 
-    $(document).ready(function () {
-      $('#addTaskModal').modal('hide');
+         $('.add-task-btn').click(function () {
+           $('#addTaskModal').modal('show');
+         });
+       });
 
-      $('.add-task-btn').click(function () {
-        $('#addTaskModal').modal('show');
-      });
-    });
+       });
+       function toggleDropdown(dropdownId) {
+           var dropdown = document.getElementById(dropdownId);
+           dropdown.classList.toggle('show');
+       }
 
-});
+       window.onclick = function(event) {
+           if (!event.target.closest('.custom-dropdown')) {
+               var dropdowns = document.getElementsByClassName("dropdown-content");
+               for (var i = 0; i < dropdowns.length; i++) {
+                   var openDropdown = dropdowns[i];
+                   if (openDropdown.classList.contains('show')) {
+                       openDropdown.classList.remove('show');
+                   }
+               }
+           }
+       }
+
+        // When a user checks All Boards, undo other option.
+       const allBoardsCheckbox = document.querySelector("input[name='boardName'][value='all']");
+       const boardNameCheckboxes = document.querySelectorAll("input[name='boardName']:not([value='all'])");
+
+       if (allBoardsCheckbox) {
+           allBoardsCheckbox.addEventListener('change', function () {
+               if (this.checked) {
+                   boardNameCheckboxes.forEach(checkbox => checkbox.checked = false);
+               }
+           });
+       }
+       boardNameCheckboxes.forEach(checkbox => {
+           checkbox.addEventListener('change', function () {
+               if (this.checked) {
+                   allBoardsCheckbox.checked = false;
+               }
+           });
+       });
+
+        // When a user checks All Priorities, undo other option.
+       const allTasksCheckbox = document.querySelector("input[name='priority'][value='all']");
+       const priorityCheckboxes = document.querySelectorAll("input[name='priority']:not([value='all'])");
+
+       if (allTasksCheckbox) {
+           allTasksCheckbox.addEventListener('change', function () {
+               if (this.checked) {
+                   priorityCheckboxes.forEach(checkbox => checkbox.checked = false);
+               }
+           });
+       }
+       priorityCheckboxes.forEach(checkbox => {
+           checkbox.addEventListener('change', function () {
+               if (this.checked) {
+                   allTasksCheckbox.checked = false;
+               }
+           });
+       });
+
+   document.getElementById("boardNameFilter").addEventListener("submit", function(event) {
+       event.preventDefault();
+       filterBoards();
+   });
+
+       function filterBoards() {
+       const allBoardsCheckbox = document.querySelector("input[name='boardName'][value='all']");
+       let boardNames = [];
+
+       if (allBoardsCheckbox && allBoardsCheckbox.checked) {
+           boardNames.push("all");
+       } else {
+           const boardNameInputs = document.querySelectorAll("input[name='boardName']:checked");
+           boardNames = Array.from(boardNameInputs).map(input => input.value);
+       }
+
+        const userId = document.getElementById("userId").value;
+
+        const params = new URLSearchParams();
+        boardNames.forEach(name => params.append("boardName", name));
+        params.append("userId", userId);
+
+        fetch(`/board/filter/boardName?${params.toString()}`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'text/html'
+            }
+        })
+        .then(response => {
+            if (response.ok) {
+                return response.text();
+            }
+            throw new Error('Network response was not ok.');
+        })
+        .then(html => {
+            document.getElementById('boardList').innerHTML = html;
+        })
+        .catch(error => {
+            console.error('There was a problem with the fetch operation:', error);
+        });
+    }
+    //priority
+       document.getElementById("boardNameFilter").addEventListener("submit", function(event) {
+       event.preventDefault();
+       filterBoards();
+   });
+
+       function filterBoards() {
+       const allBoardsCheckbox = document.querySelector("input[name='boardName'][value='all']");
+       let boardNames = [];
+
+       if (allBoardsCheckbox && allBoardsCheckbox.checked) {
+           boardNames.push("all");
+       } else {
+           const boardNameInputs = document.querySelectorAll("input[name='boardName']:checked");
+           boardNames = Array.from(boardNameInputs).map(input => input.value);
+       }
+
+        const userId = document.getElementById("userId").value;
+
+        const params = new URLSearchParams();
+        boardNames.forEach(name => params.append("boardName", name));
+        params.append("userId", userId);
+
+        fetch(`/board/filter/boardName?${params.toString()}`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'text/html'
+            }
+        })
+        .then(response => {
+            if (response.ok) {
+                return response.text();
+            }
+            throw new Error('Network response was not ok.');
+        })
+        .then(html => {
+            document.getElementById('boardList').innerHTML = html;
+        })
+        .catch(error => {
+            console.error('There was a problem with the fetch operation:', error);
+        });
+    }
 
 </script>
 </body>
