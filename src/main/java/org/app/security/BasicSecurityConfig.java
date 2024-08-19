@@ -21,7 +21,7 @@ public class BasicSecurityConfig {
         httpSecurity
             .csrf(csrf -> csrf.disable())
             .authorizeHttpRequests(auth -> auth
-                .requestMatchers("/signup","/users/**", "/home", "/css/**", "/js/**", "/images/**", "/tasks/**", "/boards/**")
+                .requestMatchers("/signup","/users/**", "/home", "/css/**", "/js/**", "/images/**")
                 .permitAll()
                 .anyRequest().authenticated()
             )

@@ -94,26 +94,6 @@ public class TaskRestController {
         return "redirect:/home";
     }
 
-
-    @GetMapping("/filter/priority")
-    public String getTaskByPriority(@RequestParam("priority") List<String> priority,
-                                            @RequestParam("userId") Integer userId,
-                                            Model model) throws UserNotFoundException {
-        List<TodoTask> tasks = userService.getTasksByUserId(userId);
-        List<TodoTask> filteredTasks;
-
-        if (priority.contains("all")) {
-            filteredTasks = tasks;
-        } else {
-            filteredTasks = tasks.stream()
-                    .filter(task -> priority.contains(task.getPriority().name()))
-                    .collect(Collectors.toList());
-        }
-        model.addAttribute("userBoards", filteredTasks);
-
-        return "home :: #boardList";
-    }
-
     @GetMapping("/filter/deadline")
     public ResponseEntity<List<TodoTask>> getTaskByDeadline(@RequestParam("deadline") LocalDate deadline) {
         try {

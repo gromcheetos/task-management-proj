@@ -5,6 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.app.exceptions.BoardNotFoundException;
 import org.app.exceptions.UserNotFoundException;
 import org.app.model.Board;
+import org.app.model.TodoTask;
 import org.app.model.User;
 import org.app.service.BoardService;
 import org.app.service.UserService;
@@ -16,7 +17,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import java.util.List;
+
+import java.util.*;
 import java.util.stream.Collectors;
 import org.springframework.ui.Model;
 
@@ -56,25 +58,43 @@ public class BoardController {
         }
     }
 
-    @GetMapping("/filter/boardName")
-    public String filterByBoardName(@RequestParam("boardName") List<String> boardNames,
-                                    @RequestParam("userId") int userId,
-                                    Model model) throws UserNotFoundException {
+   @GetMapping("/filter")
+   public String boardsByNameAndPriority(@RequestParam(value = "boardName", required = false) List<String> boardNames,
+                                         @RequestParam(value = "priority", required = false) List<String> priorities,
+                                         @RequestParam("userId") Integer userId,
+                                         Model model) throws UserNotFoundException {
 
-            User currentUser = userService.getCurrentUser();
-            List<Board> boards = boardService.findBoardsByUserId(currentUser.getId());
-            List<Board> filteredBoards;
+       List<Board> boards = boardService.findBoardsByUserId(userId);
+       List<TodoTask> tasks = userService.getTasksByUserId(userId);
+       List<Board> boardForFilteredTasks = new ArrayList<>();
+       // Filter boards by name if specified
+       List<Board> filteredBoards = (boardNames != null && !boardNames.contains("all"))
+               ? boards.stream()
+               .filter(board -> boardNames.contains(board.getBoardName()))
+               .collect(Collectors.toList())
+               : boards;
 
-            if (boardNames.contains("all")) {
-                filteredBoards = boards;
-            } else {
-                filteredBoards = boards.stream()
-                        .filter(board -> boardNames.contains(board.getBoardName()))
-                        .collect(Collectors.toList());
-            }
-            model.addAttribute("userBoards", filteredBoards);
-            return "home :: #boardList";
-        }
+       // Filter tasks by priority if specified
+       List<TodoTask> filteredTasks = (priorities != null && !priorities.contains("all"))
+               ? tasks.stream()
+               .filter(task -> priorities.contains(task.getPriority().name()))
+               .collect(Collectors.toList())
+               : tasks;
+       if (priorities != null && !priorities.contains("all")) {
+           Map<Integer, List<TodoTask>> tasksByBoardId = tasks.stream()
+                   .filter(task -> priorities.contains(task.getPriority().name()))
+                   .collect(Collectors.groupingBy(TodoTask::getBoardId));
+
+           filteredBoards = filteredBoards.stream()
+                   .peek(board -> board.setTasks(tasksByBoardId.getOrDefault(board.getBoardId(), Collections.emptyList())))
+                   .filter(board -> !board.getTasks().isEmpty()) // Remove boards with no tasks after filtering
+                   .collect(Collectors.toList());
+       }
+
+       model.addAttribute("userBoards", filteredBoards);
+
+       return "home :: #boardList";
+   }
 
 
 

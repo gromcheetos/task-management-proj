@@ -52,6 +52,9 @@ public class TodoTask {
         this.deadline = deadline;
         this.status = status;
     }
+    public int getBoardId() {
+        return board != null ? board.getBoardId() : null;
+    }
 
     @Override
     public String toString() {
