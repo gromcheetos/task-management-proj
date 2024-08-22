@@ -35,7 +35,7 @@ public class TodoController {
     public String searchTasks(Model model, String keyword) throws TaskNotFoundException {
 
         if(keyword != null){
-            model.addAttribute("userBoards", todoService.getTasksByTitle(keyword));
+            model.addAttribute("userBoards", todoService.findTasksByTitle(keyword));
         }else{
             model.addAttribute("userBoards", todoService.getAllTasks());
         }
