@@ -5,7 +5,9 @@ import java.util.List;
 import org.app.model.TodoTask;
 import org.app.model.enums.Priority;
 import org.app.model.enums.Status;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 @Repository
@@ -16,4 +18,6 @@ public interface TaskRepository extends CrudRepository<TodoTask, Integer> {
     List<TodoTask> findByStatus(Status status);
     List<TodoTask> findTodoTaskByUserId(int id);
     List<TodoTask> findByStatusIn(List<Status> statuses);
+
+    List<TodoTask> findByKeyword(@Param("Keyword") String keyword);
 }

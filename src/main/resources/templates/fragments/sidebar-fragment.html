@@ -1,28 +1,52 @@
 <!DOCTYPE html>
 <html lang="en"
-      xmlns:sec="http://www.thymeleaf.org/extras/spring-security" xmlns:th="http://www.thymeleaf.org">
-<head th:replace="fragments/header-fragment :: head"></head>
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security" xmlns:th="http://www.thymeleaf.org"
+      xmlns:javascript="http://www.w3.org/1999/xhtml">
+<head th:replace="~{fragments/header-fragment.html :: head}">
+<body><
 <div th:fragment="sidebar" class="sidebar">
     <div class="sidebar">
         <div class="sidebar-menu">
             <a sec:authorize="isAuthenticated()">Board</a>
             <ul sec:authorize="isAuthenticated()">
-                <li>Add new board</li>
+                <li>
+                    <a id="add-board-btn" class="add-board-btn" data-toggle="modal" data-target="#addBoardModal" >
+                        Add new board
+                    </a>
+                </li>
                 <li>Setting</li>
                 <li>Goals</li>
             </ul>
             <a sec:authorize="isAuthenticated()">Work Space</a>
+            <ul sec:authorize="isAuthenticated()">
+                <li>
+                    <a>
+                        Add new project
+                    </a>
+                </li>
+                <li>Setting</li>
+            </ul>
             <a sec:authorize="isAuthenticated()">My page</a>
             <a th:href="@{/signup}" sec:authorize="isAnonymous()">
                 Sign up</a>
             <a th:href="@{/users/login}" sec:authorize="!isAuthenticated()">
                 Log in</a>
-            <form th:action="@{/users/logout}" method="post" sec:authorize="isAuthenticated()">
-                <input hidden type="submit" value="Log out"/>
-                <a th:href="@{/users/logout}">Log out</a>
-            </form>
 
             </div>
         </div>
     </div>
+
+<div th:replace="~{fragments/addboard-fragment :: addboard}"></div>
+
+<script>
+        $(document).ready(function () {
+            $('#addBoardModal').modal('hide');
+
+            $('.add-board-btn').click(function () {
+                $('#addBoardModal').modal('show');
+            });
+        });
+
+</script>
+</body>
 </html>

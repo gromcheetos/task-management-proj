@@ -1,5 +1,7 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="en"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security" xmlns:th="http://www.thymeleaf.org"
+      xmlns:javascript="http://www.w3.org/1999/xhtml">
 <head th:replace="fragments/header-fragment.html :: head"></head>
 <body>
 <div class="navbar" th:fragment="navigation">
@@ -7,13 +9,31 @@
     <button class="menu-button">☰</button>
     <h1>Task Management</h1>
   </div>
-  <div class="navbar-center">
-    <input type="text" placeholder="Search...">
-  </div>
-  <div class="navbar-right">
-    <button class="add-task">+</button>
-    <img src="/images/profile.png" alt="Profile Photo" class="profile-photo">
+
+  <form action="#" th:action="@{/search}" method="get">
+    <div class="navbar-center">
+      <div class="search-container">
+        <input type="text" name="keyword" placeholder="Search...">
+        <button type="submit" class="btn btn-info">Go</button>
+      </div>
+    </div>
+  </form>
+
+
+    <div class="navbar-right">
+    <img src="/images/profile.png" alt="Profile Photo" class="profile-photo" id="profileImage">
   </div>
 </div>
+
+<div id="slideMenu" class="slide-menu">
+  <a href="javascript:void(0)" class="close-btn" id="closeBtn">&times;</a>
+  <a href="#">Profile</a>
+  <a href="#">My Page</a>
+  <form th:action="@{/users/logout}" method="post" sec:authorize="isAuthenticated()">
+    <input hidden type="submit" value="Log out"/>
+    <a th:href="@{/users/logout}">Log out</a>
+  </form>
+</div>
+
 </body>
 </html>

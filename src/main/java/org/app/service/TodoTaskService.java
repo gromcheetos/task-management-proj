@@ -82,5 +82,9 @@ public class TodoTaskService {
         }
         return taskRepository.findByStatusIn(statuses);
     }
+    //get task by keyword
+    public List<TodoTask> findByKeyword(String keyword){
+        return taskRepository.findByKeyword(keyword);
+    }
 
 }

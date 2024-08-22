@@ -32,29 +32,26 @@ public class HomePageController {
     @GetMapping
     public String getUserBoards(Model model, @RequestParam(required = false) List<Status> statuses)
         throws UserNotFoundException {
-
         User currentUser = userService.getCurrentUser();
         List<Board> boards;
-
+        int completedTasks = 0;
+        int totalTasks = 0;
         if (currentUser.getBoards().isEmpty()) {
-            log.info("No boards found, loading a default board");
             boards = boardService.getAllDefaultBoards();
         } else {
-
-            if (statuses != null) {
-                boards = boardService.filterBoardTasksByStatuses(statuses, currentUser.getId());
-            } else {
-                boards = boardService.findBoardsByUserId(currentUser.getId());
-            }
-            log.info("Found {} boards", boards);
+            boards = boardService.findBoardsByUserId(currentUser.getId());
+            List<TodoTask> allTasks = userService.getTasksByUserId(currentUser.getId());
+            List<TodoTask> doneTasks = allTasks.stream()
+                    .filter(task -> task.getStatus() == Status.DONE)
+                    .toList();
+            totalTasks = allTasks.size();
+            completedTasks = doneTasks.size();
         }
-
         model.addAttribute("userBoards", boards);
         model.addAttribute("currentUser", currentUser);
-        model.addAttribute("statuses", Status.values());
-
+        model.addAttribute("totalTasks", totalTasks);
+        model.addAttribute("completedTasks", completedTasks);
         return "home";
     }
-
 
 }

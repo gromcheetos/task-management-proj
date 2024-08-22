@@ -7,7 +7,6 @@ body {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    /*background-color: #bfa9ea;*/
     background-color: #28587B;
     color: white;
     padding: 10px 20px;
@@ -68,4 +67,90 @@ body {
     height: 40px;
     border-radius: 50%;
     border: 2px solid white;
+    cursor: pointer;
+}
+
+/* Slide-In Menu Styling */
+.slide-menu {
+    height: 100%;
+    width: 0;
+    position: fixed;
+    z-index: 1;
+    top: 0;
+    right: 0;
+    background-color: #28587B;
+    overflow-x: hidden;
+    transition: 0.5s;
+    padding-top: 60px;
+    color: white;
+}
+
+.slide-menu a {
+    padding: 8px 8px 8px 32px;
+    text-decoration: none;
+    font-size: 25px;
+    color: #ffffff;
+    display: block;
+    transition: 0.3s;
+}
+
+.slide-menu a:hover {
+    background-color: #1F3A57;
+    color: #ffeb3b;
+}
+
+.slide-menu .close-btn {
+    position: absolute;
+    top: 20px;
+    right: 25px;
+    font-size: 36px;
+    margin-left: 50px;
+    color: #ffffff;
+}
+
+.slide-menu .close-btn:hover {
+    color: #ffeb3b;
+}
+
+/* When the slide-in menu is active (open) */
+.slide-menu.active {
+    width: 250px;
+}
+
+@media screen and (max-height: 450px) {
+  .slide-menu {padding-top: 15px;}
+  .slide-menu a {font-size: 18px;}
+}
+
+.navbar-center {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+}
+
+.search-container {
+    display: flex;
+    align-items: center;
+}
+
+.search-container input {
+    padding: 5px;
+    font-size: 16px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    margin-right: 5px; /* Space between input and button */
+}
+
+.search-container button {
+    padding: 5px 10px;
+    font-size: 16px;
+    border: none;
+    border-radius: 5px;
+    background-color: #17a2b8;
+    color: white;
+    cursor: pointer;
+}
+
+.search-container button:hover {
+    background-color: #138496;
 }

@@ -17,13 +17,12 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-
-import java.time.LocalDate;
-import java.util.HashMap;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
 import java.util.List;
-import java.util.Map;
+import java.time.LocalDate;
 import java.util.stream.Collectors;
+
 
 @Slf4j
 @Controller
@@ -95,71 +94,12 @@ public class TaskRestController {
         return "redirect:/home";
     }
 
-
-    @GetMapping("/filter/priority")
-    public String getTaskByPriority(@RequestParam("priority") Priority priority,
-                                            @RequestParam("userId") int userId,
-                                            RedirectAttributes redirectAttributes) {
-        try {
-            User currentUser = userService.getUserById(userId);
-            List<TodoTask> tasks = taskService.getTaskByPriority(priority);
-            redirectAttributes.addFlashAttribute("tasks", tasks);
-            redirectAttributes.addFlashAttribute("currentUser", currentUser);
-            redirectAttributes.addFlashAttribute("selectedPriority", priority);
-            return "redirect:/home";
-        } catch (UserNotFoundException | TaskNotFoundException exception) {
-//
-        }
-        return "redirect:/home";
-    }
-    @GetMapping("/filter/boardName")
-    public String getTasksByBoardName(@RequestParam(required = false) String boardName,
-                                      @RequestParam("userId") int userId,
-                                      RedirectAttributes redirectAttributes){
-        try{
-            User currentUser = userService.getCurrentUser();
-            List<Board> boards = boardService.findBoardsByUserId(currentUser.getId());
-            if (boardName != null && !boardName.isEmpty()) {
-                boards = boards.stream()
-                        .filter(board -> board.getBoardName().equals(boardName))
-                        .collect(Collectors.toList());
-            }
-            redirectAttributes.addFlashAttribute("userBoards", boards);
-            redirectAttributes.addFlashAttribute("currentUser", currentUser);
-            redirectAttributes.addFlashAttribute("selectedBoardName", boardName);
-        }catch (UserNotFoundException exception){
-            //
-        }
-        return "redirect:/home";
-    }
-
-
     @GetMapping("/filter/deadline")
     public ResponseEntity<List<TodoTask>> getTaskByDeadline(@RequestParam("deadline") LocalDate deadline) {
         try {
             return ResponseEntity.ok(taskService.getTaskByDeadline(deadline));
         } catch (TaskNotFoundException exception) {
             return ResponseEntity.notFound().build();
-        }
-    }
-
-    @GetMapping("/filter/completed")
-    public ResponseEntity<Map<String, Integer>> getTaskByStatusDone() {
-        try {
-            List<TodoTask> allTasks = taskService.getAllTasks();
-            List<TodoTask> doneTasks = taskService.getTaskByStatus(Status.DONE);
-            int totalTasks = allTasks.size();
-            int completedTasks = doneTasks.size();
-            int progressPercentage = (completedTasks/totalTasks) * 100;
-
-            Map<String, Integer> progressData = new HashMap<>();
-            progressData.put("completed", progressPercentage);
-            progressData.put("totalTasks", totalTasks);
-            progressData.put("completedTasks", completedTasks);
-            return ResponseEntity.ok(progressData);
-
-        } catch (TaskNotFoundException exception) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
 
