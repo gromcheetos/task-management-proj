@@ -8,6 +8,7 @@ import org.app.model.Board;
 import org.app.model.TodoTask;
 import org.app.model.User;
 import org.app.service.BoardService;
+import org.app.service.SearchService;
 import org.app.service.UserService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -31,6 +32,7 @@ public class BoardController {
 
     private final UserService userService;
     private final BoardService boardService;
+    private final SearchService searchService;
 
     @PostMapping("/create")
     public ResponseEntity<Board> createBoard(@RequestParam("boardName") String boardName,
@@ -66,20 +68,12 @@ public class BoardController {
 
        List<Board> boards = boardService.findBoardsByUserId(userId);
        List<TodoTask> tasks = userService.getTasksByUserId(userId);
-       List<Board> boardForFilteredTasks = new ArrayList<>();
        // Filter boards by name if specified
-       List<Board> filteredBoards = (boardNames != null && !boardNames.contains("all"))
-               ? boards.stream()
-               .filter(board -> boardNames.contains(board.getBoardName()))
-               .collect(Collectors.toList())
-               : boards;
+       List<Board> filteredBoards = searchService.filterBoardsByBoardNames(boardNames, boards);
 
        // Filter tasks by priority if specified
-       List<TodoTask> filteredTasks = (priorities != null && !priorities.contains("all"))
-               ? tasks.stream()
-               .filter(task -> priorities.contains(task.getPriority().name()))
-               .collect(Collectors.toList())
-               : tasks;
+       List<TodoTask> filteredTasks = searchService.filterTasksByPriority(priorities, tasks);
+
        if (priorities != null && !priorities.contains("all")) {
            Map<Integer, List<TodoTask>> tasksByBoardId = tasks.stream()
                    .filter(task -> priorities.contains(task.getPriority().name()))
@@ -95,7 +89,6 @@ public class BoardController {
 
        return "home :: #boardList";
    }
-
 
 
     @PostMapping("/delete/{id}")

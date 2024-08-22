@@ -18,6 +18,6 @@ public interface TaskRepository extends CrudRepository<TodoTask, Integer> {
     List<TodoTask> findByStatus(Status status);
     List<TodoTask> findTodoTaskByUserId(int id);
     List<TodoTask> findByStatusIn(List<Status> statuses);
-
-    List<TodoTask> findByKeyword(@Param("Keyword") String keyword);
+    List<TodoTask> findTodoTaskByTitle(String title);
 }
+

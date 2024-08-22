@@ -20,16 +20,19 @@ import org.springframework.stereotype.Service;
 @Service
 @AllArgsConstructor
 public class TodoTaskService {
+
     //@Autowired  creates and destroys objects for you, you don't need to instantiate them
     private final TaskRepository taskRepository;
 
-    private final  UserService userService;
+    private final UserService userService;
 
-    public TodoTask insertTask(TodoTask task){
+    public TodoTask insertTask(TodoTask task) {
         return taskRepository.save(task); //runs the insert into table todo_tasks values(...)
     }
+
     public TodoTask updateTask(Integer taskId, TodoTask todoTask) throws TaskNotFoundException {
-        TodoTask toUpdateTask = taskRepository.findById(taskId).orElseThrow(() -> new TaskNotFoundException("No Found Task"));
+        TodoTask toUpdateTask = taskRepository.findById(taskId)
+            .orElseThrow(() -> new TaskNotFoundException("No Found Task"));
         toUpdateTask.setTitle(todoTask.getTitle());
         toUpdateTask.setDescription(todoTask.getDescription());
         toUpdateTask.setDeadline(todoTask.getDeadline());
@@ -37,44 +40,50 @@ public class TodoTaskService {
         toUpdateTask.setStatus(todoTask.getStatus());
         return taskRepository.save(toUpdateTask);
     }
+
     public TodoTask getTaskById(Integer taskId) throws TaskNotFoundException {
         return taskRepository.findById(taskId).orElseThrow(() -> new TaskNotFoundException("No Found Task"));
     }
-    public List<TodoTask> getAllTasks(){
-        return (List<TodoTask>)taskRepository.findAll();
+
+    public List<TodoTask> getAllTasks() {
+        return (List<TodoTask>) taskRepository.findAll();
     }
-    public void deleteTaskById(Integer userId, Integer taskId)  throws TaskNotFoundException {
-        if(taskRepository.findById(taskId).isEmpty()){
+
+    public void deleteTaskById(Integer userId, Integer taskId) throws TaskNotFoundException {
+        if (taskRepository.findById(taskId).isEmpty()) {
             throw new TaskNotFoundException("No Found Task");
         }
         taskRepository.deleteById(taskId);
 
     }
 
-    public List<TodoTask> getTaskByPriority(Priority priority) throws TaskNotFoundException{
+    public List<TodoTask> getTaskByPriority(Priority priority) throws TaskNotFoundException {
         List<TodoTask> tasks = taskRepository.findByPriority(priority);
-        if(tasks.isEmpty()){
+        if (tasks.isEmpty()) {
             throw new TaskNotFoundException("No Found Task");
         }
         return tasks;
     }
-    public List<TodoTask> getTaskByDeadline(LocalDate deadline) throws TaskNotFoundException{
+
+    public List<TodoTask> getTaskByDeadline(LocalDate deadline) throws TaskNotFoundException {
         List<TodoTask> tasks = taskRepository.findByDeadline(deadline);
-        if(tasks.isEmpty()){
+        if (tasks.isEmpty()) {
             throw new TaskNotFoundException("No Found Task");
         }
         return tasks;
     }
-    public List<TodoTask> getTaskByStatus(Status status) throws TaskNotFoundException{
+
+    public List<TodoTask> getTaskByStatus(Status status) throws TaskNotFoundException {
         List<TodoTask> tasks = taskRepository.findByStatus(status);
-        if(tasks.isEmpty()){
+        if (tasks.isEmpty()) {
             throw new TaskNotFoundException("No Found Task");
         }
         return tasks;
     }
-   public long getCount(){
+
+    public long getCount() {
         return taskRepository.count();
-   }
+    }
 
     public List<TodoTask> getTodosByStatuses(List<Status> statuses) {
         if (statuses == null || statuses.isEmpty()) {
@@ -82,9 +91,9 @@ public class TodoTaskService {
         }
         return taskRepository.findByStatusIn(statuses);
     }
-    //get task by keyword
-    public List<TodoTask> findByKeyword(String keyword){
-        return taskRepository.findByKeyword(keyword);
+
+    public List<TodoTask> findTasksByTitle(String title) {
+        return taskRepository.findTodoTaskByTitle(title);
     }
 
 }
