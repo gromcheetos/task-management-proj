@@ -35,16 +35,14 @@ public class BoardController {
     private final SearchService searchService;
 
     @PostMapping("/create")
-    public ResponseEntity<Board> createBoard(@RequestParam("boardName") String boardName,
-        @RequestParam("description") String description) {
-        try {
-            User currentUser = userService.getCurrentUser();
-            Board board = new Board(boardName, description);
-            board.setUser(currentUser);
-            return ResponseEntity.ok(boardService.createBoard(board));
-        } catch (UserNotFoundException e) {
-            throw new RuntimeException(e);
-        }
+    public String createBoard(@RequestParam("boardName") String boardName,
+                                            @RequestParam("description") String description, Model model) throws UserNotFoundException {
+
+        User currentUser = userService.getCurrentUser();
+        Board board = new Board(boardName, description);
+        board.setUser(currentUser);
+        boardService.createBoard(board);
+        return "redirect:/home";
     }
 
     @PostMapping("/update")

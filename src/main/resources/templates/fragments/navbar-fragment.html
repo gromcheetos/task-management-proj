@@ -2,7 +2,10 @@
 <html lang="en"
       xmlns:sec="http://www.thymeleaf.org/extras/spring-security" xmlns:th="http://www.thymeleaf.org"
       xmlns:javascript="http://www.w3.org/1999/xhtml">
-<head th:replace="fragments/header-fragment.html :: head"></head>
+<head th:replace="fragments/header-fragment.html :: head">
+  <link rel="stylesheet" href="path/to/navbar.css">
+  <script type="text/javascript" th:src="@{/js/nav.js}"></script>
+</head>
 <body>
 <div class="navbar" th:fragment="navigation">
   <div class="navbar-left">
@@ -18,7 +21,6 @@
       </div>
     </div>
   </form>
-
 
     <div class="navbar-right">
     <img src="/images/profile.png" alt="Profile Photo" class="profile-photo" id="profileImage">

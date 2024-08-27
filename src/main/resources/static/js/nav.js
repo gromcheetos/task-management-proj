@@ -7,6 +7,7 @@ document.addEventListener('DOMContentLoaded', function() {
         profileImage.addEventListener('click', function() {
             console.log("Profile image clicked!"); // Debug line
             slideMenu.classList.add('active');  // Show the slide menu
+            console.log("Slide menu should now be active."); // Debug line
         });
     }
 
@@ -14,6 +15,7 @@ document.addEventListener('DOMContentLoaded', function() {
         closeButton.addEventListener('click', function() {
             console.log("Close button clicked!"); // Debug line
             slideMenu.classList.remove('active');  // Hide the slide menu
+            console.log("Slide menu should now be inactive."); // Debug line
         });
     }
 });
