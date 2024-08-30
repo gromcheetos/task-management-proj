@@ -5,17 +5,19 @@ document.addEventListener('DOMContentLoaded', function() {
 
     if (profileImage && slideMenu) {
         profileImage.addEventListener('click', function() {
-            console.log("Profile image clicked!"); // Debug line
-            slideMenu.classList.add('active');  // Show the slide menu
-            console.log("Slide menu should now be active."); // Debug line
+            console.log("Profile image clicked!");
+            slideMenu.classList.add('active');
         });
+    } else {
+        console.error("Profile image or slide menu not found.");
     }
 
     if (closeButton && slideMenu) {
         closeButton.addEventListener('click', function() {
-            console.log("Close button clicked!"); // Debug line
-            slideMenu.classList.remove('active');  // Hide the slide menu
-            console.log("Slide menu should now be inactive."); // Debug line
+            console.log("Close button clicked!");
+            slideMenu.classList.remove('active');
         });
+    } else {
+        console.error("Close button or slide menu not found.");
     }
 });
