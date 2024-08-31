@@ -1,13 +1,10 @@
-document.addEventListener('DOMContentLoaded', function() {
+function showProfileImageUpload(){
     const profileImage = document.getElementById('profileImage');
-    const slideMenu = document.getElementById('slideMenu');
+    const slideMenu = document.getElementById('slider-menu');
     const closeButton = document.getElementById('closeBtn');
 
     if (profileImage && slideMenu) {
-        profileImage.addEventListener('click', function() {
-            console.log("Profile image clicked!");
-            slideMenu.classList.add('active');
-        });
+        slideMenu.classList.add('active');
     } else {
         console.error("Profile image or slide menu not found.");
     }
@@ -20,4 +17,4 @@ document.addEventListener('DOMContentLoaded', function() {
     } else {
         console.error("Close button or slide menu not found.");
     }
-});
+}

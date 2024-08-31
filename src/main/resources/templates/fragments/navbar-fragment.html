@@ -20,18 +20,19 @@
     </form>
 
       <div class="navbar-right">
-      <img src="/images/profile.png" alt="Profile Photo" class="profile-photo" id="profileImage">
+      <img src="/images/profile.png" alt="Profile Photo" class="profile-photo" id="profileImage" onclick="showProfileImageUpload();">
+    </div>
+
+    <div id="slider-menu" class="slide-menu">
+      <a href="javascript:void(0)" class="close-btn" id="closeBtn">&times;</a>
+      <a href="#">Profile</a>
+      <a href="#">My Page</a>
+      <form th:action="@{/users/logout}" method="post" sec:authorize="isAuthenticated()">
+        <input hidden type="submit" value="Log out"/>
+        <a th:href="@{/users/logout}">Log out</a>
+      </form>
     </div>
   </div>
 
-  <div id="slideMenu" class="slide-menu">
-    <a href="javascript:void(0)" class="close-btn" id="closeBtn">&times;</a>
-    <a href="#">Profile</a>
-    <a href="#">My Page</a>
-    <form th:action="@{/users/logout}" method="post" sec:authorize="isAuthenticated()">
-      <input hidden type="submit" value="Log out"/>
-      <a th:href="@{/users/logout}">Log out</a>
-    </form>
-  </div>
 </body>
 </html>
