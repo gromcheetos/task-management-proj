@@ -58,6 +58,10 @@ public class BoardService {
         return filteredList;
     }
 
+    public List<Board> getAllBoards() {
+        return (List<Board>) boardRepository.findAll();
+    }
+
     @Transactional
     public void deleteBoardById(Integer userId, Integer boardId) throws BoardNotFoundException {
         Board board = boardRepository.findById(boardId).orElse(null);

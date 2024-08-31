@@ -2,15 +2,17 @@ package org.app.service;
 
 import java.util.List;
 import java.util.stream.Collectors;
+import lombok.RequiredArgsConstructor;
 import org.app.model.Board;
 import org.app.model.TodoTask;
 import org.springframework.stereotype.Service;
 
 @Service
+@RequiredArgsConstructor
 public class SearchService {
 
-    private TodoTaskService todoTaskService;
-    private BoardService boardService;
+    private final TodoTaskService todoTaskService;
+    private final BoardService boardService;
 
     public List<Board> performSearch(String keyword) {
 
@@ -32,6 +34,20 @@ public class SearchService {
             .filter(task -> priorities.contains(task.getPriority().name()))
             .collect(Collectors.toList())
             : tasks;
+    }
+
+    private List<TodoTask> findTasksContainingKeyword(String keyword) {
+        return todoTaskService.getAllTasks().stream()
+            .filter(task -> task.getTitle().contains(keyword)
+                || task.getDescription().contains(keyword))
+            .toList();
+    }
+
+    private List<Board> findBoardsContainingKeyword(String keyword) {
+       return boardService.getAllBoards().stream()
+           .filter(board -> board.getBoardName().contains(keyword)
+               || board.getDescription().contains(keyword))
+           .toList();
     }
 
 }
