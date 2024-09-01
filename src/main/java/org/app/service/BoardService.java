@@ -27,12 +27,11 @@ public class BoardService {
 
     public Board createBoard(Board board) {
         return boardRepository.save(board);
-
     }
 
     public Board updateBoard(int boardId, String boardName, String description) throws BoardNotFoundException {
         Board toUpdateBoard = boardRepository.findById(boardId)
-                .orElseThrow(() -> new BoardNotFoundException("No Found Board"));
+            .orElseThrow(() -> new BoardNotFoundException("No Found Board"));
         toUpdateBoard.setBoardName(boardName);
         toUpdateBoard.setDescription(description);
 
@@ -72,20 +71,6 @@ public class BoardService {
         User user = userRepository.findById(userId).get();
         user.getBoards().remove(board);
         userRepository.save(user);
-    }
-
-    public List<Board> filterBoardTasksByStatuses(List<Status> statuses, int userId) {
-        List<Board> allBoards = findBoardsByUserId(userId);
-
-        for (Board board : allBoards) {
-            List<TodoTask> allTasksForBoard = board.getTasks();
-            for (TodoTask todoTask : allTasksForBoard) {
-                if (!statuses.contains(todoTask)) {
-                    allTasksForBoard.remove(todoTask);
-                }
-            }
-        }
-        return allBoards;
     }
 
     public void saveAll(List<Board> boards) {

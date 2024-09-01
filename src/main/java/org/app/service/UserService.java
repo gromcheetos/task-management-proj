@@ -9,7 +9,6 @@ import org.app.model.TodoTask;
 import org.app.model.User;
 import org.app.repository.TaskRepository;
 import org.app.repository.UserRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -46,13 +45,6 @@ public class UserService {
 
     public List<User> getAllUsers() {
         return (List<User>) userRepository.findAll();
-    }
-
-    public void deleteUserById(Integer userId) throws UserNotFoundException{
-        if(userRepository.findById(userId).isEmpty()){
-            throw new UserNotFoundException("No Found User");
-        }
-        userRepository.deleteById(userId);
     }
 
     public List<TodoTask> getTasksByUserId(Integer userId) throws UserNotFoundException {

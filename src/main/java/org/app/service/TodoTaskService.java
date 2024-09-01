@@ -30,15 +30,17 @@ public class TodoTaskService {
     private final BoardRepository boardRepository;
 
     public TodoTask insertTask(TodoTask task) {
-        return taskRepository.save(task); //runs the insert into table todo_tasks values(...)
+        //runs the insert into table todo_tasks values(...)
+        return taskRepository.save(task);
     }
 
-    public TodoTask updateTask(Integer taskId, Integer newBoardId) throws TaskNotFoundException, BoardNotFoundException {
+    public TodoTask updateTask(Integer taskId, Integer newBoardId)
+        throws TaskNotFoundException, BoardNotFoundException {
         TodoTask toUpdateTask = taskRepository.findById(taskId)
             .orElseThrow(() -> new TaskNotFoundException("No Found Task"));
 
         Board newBoard = boardRepository.findById(newBoardId)
-                .orElseThrow(() -> new BoardNotFoundException("Board not found"));
+            .orElseThrow(() -> new BoardNotFoundException("Board not found"));
 
         toUpdateTask.setBoard(newBoard);
         return taskRepository.save(toUpdateTask);
@@ -60,32 +62,12 @@ public class TodoTaskService {
 
     }
 
-    public List<TodoTask> getTaskByPriority(Priority priority) throws TaskNotFoundException {
-        List<TodoTask> tasks = taskRepository.findByPriority(priority);
-        if (tasks.isEmpty()) {
-            throw new TaskNotFoundException("No Found Task");
-        }
-        return tasks;
-    }
-
     public List<TodoTask> getTaskByDeadline(LocalDate deadline) throws TaskNotFoundException {
         List<TodoTask> tasks = taskRepository.findByDeadline(deadline);
         if (tasks.isEmpty()) {
             throw new TaskNotFoundException("No Found Task");
         }
         return tasks;
-    }
-
-    public List<TodoTask> getTaskByStatus(Status status) throws TaskNotFoundException {
-        List<TodoTask> tasks = taskRepository.findByStatus(status);
-        if (tasks.isEmpty()) {
-            throw new TaskNotFoundException("No Found Task");
-        }
-        return tasks;
-    }
-
-    public long getCount() {
-        return taskRepository.count();
     }
 
     public List<TodoTask> getTodosByStatuses(List<Status> statuses) {
@@ -98,6 +80,5 @@ public class TodoTaskService {
     public List<TodoTask> findTasksByTitle(String title) {
         return taskRepository.findTodoTaskByTitle(title);
     }
-
 
 }

@@ -19,14 +19,14 @@ public class BasicSecurityConfig {
         httpSecurity
             .csrf(csrf -> csrf.disable())
             .authorizeHttpRequests(auth -> auth
-                .requestMatchers("/signup","/users/**", "/", "/css/**", "/js/**", "/images/**")
+                .requestMatchers("/signup", "/users/**", "/", "/css/**", "/js/**", "/images/**")
                 .permitAll()
                 .anyRequest().authenticated()
             )
             .formLogin(form -> form
 //                .loginPage("/login") // This line is optional; Spring Boot uses a default login page if not specified.
-                .defaultSuccessUrl("/", true) // Redirect to /index after successful login.
-                .permitAll()
+                    .defaultSuccessUrl("/", true) // Redirect to /index after successful login.
+                    .permitAll()
             )
             .logout(logout -> logout
                 .logoutUrl("/users/logout")

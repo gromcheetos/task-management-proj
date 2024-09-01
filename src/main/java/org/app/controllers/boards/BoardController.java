@@ -69,6 +69,7 @@ public class BoardController {
         // Filter boards by name if specified
         List<Board> filteredBoards = searchService.filterBoardsByBoardNames(boardNames, boards);
 
+        // TODO: check why this filteredTasks variable is empty and not used
         // Filter tasks by priority if specified
         List<TodoTask> filteredTasks = searchService.filterTasksByPriority(priorities, tasks);
 
