@@ -61,8 +61,7 @@ public class BoardController {
     @GetMapping("/filter")
     public String boardsByNameAndPriority(@RequestParam(value = "boardName", required = false) List<String> boardNames,
         @RequestParam(value = "priority", required = false) List<String> priorities,
-        @RequestParam("userId") Integer userId,
-        Model model) throws UserNotFoundException {
+        @RequestParam("userId") Integer userId, Model model) throws UserNotFoundException {
 
         List<Board> boards = boardService.findBoardsByUserId(userId);
         List<TodoTask> tasks = userService.getTasksByUserId(userId);
