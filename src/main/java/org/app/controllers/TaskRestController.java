@@ -57,15 +57,17 @@ public class TaskRestController {
         return "redirect:/home";
     }
 
-    @PostMapping("/update/{taskId}")
-    public ResponseEntity<TodoTask> updateTasks(@PathVariable("taskId") Integer taskId,
-        @RequestBody TodoTask task) {
-        log.info("Received RequestBody: {}", task);
+    @PostMapping("/update")
+    public ResponseEntity<TodoTask> updateTasks(@RequestParam("taskId") Integer taskId,
+                                                @RequestParam("newBoardId") Integer newBoardId) {
+
         try {
-            TodoTask todoTask = taskService.updateTask(taskId, task);
+            TodoTask todoTask = taskService.updateTask(taskId, newBoardId);
             return ResponseEntity.ok(todoTask);
         } catch (TaskNotFoundException exception) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        } catch (BoardNotFoundException e) {
+            throw new RuntimeException(e);
         }
     }
 
@@ -111,4 +113,6 @@ public class TaskRestController {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
+
+
 }

@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
+import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import org.app.exceptions.BoardNotFoundException;
 import org.app.exceptions.TaskNotFoundException;
@@ -13,6 +14,7 @@ import org.app.model.TodoTask;
 import org.app.model.User;
 import org.app.model.enums.Priority;
 import org.app.model.enums.Status;
+import org.app.repository.BoardRepository;
 import org.app.repository.TaskRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -25,19 +27,20 @@ public class TodoTaskService {
     private final TaskRepository taskRepository;
 
     private final UserService userService;
+    private final BoardRepository boardRepository;
 
     public TodoTask insertTask(TodoTask task) {
         return taskRepository.save(task); //runs the insert into table todo_tasks values(...)
     }
 
-    public TodoTask updateTask(Integer taskId, TodoTask todoTask) throws TaskNotFoundException {
+    public TodoTask updateTask(Integer taskId, Integer newBoardId) throws TaskNotFoundException, BoardNotFoundException {
         TodoTask toUpdateTask = taskRepository.findById(taskId)
             .orElseThrow(() -> new TaskNotFoundException("No Found Task"));
-        toUpdateTask.setTitle(todoTask.getTitle());
-        toUpdateTask.setDescription(todoTask.getDescription());
-        toUpdateTask.setDeadline(todoTask.getDeadline());
-        toUpdateTask.setPriority(todoTask.getPriority());
-        toUpdateTask.setStatus(todoTask.getStatus());
+
+        Board newBoard = boardRepository.findById(newBoardId)
+                .orElseThrow(() -> new BoardNotFoundException("Board not found"));
+
+        toUpdateTask.setBoard(newBoard);
         return taskRepository.save(toUpdateTask);
     }
 
@@ -95,5 +98,6 @@ public class TodoTaskService {
     public List<TodoTask> findTasksByTitle(String title) {
         return taskRepository.findTodoTaskByTitle(title);
     }
+
 
 }

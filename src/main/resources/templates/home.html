@@ -76,28 +76,53 @@
                     </div>
 
                     <div class="board" id="boardList" th:fragment="boardList">
-                        <div class="column" th:each="board : ${userBoards}">
+                        <div class="column" th:each="board : ${userBoards}" th:attr="data-board-id=${board.boardId}">
                             <div class="column-header">
                                 <h3 th:text="${board.boardName}"></h3>
                                 <form th:action="@{/board/delete/{id}(id=${board.boardId})}" method="post" class="delete-board-form">
                                     <button type="submit" class="delete-board-btn">x</button>
                                 </form>
                             </div>
-                                <div th:each="task : ${board.tasks}">
-                                        <div class="task">
-                                            <p th:text="${task.title}"></p>
-                                            <span class="tag" th:class="'tag ' + ${task.priority.toString().toLowerCase()}"
-                                                  th:text="${task.priority.toString().toUpperCase()}"></span>
-                                            <div class="date-and-delete">
-                                                <span class="date" th:text="${task.deadline}"></span>
-                                                <form th:action="@{/tasks/remove/{id}(id=${task.Id})}" method="post" class="delete-task">
-                                                    <button type="submit" class="delete-task-btn">x</button>
-                                                </form>
-                                            </div>
-                                        </div>
+                            <div class="task-list" ondrop="drop(event)" ondragover="allowDrop(event)">
+                                <div class="task" th:each="task : ${board.tasks}" draggable="true" ondragstart="drag(event)" th:attr="data-task-id=${task.Id}">
+                                    <p th:text="${task.title}"></p>
+                                    <span class="tag" th:class="'tag ' + ${task.priority.toString().toLowerCase()}" th:text="${task.priority.toString().toUpperCase()}"></span>
+                                    <div class="date-and-delete">
+                                        <span class="date" th:text="${task.deadline}"></span>
+                                        <form th:action="@{/tasks/remove/{id}(id=${task.Id})}" method="post" class="delete-task">
+                                            <button type="submit" class="delete-task-btn">x</button>
+                                        </form>
+                                    </div>
                                 </div>
                             </div>
                         </div>
+                    </div>
+
+
+
+                    <!--                    <div class="board" id="boardList" th:fragment="boardList">-->
+<!--                        <div class="column" th:each="board : ${userBoards}">-->
+<!--                            <div class="column-header">-->
+<!--                                <h3 th:text="${board.boardName}"></h3>-->
+<!--                                <form th:action="@{/board/delete/{id}(id=${board.boardId})}" method="post" class="delete-board-form">-->
+<!--                                    <button type="submit" class="delete-board-btn">x</button>-->
+<!--                                </form>-->
+<!--                            </div>-->
+<!--                                <div th:each="task : ${board.tasks}">-->
+<!--                                        <div class="task">-->
+<!--                                            <p th:text="${task.title}"></p>-->
+<!--                                            <span class="tag" th:class="'tag ' + ${task.priority.toString().toLowerCase()}"-->
+<!--                                                  th:text="${task.priority.toString().toUpperCase()}"></span>-->
+<!--                                            <div class="date-and-delete">-->
+<!--                                                <span class="date" th:text="${task.deadline}"></span>-->
+<!--                                                <form th:action="@{/tasks/remove/{id}(id=${task.Id})}" method="post" class="delete-task">-->
+<!--                                                    <button type="submit" class="delete-task-btn">x</button>-->
+<!--                                                </form>-->
+<!--                                            </div>-->
+<!--                                        </div>-->
+<!--                                </div>-->
+<!--                            </div>-->
+<!--                        </div>-->
                     </div>
             </div>
     </div>
