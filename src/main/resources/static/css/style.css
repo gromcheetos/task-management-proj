@@ -289,3 +289,21 @@ color: #28587B;
 .show {
     display: block;
 }
+
+/* drag and drop tasks */
+.task-list {
+    min-height: 100px;
+    padding: 10px;
+}
+
+.task {
+    margin: 5px 0;
+    padding: 10px;
+    background-color: #f9f9f9;
+    border: 1px solid #ddd;
+    cursor: move;
+}
+
+.task.dragging {
+    opacity: 0.5;
+}

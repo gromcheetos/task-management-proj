@@ -1,4 +1,4 @@
-package org.app.controllers;
+package org.app.controllers.users;
 
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -37,26 +37,7 @@ public class AuthenticationController {
         User newUser = new User(name, userEmail, username);
         newUser.setBoards(boardService.getAllDefaultBoards());
         userService.createUser(newUser, password);
-        return "redirect:/home";
+        return "redirect:/";
     }
-
-//    @PostMapping("/login")
-//    public ResponseEntity<Map<String, Object>> basicLogin(@RequestParam("username") String username,
-//        @RequestParam("password") String password) {
-//        log.info("Request received for /users/login");
-//        Authentication authentication = authenticationManager.authenticate(
-//            new UsernamePasswordAuthenticationToken(username, password)
-//        );
-//        log.info("Authentication " + authentication);
-//        SecurityContextHolder.getContext().setAuthentication(authentication);
-//        User user = (User) authentication.getPrincipal();
-//
-//        log.info("User details: " + user);
-//        Map<String, Object> responseBody = new HashMap<>();
-//        responseBody.put("userId", user.getId());
-//        responseBody.put("message", "User " + user.getUsername() + " logged in successfully");
-//        return ResponseEntity.ok(responseBody);
-//    }
-
 
 }

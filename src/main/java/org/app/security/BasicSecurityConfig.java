@@ -2,14 +2,12 @@ package org.app.security;
 
 import lombok.AllArgsConstructor;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
 @Configuration
 @EnableWebSecurity
@@ -21,18 +19,18 @@ public class BasicSecurityConfig {
         httpSecurity
             .csrf(csrf -> csrf.disable())
             .authorizeHttpRequests(auth -> auth
-                .requestMatchers("/signup","/users/**", "/home", "/css/**", "/js/**", "/images/**")
+                .requestMatchers("/signup", "/users/**", "/", "/css/**", "/js/**", "/images/**")
                 .permitAll()
                 .anyRequest().authenticated()
             )
             .formLogin(form -> form
 //                .loginPage("/login") // This line is optional; Spring Boot uses a default login page if not specified.
-                .defaultSuccessUrl("/home", true) // Redirect to /index after successful login.
-                .permitAll()
+                    .defaultSuccessUrl("/", true) // Redirect to /index after successful login.
+                    .permitAll()
             )
             .logout(logout -> logout
                 .logoutUrl("/users/logout")
-                .logoutSuccessUrl("/home")
+                .logoutSuccessUrl("/")
                 .permitAll()
             );
 

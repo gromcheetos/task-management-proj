@@ -9,10 +9,7 @@ import org.app.model.TodoTask;
 import org.app.model.User;
 import org.app.model.enums.Status;
 import org.app.service.BoardService;
-import org.app.service.TodoTaskService;
 import org.app.service.UserService;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -22,12 +19,11 @@ import org.springframework.web.bind.annotation.RequestParam;
 @Controller
 @Slf4j
 @AllArgsConstructor
-@RequestMapping("/home")
+@RequestMapping("/")
 public class HomePageController {
 
     private final BoardService boardService;
     private final UserService userService;
-    private final TodoTaskService todoTaskService;
 
     @GetMapping
     public String getUserBoards(Model model, @RequestParam(required = false) List<Status> statuses)

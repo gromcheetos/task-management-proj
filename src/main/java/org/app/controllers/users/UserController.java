@@ -1,4 +1,4 @@
-package org.app.controllers;
+package org.app.controllers.users;
 
 import java.util.List;
 import lombok.AllArgsConstructor;
@@ -8,7 +8,6 @@ import org.app.model.User;
 import org.app.service.UserService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -33,20 +32,6 @@ public class UserController {
         try {
             User updatedUser = userService.updateUserById(userId, name, email, username, password);
             return ResponseEntity.ok(updatedUser);
-        } catch (UserNotFoundException exception) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
-    }
-
-    @DeleteMapping("/delete")
-    public ResponseEntity<?> deleteUser(@RequestParam("userId") Integer userId) {
-        try {
-            User userToBeDeleted = userService.getUserById(userId);
-            if (userToBeDeleted == null) {
-                throw new UserNotFoundException("User not found with id: " + userId);
-            }
-            userService.deleteUserById(userId);
-            return ResponseEntity.ok("Deleted user:" + userToBeDeleted);
         } catch (UserNotFoundException exception) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
