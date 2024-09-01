@@ -1,4 +1,4 @@
-package org.app.controllers;
+package org.app.controllers.boards;
 
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -36,13 +36,13 @@ public class BoardController {
 
     @PostMapping("/create")
     public String createBoard(@RequestParam("boardName") String boardName,
-                                            @RequestParam("description") String description, Model model) throws UserNotFoundException {
+        @RequestParam("description") String description, Model model) throws UserNotFoundException {
 
         User currentUser = userService.getCurrentUser();
         Board board = new Board(boardName, description);
         board.setUser(currentUser);
         boardService.createBoard(board);
-        return "redirect:/home";
+        return "redirect:/";
     }
 
     @PostMapping("/update")
@@ -58,35 +58,35 @@ public class BoardController {
         }
     }
 
-   @GetMapping("/filter")
-   public String boardsByNameAndPriority(@RequestParam(value = "boardName", required = false) List<String> boardNames,
-                                         @RequestParam(value = "priority", required = false) List<String> priorities,
-                                         @RequestParam("userId") Integer userId,
-                                         Model model) throws UserNotFoundException {
+    @GetMapping("/filter")
+    public String boardsByNameAndPriority(@RequestParam(value = "boardName", required = false) List<String> boardNames,
+        @RequestParam(value = "priority", required = false) List<String> priorities,
+        @RequestParam("userId") Integer userId,
+        Model model) throws UserNotFoundException {
 
-       List<Board> boards = boardService.findBoardsByUserId(userId);
-       List<TodoTask> tasks = userService.getTasksByUserId(userId);
-       // Filter boards by name if specified
-       List<Board> filteredBoards = searchService.filterBoardsByBoardNames(boardNames, boards);
+        List<Board> boards = boardService.findBoardsByUserId(userId);
+        List<TodoTask> tasks = userService.getTasksByUserId(userId);
+        // Filter boards by name if specified
+        List<Board> filteredBoards = searchService.filterBoardsByBoardNames(boardNames, boards);
 
-       // Filter tasks by priority if specified
-       List<TodoTask> filteredTasks = searchService.filterTasksByPriority(priorities, tasks);
+        // Filter tasks by priority if specified
+        List<TodoTask> filteredTasks = searchService.filterTasksByPriority(priorities, tasks);
 
-       if (priorities != null && !priorities.contains("all")) {
-           Map<Integer, List<TodoTask>> tasksByBoardId = tasks.stream()
-                   .filter(task -> priorities.contains(task.getPriority().name()))
-                   .collect(Collectors.groupingBy(TodoTask::getBoardId));
+        if (priorities != null && !priorities.contains("all")) {
+            Map<Integer, List<TodoTask>> tasksByBoardId = tasks.stream()
+                .filter(task -> priorities.contains(task.getPriority().name()))
+                .collect(Collectors.groupingBy(TodoTask::getBoardId));
 
-           filteredBoards = filteredBoards.stream()
-                   .peek(board -> board.setTasks(tasksByBoardId.getOrDefault(board.getBoardId(), Collections.emptyList())))
-                   .filter(board -> !board.getTasks().isEmpty()) // Remove boards with no tasks after filtering
-                   .collect(Collectors.toList());
-       }
+            filteredBoards = filteredBoards.stream()
+                .peek(board -> board.setTasks(tasksByBoardId.getOrDefault(board.getBoardId(), Collections.emptyList())))
+                .filter(board -> !board.getTasks().isEmpty()) // Remove boards with no tasks after filtering
+                .toList();
+        }
 
-       model.addAttribute("userBoards", filteredBoards);
+        model.addAttribute("userBoards", filteredBoards);
 
-       return "home :: #boardList";
-   }
+        return "home :: #boardList";
+    }
 
 
     @PostMapping("/delete/{id}")
@@ -98,7 +98,7 @@ public class BoardController {
         } catch (UserNotFoundException | BoardNotFoundException exception) {
             // fix this
         }
-        return "redirect:/home";
+        return "redirect:/";
     }
 
 
