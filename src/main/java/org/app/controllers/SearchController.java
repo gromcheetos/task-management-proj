@@ -2,8 +2,8 @@ package org.app.controllers;
 
 import java.util.List;
 import lombok.AllArgsConstructor;
-import org.app.model.TodoTask;
-import org.app.service.TodoTaskService;
+import org.app.model.Board;
+import org.app.service.SearchService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -12,17 +12,16 @@ import org.springframework.web.bind.annotation.GetMapping;
 @AllArgsConstructor
 public class SearchController {
 
-    private final TodoTaskService todoService;
+    private final SearchService searchService;
 
     @GetMapping("/search")
     public String searchTasks(Model model, String keyword)  {
 
         if (keyword != null) {
-            List<TodoTask> tasksForSearch = todoService.findTasksByTitle(keyword);
-            model.addAttribute("userBoards", tasksForSearch);
-        } else {
-            model.addAttribute("userBoards", todoService.getAllTasks());
+            List<Board> boards = searchService.performSearch(keyword);
+            model.addAttribute("userBoards", boards);
         }
+
         return "home :: #boardList";
     }
 
