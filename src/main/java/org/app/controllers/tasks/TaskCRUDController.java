@@ -1,7 +1,10 @@
 package org.app.controllers.tasks;
 
 import java.time.LocalDate;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.app.exceptions.*;
@@ -12,11 +15,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 @Controller
 @RequiredArgsConstructor
@@ -53,18 +52,22 @@ public class TaskCRUDController {
 
     // TODO: make sure that you're returning JSON ResponseEntity for a reason (not by accident)
     @PostMapping("/update")
-    public ResponseEntity<TodoTask> updateTask(@RequestParam("taskId") Integer taskId,
-        @RequestParam("newBoardId") Integer newBoardId) {
+    @ResponseBody  // Ensure the response is JSON
+    public ResponseEntity<Map<String, Object>> updateTask(
+            @RequestParam("taskId") Integer taskId,
+            @RequestParam("newBoardId") Integer newBoardId)
+            throws TaskNotFoundException, BoardNotFoundException {
 
-        try {
-            TodoTask todoTask = taskService.updateTask(taskId, newBoardId);
-            return ResponseEntity.ok(todoTask);
-        } catch (TaskNotFoundException exception) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        } catch (BoardNotFoundException e) {
-            throw new RuntimeException(e);
-        }
+        TodoTask todoTask = taskService.updateTask(taskId, newBoardId);
+
+        Map<String, Object> response = new HashMap<>();
+        response.put("message", "Task moved successfully");
+        response.put("task", todoTask);
+
+        return ResponseEntity.ok(response);  // Send JSON response
     }
+
+
 
     // TODO: handle exceptions by redirecting to an error page
     @PostMapping("/remove/{id}")
