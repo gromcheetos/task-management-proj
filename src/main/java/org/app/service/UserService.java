@@ -47,14 +47,6 @@ public class UserService {
         return (List<User>) userRepository.findAll();
     }
 
-    public List<TodoTask> getTasksByUserId(Integer userId) throws UserNotFoundException {
-        List<TodoTask> tasks = taskRepository.findTodoTaskByUserId(userId);
-        if(tasks.isEmpty()){
-            throw new UserNotFoundException("No Found User");
-        }
-        return tasks;
-    }
-
     public User getUserByUsername(String username){
         return userRepository.findUserByUsername(username);
     }

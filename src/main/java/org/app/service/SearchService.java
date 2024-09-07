@@ -1,5 +1,6 @@
 package org.app.service;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
@@ -15,18 +16,16 @@ public class SearchService {
     private final BoardService boardService;
 
     public List<Board> performSearch(String keyword) {
-
         List<Board> boardsContainingKeyword = findBoardsContainingKeyword(keyword);
         List<TodoTask> tasksContainingKeyword = findTasksContainingKeyword(keyword);
-
-        if (boardsContainingKeyword.isEmpty() && tasksContainingKeyword.isEmpty()) {
-            // no boards or tasks match the keyword user entered in the search bar
-            return null;
-        } else if (!boardsContainingKeyword.isEmpty()) {
+        if (!boardsContainingKeyword.isEmpty()) {
             return boardsContainingKeyword;
+        }else if(!tasksContainingKeyword.isEmpty()){
+            return tasksContainingKeyword.stream()
+                .map(TodoTask::getBoard)
+                .toList();
         }
-
-        return null;
+        return Collections.emptyList();
     }
 
     public List<Board> filterBoardsByBoardNames(List<String> boardNames, List<Board> boards) {

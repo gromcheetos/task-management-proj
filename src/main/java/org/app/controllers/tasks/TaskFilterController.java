@@ -38,7 +38,7 @@ public class TaskFilterController {
     @GetMapping("/filter/user")
     public ResponseEntity<List<TodoTask>> getAllTasksByUserId(@RequestParam("userId") int userId) {
         try {
-            return ResponseEntity.ok(userService.getTasksByUserId(userId));
+            return ResponseEntity.ok(taskService.getTasksByUserId(userId));
         } catch (UserNotFoundException exception) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
