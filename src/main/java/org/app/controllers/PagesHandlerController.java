@@ -13,4 +13,9 @@ public class PagesHandlerController {
         return "registration";
     }
 
+    @GetMapping("/signin")
+    public String showLoginPage() {
+        return "login-page";
+    }
+
 }
