@@ -76,4 +76,13 @@ public class BoardService {
     public void saveAll(List<Board> boards) {
         boardRepository.saveAll(boards);
     }
+
+    private void createDefaultBoardForNewUsers(User user, String boardName, String description, Status status,
+        boolean isDefault) {
+        Board defaultBoard = new Board(boardName, description, isDefault, Status.TO_DO, new ArrayList<>(), user);
+        defaultBoard.setDefault(true);
+        defaultBoard.setStatus(Status.TO_DO);
+        createBoard(defaultBoard);
+    }
+
 }

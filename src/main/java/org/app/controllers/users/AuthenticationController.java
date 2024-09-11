@@ -31,6 +31,8 @@ public class AuthenticationController {
         @RequestParam("password") String password) {
         log.info("Request received to register the user");
         User newUser = new User(name, userEmail, username);
+        // TODO: create default boards here
+//        boardService.createDefaultBoardForNewUsers();
         List<Board> defaultBoards = boardService.getAllDefaultBoards();
         newUser.setBoards(defaultBoards);
         userService.createUser(newUser, password);
