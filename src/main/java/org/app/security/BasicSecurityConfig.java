@@ -24,7 +24,7 @@ public class BasicSecurityConfig {
                 .anyRequest().authenticated()
             )
             .formLogin(form -> form
-                .loginPage("/signin") // This line is optional; Spring Boot uses a default login page if not specified.
+                .loginPage("/login") // This line is optional; Spring Boot uses a default login page if not specified.
                     .defaultSuccessUrl("/", true) // Redirect to /index after successful login.
                     .permitAll()
             )

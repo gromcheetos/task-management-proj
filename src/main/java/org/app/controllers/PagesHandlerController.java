@@ -13,7 +13,7 @@ public class PagesHandlerController {
         return "registration";
     }
 
-    @GetMapping("/signin")
+    @GetMapping("/login")
     public String showLoginPage() {
         return "login-page";
     }
