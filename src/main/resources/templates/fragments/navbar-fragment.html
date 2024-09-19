@@ -26,7 +26,11 @@
     <div id="slider-menu" class="slide-menu">
       <a href="javascript:void(0)" class="close-btn" id="closeBtn">&times;</a>
       <a href="#">Profile</a>
-      <a href="#">My Page</a>
+      <a sec:authorize="isAuthenticated()">My page</a>
+      <a th:href="@{/signup}" sec:authorize="isAnonymous()">
+        Sign up</a>
+      <a th:href="@{/users/login}" sec:authorize="!isAuthenticated()">
+        Log in</a>
       <form th:action="@{/users/logout}" method="post" sec:authorize="isAuthenticated()">
         <input hidden type="submit" value="Log out"/>
         <a th:href="@{/users/logout}">Log out</a>
