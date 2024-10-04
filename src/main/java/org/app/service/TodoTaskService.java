@@ -9,6 +9,7 @@ import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import org.app.exceptions.BoardNotFoundException;
 import org.app.exceptions.TaskNotFoundException;
+import org.app.exceptions.UserNotFoundException;
 import org.app.model.Board;
 import org.app.model.TodoTask;
 import org.app.model.User;
@@ -77,8 +78,23 @@ public class TodoTaskService {
         return taskRepository.findByStatusIn(statuses);
     }
 
+    public List<TodoTask> getTasksByUserId(Integer userId) throws UserNotFoundException {
+        List<TodoTask> tasks = taskRepository.findTodoTaskByUserId(userId);
+        if(tasks.isEmpty()){
+            throw new UserNotFoundException("No Found User");
+        }
+        return tasks;
+    }
+
     public List<TodoTask> findTasksByTitle(String title) {
         return taskRepository.findTodoTaskByTitle(title);
     }
 
+    public int getCompletedTasksCount(Integer userId) throws UserNotFoundException {
+        List<TodoTask> allTasks = getTasksByUserId(userId);
+        List<TodoTask> doneTasks = allTasks.stream()
+            .filter(task -> task.getStatus() == Status.DONE)
+            .toList();
+        return doneTasks.size();
+    }
 }

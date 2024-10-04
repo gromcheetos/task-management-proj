@@ -9,6 +9,7 @@ import org.app.model.TodoTask;
 import org.app.model.User;
 import org.app.service.BoardService;
 import org.app.service.SearchService;
+import org.app.service.TodoTaskService;
 import org.app.service.UserService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -33,6 +34,7 @@ public class BoardController {
     private final UserService userService;
     private final BoardService boardService;
     private final SearchService searchService;
+    private final TodoTaskService todoTaskService;
 
     @PostMapping("/create")
     public String createBoard(@RequestParam("boardName") String boardName,
@@ -64,7 +66,7 @@ public class BoardController {
         @RequestParam("userId") Integer userId, Model model) throws UserNotFoundException {
 
         List<Board> boards = boardService.findBoardsByUserId(userId);
-        List<TodoTask> tasks = userService.getTasksByUserId(userId);
+        List<TodoTask> tasks = todoTaskService.getTasksByUserId(userId);
         // Filter boards by name if specified
         List<Board> filteredBoards = searchService.filterBoardsByBoardNames(boardNames, boards);
 

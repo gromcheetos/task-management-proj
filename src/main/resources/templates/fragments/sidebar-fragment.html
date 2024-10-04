@@ -15,22 +15,14 @@
                     </a>
                 </li>
                 <li>Setting</li>
-                <li>Goals</li>
             </ul>
             <a sec:authorize="isAuthenticated()">Work Space</a>
             <ul sec:authorize="isAuthenticated()">
                 <li>
-                    <a>
-                        Add new project
-                    </a>
+                    Add team member
                 </li>
                 <li>Setting</li>
             </ul>
-            <a sec:authorize="isAuthenticated()">My page</a>
-            <a th:href="@{/signup}" sec:authorize="isAnonymous()">
-                Sign up</a>
-            <a th:href="@{/users/login}" sec:authorize="!isAuthenticated()">
-                Log in</a>
 
             </div>
         </div>

@@ -9,6 +9,7 @@ import org.app.model.TodoTask;
 import org.app.model.User;
 import org.app.model.enums.Status;
 import org.app.service.BoardService;
+import org.app.service.TodoTaskService;
 import org.app.service.UserService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -24,7 +25,9 @@ public class HomePageController {
 
     private final BoardService boardService;
     private final UserService userService;
+    private final TodoTaskService taskService;
 
+    // TODO: check why statuses is not used
     @GetMapping
     public String getUserBoards(Model model, @RequestParam(required = false) List<Status> statuses)
         throws UserNotFoundException {
@@ -36,12 +39,8 @@ public class HomePageController {
             boards = boardService.getAllDefaultBoards();
         } else {
             boards = boardService.findBoardsByUserId(currentUser.getId());
-            List<TodoTask> allTasks = userService.getTasksByUserId(currentUser.getId());
-            List<TodoTask> doneTasks = allTasks.stream()
-                    .filter(task -> task.getStatus() == Status.DONE)
-                    .toList();
-            totalTasks = allTasks.size();
-            completedTasks = doneTasks.size();
+            totalTasks = taskService.getTasksByUserId(currentUser.getId()).size();
+            completedTasks = taskService.getCompletedTasksCount(currentUser.getId());
         }
         model.addAttribute("userBoards", boards);
         model.addAttribute("currentUser", currentUser);

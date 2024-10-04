@@ -6,8 +6,8 @@ import org.app.exceptions.TaskNotFoundException;
 import org.app.exceptions.UserNotFoundException;
 import org.app.model.TodoTask;
 import org.app.model.enums.Status;
-import org.app.service.TodoTaskService;
 import org.app.service.UserService;
+import org.app.service.TodoTaskService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -38,7 +38,7 @@ public class TaskFilterController {
     @GetMapping("/filter/user")
     public ResponseEntity<List<TodoTask>> getAllTasksByUserId(@RequestParam("userId") int userId) {
         try {
-            return ResponseEntity.ok(userService.getTasksByUserId(userId));
+            return ResponseEntity.ok(taskService.getTasksByUserId(userId));
         } catch (UserNotFoundException exception) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
