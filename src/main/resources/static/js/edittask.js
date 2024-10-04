@@ -42,7 +42,7 @@
                 taskDeadline : taskDeadline
             });
         fetch(`/tasks/update?${params.toString()}`, {
-            method: 'Post',
+            method: 'POST',
             headers: {
                 'Content-Type': 'text/html'
             }
