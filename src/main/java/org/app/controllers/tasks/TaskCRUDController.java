@@ -50,7 +50,6 @@ public class TaskCRUDController {
         return "redirect:/";
     }
 
-    // TODO: make sure that you're returning JSON ResponseEntity for a reason (not by accident)
     @PostMapping("/update")
     @ResponseBody  // Ensure the response is JSON
     public ResponseEntity<Map<String, Object>> updateTask(
@@ -66,7 +65,6 @@ public class TaskCRUDController {
 
         return ResponseEntity.ok(response);  // Send JSON response
     }
-
 
 
     // TODO: handle exceptions by redirecting to an error page
