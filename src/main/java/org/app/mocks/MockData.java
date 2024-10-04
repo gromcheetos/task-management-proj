@@ -20,6 +20,8 @@ import org.springframework.stereotype.Component;
 @Component
 public class MockData {
 
+    // TODO: add functionality here to add mock projects and make sure they are saved into the database
+
     @Autowired
     private UserService userService;
 

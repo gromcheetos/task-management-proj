@@ -5,11 +5,10 @@ import lombok.AllArgsConstructor;
 import java.util.ArrayList;
 import org.app.exceptions.BoardNotFoundException;
 import org.app.model.Board;
-import org.app.model.TodoTask;
+import org.app.model.Project;
 import org.app.model.User;
 import org.app.model.enums.Status;
 import org.app.repository.BoardRepository;
-import org.app.repository.TaskRepository;
 import org.app.repository.UserRepository;
 import org.springframework.stereotype.Service;
 import java.util.List;
@@ -18,14 +17,16 @@ import java.util.List;
 @AllArgsConstructor
 public class BoardService {
 
-
     private final BoardRepository boardRepository;
-
-    private final TaskRepository taskRepository;
 
     private final UserRepository userRepository;
 
+    // TODO: add a BoardRepository here
+
+    // TODO: modify the singature of this method to accept a project object
     public Board createBoard(Board board) {
+        // TODO: create functionality to add board to a specific project
+        // make sure to save the board and project changes using save method on both board and project repositories
         return boardRepository.save(board);
     }
 

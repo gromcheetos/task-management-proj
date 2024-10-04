@@ -42,7 +42,6 @@ public class Board {
         this.description = description;
     }
 
-
     public Board(String boardName, String description, boolean isDefault,
         Status status, List<TodoTask> tasks, User user) {
         this.boardName = boardName;
@@ -52,7 +51,6 @@ public class Board {
         this.tasks = tasks;
         this.user = user;
     }
-
 
     @Override
     public boolean equals(Object o) {

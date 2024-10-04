@@ -40,6 +40,7 @@ public class BoardController {
     public String createBoard(@RequestParam("boardName") String boardName,
         @RequestParam("description") String description, Model model) throws UserNotFoundException {
 
+        // TODO: add board to the project as well
         User currentUser = userService.getCurrentUser();
         Board board = new Board(boardName, description);
         board.setUser(currentUser);

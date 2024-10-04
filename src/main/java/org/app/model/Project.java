@@ -22,19 +22,40 @@ public class Project {
     @OneToMany
     private Set<User> teamMembers;
 
+    @OneToMany
+    private Set<Board> boards;
+
     @OneToOne
     private User projectOwner;
 
     public Project() {
         this.projectName = "NOT SET";
         this.teamMembers = new HashSet<>();
+        this.boards = new HashSet<>();
         this.projectOwner = new User();
     }
 
     public Project(String projectName, User projectOwner) {
         this.projectName = projectName;
         this.teamMembers = new HashSet<>();
+        this.boards = new HashSet<>();
         this.projectOwner = projectOwner;
+    }
+
+    protected void addBoard(Board board) {
+        this.boards.add(board);
+    }
+
+    protected void addTeamMember(User user) {
+        this.teamMembers.add(user);
+    }
+
+    protected void removeTeamMember(User user) {
+        this.teamMembers.remove(user);
+    }
+
+    protected void removeBoard(Board board) {
+        this.boards.remove(board);
     }
 
     @Override
