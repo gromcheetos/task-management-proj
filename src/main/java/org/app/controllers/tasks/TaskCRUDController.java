@@ -2,19 +2,15 @@ package org.app.controllers.tasks;
 
 import java.time.LocalDate;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
-
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.app.exceptions.*;
 import org.app.model.*;
 import org.app.model.enums.*;
 import org.app.service.*;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 @Controller
@@ -53,9 +49,9 @@ public class TaskCRUDController {
     @PostMapping("/update")
     @ResponseBody
     public ResponseEntity<Map<String, Object>> updateTask(
-            @RequestParam("taskId") Integer taskId,
-            @RequestParam("newBoardId") Integer newBoardId)
-            throws TaskNotFoundException, BoardNotFoundException {
+        @RequestParam("taskId") Integer taskId,
+        @RequestParam("newBoardId") Integer newBoardId)
+        throws TaskNotFoundException, BoardNotFoundException {
 
         TodoTask todoTask = taskService.updateTask(taskId, newBoardId);
 
@@ -80,7 +76,8 @@ public class TaskCRUDController {
     }
 
     @GetMapping("/detail/{taskId}")
-    public TodoTask  getTaskDetail(@PathVariable("taskId") Integer taskId) throws TaskNotFoundException {
-        return taskService.getTaskById(taskId);
+    public ResponseEntity<TodoTask> getTaskDetail(@PathVariable Integer taskId) throws TaskNotFoundException {
+        TodoTask task = taskService.getTaskById(taskId);
+        return ResponseEntity.ok(task);
     }
 }

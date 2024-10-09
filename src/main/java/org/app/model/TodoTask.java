@@ -30,6 +30,7 @@ public class TodoTask {
 
     @ManyToOne
     @JoinColumn(name = "board_id")
+    @JsonIgnore
     private Board board;
 
     @ManyToOne
