@@ -46,6 +46,7 @@ public class HomePageController {
         model.addAttribute("currentUser", currentUser);
         model.addAttribute("totalTasks", totalTasks);
         model.addAttribute("completedTasks", completedTasks);
+
         return "home";
     }
 

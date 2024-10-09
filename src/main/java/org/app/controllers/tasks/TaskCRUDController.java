@@ -51,7 +51,7 @@ public class TaskCRUDController {
     }
 
     @PostMapping("/update")
-    @ResponseBody  // Ensure the response is JSON
+    @ResponseBody
     public ResponseEntity<Map<String, Object>> updateTask(
             @RequestParam("taskId") Integer taskId,
             @RequestParam("newBoardId") Integer newBoardId)
@@ -63,7 +63,7 @@ public class TaskCRUDController {
         response.put("message", "Task moved successfully");
         response.put("task", todoTask);
 
-        return ResponseEntity.ok(response);  // Send JSON response
+        return ResponseEntity.ok(response);
     }
 
 
@@ -79,12 +79,8 @@ public class TaskCRUDController {
         return "redirect:/";
     }
 
-
     @GetMapping("/detail/{taskId}")
-    public String getTaskDetail(@PathVariable("taskId") int id, Model model) throws TaskNotFoundException {
-        TodoTask task = taskService.getTaskById(id);
-        model.addAttribute("task", task);
-        return "task-detail";
+    public TodoTask  getTaskDetail(@PathVariable("taskId") Integer taskId) throws TaskNotFoundException {
+        return taskService.getTaskById(taskId);
     }
-
 }

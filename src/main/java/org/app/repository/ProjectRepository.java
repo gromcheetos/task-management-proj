@@ -1,6 +1,8 @@
 package org.app.repository;
 
-// TODO: Implement the ProjectRepository interface
-public interface ProjectRepository {
+import org.app.model.Project;
+import org.springframework.data.repository.CrudRepository;
+
+public interface ProjectRepository extends CrudRepository<Project, Integer> {
 
 }

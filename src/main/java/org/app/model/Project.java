@@ -7,12 +7,16 @@ import jakarta.persistence.OneToOne;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
+
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Entity
 @Data
 @Builder
+@AllArgsConstructor
 public class Project {
 
     @Id
@@ -28,6 +32,11 @@ public class Project {
     @OneToOne
     private User projectOwner;
 
+
+    public Project(String projectName) {
+        this.projectName = projectName;
+    }
+
     public Project() {
         this.projectName = "NOT SET";
         this.teamMembers = new HashSet<>();
@@ -35,7 +44,7 @@ public class Project {
         this.projectOwner = new User();
     }
 
-    public Project(String projectName, User projectOwner) {
+    public Project(String projectName, Set<User> teamMembers, Set<Board> boards, User projectOwner) {
         this.projectName = projectName;
         this.teamMembers = new HashSet<>();
         this.boards = new HashSet<>();

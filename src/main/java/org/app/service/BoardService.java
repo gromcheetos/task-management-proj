@@ -9,6 +9,7 @@ import org.app.model.Project;
 import org.app.model.User;
 import org.app.model.enums.Status;
 import org.app.repository.BoardRepository;
+import org.app.repository.ProjectRepository;
 import org.app.repository.UserRepository;
 import org.springframework.stereotype.Service;
 import java.util.List;
@@ -21,7 +22,7 @@ public class BoardService {
 
     private final UserRepository userRepository;
 
-    // TODO: add a BoardRepository here
+    private final ProjectRepository projectRepository;
 
     // TODO: modify the singature of this method to accept a project object
     public Board createBoard(Board board) {
