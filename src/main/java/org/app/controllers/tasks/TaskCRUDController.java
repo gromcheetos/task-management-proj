@@ -7,6 +7,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.app.exceptions.*;
 import org.app.model.*;
+import org.app.model.dto.TaskData;
 import org.app.model.enums.*;
 import org.app.service.*;
 import org.springframework.http.ResponseEntity;
@@ -64,18 +65,15 @@ public class TaskCRUDController {
 
     @PostMapping("/update")
     @ResponseBody
-    public ResponseEntity<Map<String, Object>> updateTask(
-            @RequestParam("taskId") Integer taskId,
-            @RequestParam("title") String title,
-            @RequestParam("description") String description,
-            @RequestParam("priority") Priority priority,
-            @RequestParam("deadline") String deadline,
-            @RequestParam("boardName") String boardName
-            )
-            throws TaskNotFoundException, BoardNotFoundException {
+    public ResponseEntity<Map<String, Object>> updateTask(@RequestParam("boardName") String boardName,
+        @RequestParam("taskId") int taskId,
+        @RequestBody TaskData taskData)
+        throws TaskNotFoundException, BoardNotFoundException {
         Status status = Status.valueOf(boardName);
-        LocalDate convertedDeadline = LocalDate.parse(deadline);
-        TodoTask todoTask = taskService.updateTask(taskId, title, description, priority, convertedDeadline, status, boardName);
+        LocalDate convertedDeadline = LocalDate.parse(taskData.getDeadline());
+        TodoTask todoTask = taskService.updateTask(taskId, taskData.getTitle(), taskData.getDescription(),
+            Priority.valueOf(taskData.getPriority()), convertedDeadline, status,
+            Status.valueOf(boardName).toString());
 
         Map<String, Object> response = new HashMap<>();
         response.put("message", "Task moved successfully");
@@ -83,7 +81,6 @@ public class TaskCRUDController {
 
         return ResponseEntity.ok(response);
     }
-
 
 
     // TODO: handle exceptions by redirecting to an error page

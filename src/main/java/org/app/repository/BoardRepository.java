@@ -10,6 +10,6 @@ import java.util.List;
 public interface BoardRepository extends CrudRepository<Board, Integer> {
     List<Board> findBoardsByUserId(Integer userId);
 
-    List<Board> findBoardByName(String boardName);
+    List<Board> findBoardByBoardName(String boardName);
 
 }
