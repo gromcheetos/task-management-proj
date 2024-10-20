@@ -14,7 +14,7 @@
                 </button>
             </div>
             <div class="modal-body" >
-                <form id="editTaskForm">
+                <form th:action="@{/tasks/update}" method="post" id="editTaskForm">
                     <input type="hidden" id="editTaskId">
 
                     <div class="form-group">

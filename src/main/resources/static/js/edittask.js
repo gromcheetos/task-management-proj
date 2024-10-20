@@ -42,4 +42,44 @@ function openEditTaskModal(taskElement) {
   .catch((error) => {
     console.error('Error fetching task details:', error);
   });
+
+  // Function to handle the "Save Changes" button click
+  document.getElementById('editTaskForm').addEventListener('submit', function(event) {
+    event.preventDefault();
+
+    var taskId = document.getElementById('editTaskId').value;
+    var newBoardName = document.getElementById('editTaskStatus').value;
+    var taskData = {
+                 title: document.getElementById('editTaskTitle').value,
+                description: document.getElementById('editTaskDescription').value,
+                priority: document.getElementById('editTaskPriority').value,
+                deadline: document.getElementById('editTaskDeadline').value
+                };
+
+    const params = new URLSearchParams({
+      taskId: taskId,
+      newBoardId: newBoardId, taskData
+    });
+
+    // Send the request to update (move) the task
+    fetch(`/tasks/update?${params.toString()}`, {
+      method: 'POST',
+      headers: {
+           'Content-Type': 'application/x-www-form-urlencoded',
+         }
+    })
+    .then(response => {
+      if (!response.ok) {
+        throw new Error("Failed to move task");
+      }
+      return response.json();
+    })
+    .then(data => {
+      $('#editTaskModal').modal('hide');
+    })
+    .catch((error) => {
+      console.error('Error moving task:', error);
+    });
+  });
+
 }

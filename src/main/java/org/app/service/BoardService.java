@@ -47,7 +47,6 @@ public class BoardService {
     public Board findBoardById(Integer boardId) throws BoardNotFoundException {
         return boardRepository.findById(boardId).orElseThrow(() -> new BoardNotFoundException("No Found Board"));
     }
-
     public List<Board> getAllDefaultBoards() {
         List<Board> filteredList = new ArrayList<>();
         List<Board> allBoards = (List<Board>) boardRepository.findAll();

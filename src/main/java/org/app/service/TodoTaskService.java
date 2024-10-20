@@ -3,6 +3,7 @@ package org.app.service;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.Random;
 
 import jakarta.transaction.Transactional;
@@ -35,7 +36,7 @@ public class TodoTaskService {
         return taskRepository.save(task);
     }
 
-    public TodoTask updateTask(Integer taskId, Integer newBoardId)
+    public TodoTask moveTask(Integer taskId, Integer newBoardId)
         throws TaskNotFoundException, BoardNotFoundException {
         TodoTask toUpdateTask = taskRepository.findById(taskId)
             .orElseThrow(() -> new TaskNotFoundException("No Found Task"));
@@ -43,6 +44,20 @@ public class TodoTaskService {
         Board newBoard = boardRepository.findById(newBoardId)
             .orElseThrow(() -> new BoardNotFoundException("Board not found"));
 
+        toUpdateTask.setBoard(newBoard);
+        return taskRepository.save(toUpdateTask);
+    }
+
+    public TodoTask updateTask(Integer taskId, String title, String description, Priority priority, LocalDate deadline, Status status, String boardName)
+            throws TaskNotFoundException, BoardNotFoundException{
+
+        Board newBoard = (Board) boardRepository.findBoardByName(boardName);
+        TodoTask toUpdateTask = taskRepository.findById(taskId) .orElseThrow(() -> new TaskNotFoundException("No Found Task"));
+        toUpdateTask.setTitle(title);
+        toUpdateTask.setDescription(description);
+        toUpdateTask.setPriority(priority);
+        toUpdateTask.setDeadline(deadline);
+        toUpdateTask.setStatus(status);
         toUpdateTask.setBoard(newBoard);
         return taskRepository.save(toUpdateTask);
     }

@@ -46,14 +46,14 @@ public class TaskCRUDController {
         return "redirect:/";
     }
 
-    @PostMapping("/update")
+    @PostMapping("/move")
     @ResponseBody
-    public ResponseEntity<Map<String, Object>> updateTask(
+    public ResponseEntity<Map<String, Object>> moveTask(
         @RequestParam("taskId") Integer taskId,
-        @RequestParam("newBoardId") Integer newBoardId)
+        @RequestParam("boardId") Integer boardId)
         throws TaskNotFoundException, BoardNotFoundException {
 
-        TodoTask todoTask = taskService.updateTask(taskId, newBoardId);
+        TodoTask todoTask = taskService.moveTask(taskId, boardId);
 
         Map<String, Object> response = new HashMap<>();
         response.put("message", "Task moved successfully");
@@ -61,6 +61,29 @@ public class TaskCRUDController {
 
         return ResponseEntity.ok(response);
     }
+
+    @PostMapping("/update")
+    @ResponseBody
+    public ResponseEntity<Map<String, Object>> updateTask(
+            @RequestParam("taskId") Integer taskId,
+            @RequestParam("title") String title,
+            @RequestParam("description") String description,
+            @RequestParam("priority") Priority priority,
+            @RequestParam("deadline") String deadline,
+            @RequestParam("boardName") String boardName
+            )
+            throws TaskNotFoundException, BoardNotFoundException {
+        Status status = Status.valueOf(boardName);
+        LocalDate convertedDeadline = LocalDate.parse(deadline);
+        TodoTask todoTask = taskService.updateTask(taskId, title, description, priority, convertedDeadline, status, boardName);
+
+        Map<String, Object> response = new HashMap<>();
+        response.put("message", "Task moved successfully");
+        response.put("task", todoTask);
+
+        return ResponseEntity.ok(response);
+    }
+
 
 
     // TODO: handle exceptions by redirecting to an error page

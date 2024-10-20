@@ -25,7 +25,7 @@ function drop(event) {
         newBoardId: newBoardId
     });
 
-    fetch(`/tasks/update?${params.toString()}`, {
+    fetch(`/tasks/move?${params.toString()}`, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
