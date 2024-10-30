@@ -51,30 +51,31 @@ function openEditTaskModal(taskElement) {
 
         var taskId = document.getElementById('editTaskId').value;
         var newBoardName = document.getElementById('editTaskStatus').value;
-        var taskData = {
-          title: document.getElementById('editTaskTitle').value,
-          description: document.getElementById('editTaskDescription').value,
-          priority: document.getElementById('editTaskPriority').value,
-          deadline: document.getElementById('editTaskDeadline').value
-        };
+        var title = document.getElementById('editTaskTitle').value;
+        var description = document.getElementById('editTaskDescription').value;
+        var priority = document.getElementById('editTaskPriority').value;
+        var deadline = document.getElementById('editTaskDeadline').value;
+
 
         const params = new URLSearchParams({
           taskId: taskId,
-          boardName: newBoardName
+          boardName: newBoardName,
+          title: title,
+          description: description,
+          priority: priority,
+          deadline: deadline
         });
 
-        // Send the request to update (move) the task
         fetch(`/tasks/update?${params.toString()}`,
             {
               method: 'POST',
               headers: {
                 'Content-Type': 'application/json',
-              },
-              body: JSON.stringify(taskData)
+              }
             })
         .then(response => {
           if (!response.ok) {
-            throw new Error("Failed to move task");
+            throw new Error("Failed to update task");
           }
           return response.json();
         })
@@ -82,8 +83,7 @@ function openEditTaskModal(taskElement) {
           $('#editTaskModal').modal('hide');
         })
         .catch((error) => {
-          console.error('Error moving task:', error);
+          console.error('Error updating task:', error);
         });
       });
-
 }

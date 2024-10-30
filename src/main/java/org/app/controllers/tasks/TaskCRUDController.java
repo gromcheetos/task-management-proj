@@ -65,18 +65,20 @@ public class TaskCRUDController {
 
     @PostMapping("/update")
     @ResponseBody
-    public ResponseEntity<Map<String, Object>> updateTask(@RequestParam("boardName") String boardName,
-        @RequestParam("taskId") int taskId,
-        @RequestBody TaskData taskData)
-        throws TaskNotFoundException, BoardNotFoundException {
+    public ResponseEntity<Map<String, Object>> updateTask(
+        @RequestParam("taskId") Integer taskId,
+        @RequestParam("boardName") String boardName,
+        @RequestParam("title") String title,
+        @RequestParam("description") String description,
+        @RequestParam("priority") String priority,
+        @RequestParam("deadline") String deadline)
+            throws TaskNotFoundException, BoardNotFoundException, UserNotFoundException {
         Status status = Status.valueOf(boardName);
-        LocalDate convertedDeadline = LocalDate.parse(taskData.getDeadline());
-        TodoTask todoTask = taskService.updateTask(taskId, taskData.getTitle(), taskData.getDescription(),
-            Priority.valueOf(taskData.getPriority()), convertedDeadline, status,
+        LocalDate convertedDeadline = LocalDate.parse(deadline);
+        TodoTask todoTask = taskService.updateTask(taskId, title, description,
+            Priority.valueOf(priority), convertedDeadline, status,
             Status.valueOf(boardName).toString());
-
         Map<String, Object> response = new HashMap<>();
-        response.put("message", "Task moved successfully");
         response.put("task", todoTask);
 
         return ResponseEntity.ok(response);

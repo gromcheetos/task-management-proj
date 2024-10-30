@@ -51,7 +51,7 @@ public class TodoTaskService {
     public TodoTask updateTask(Integer taskId, String title, String description, Priority priority, LocalDate deadline, Status status, String boardName)
             throws TaskNotFoundException, BoardNotFoundException{
 
-        Board newBoard = (Board) boardRepository.findBoardByBoardName(Status.valueOf(boardName).getValue());
+        Board newBoard = boardRepository.findBoardByBoardName(Status.valueOf(boardName).getValue());
         TodoTask toUpdateTask = taskRepository.findById(taskId) .orElseThrow(() -> new TaskNotFoundException("No Found Task"));
         toUpdateTask.setTitle(title);
         toUpdateTask.setDescription(description);

@@ -25,12 +25,15 @@ public class BoardService {
     private final ProjectRepository projectRepository;
 
     // TODO: modify the singature of this method to accept a project object
-    public Board createBoard(Board board) {
-        // TODO: create functionality to add board to a specific project
-        // make sure to save the board and project changes using save method on both board and project repositories
+    public Board createBoard(Integer newProjectId, Board board) {
+        if(newProjectId != null){
+            boardRepository.saveBoardsByProject(String.valueOf(board));
+        }
         return boardRepository.save(board);
     }
-
+    public Board createBoard(Board board) {
+        return createBoard(null, board);
+    }
     public Board updateBoard(int boardId, String boardName, String description) throws BoardNotFoundException {
         Board toUpdateBoard = boardRepository.findById(boardId)
             .orElseThrow(() -> new BoardNotFoundException("No Found Board"));
@@ -78,8 +81,8 @@ public class BoardService {
         boardRepository.saveAll(boards);
     }
 
-    private void createDefaultBoardForNewUsers(User user, String boardName, String description, Status status,
-        boolean isDefault) {
+    public void createDefaultBoardForNewUsers(User user, String boardName, String description, Status status,
+                                              boolean isDefault) {
         Board defaultBoard = new Board(boardName, description, isDefault, Status.TO_DO, new ArrayList<>(), user);
         defaultBoard.setDefault(true);
         defaultBoard.setStatus(Status.TO_DO);

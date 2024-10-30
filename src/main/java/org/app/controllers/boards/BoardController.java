@@ -7,6 +7,7 @@ import org.app.exceptions.UserNotFoundException;
 import org.app.model.Board;
 import org.app.model.TodoTask;
 import org.app.model.User;
+import org.app.model.enums.Status;
 import org.app.service.BoardService;
 import org.app.service.SearchService;
 import org.app.service.TodoTaskService;
@@ -38,13 +39,20 @@ public class BoardController {
 
     @PostMapping("/create")
     public String createBoard(@RequestParam("boardName") String boardName,
-        @RequestParam("description") String description, Model model) throws UserNotFoundException {
+                              @RequestParam("description") String description,
+                              @RequestParam("status") String status,
+                              @RequestParam(value = "projectId",  required = false) Integer projectId) throws UserNotFoundException {
 
         // TODO: add board to the project as well
         User currentUser = userService.getCurrentUser();
         Board board = new Board(boardName, description);
         board.setUser(currentUser);
-        boardService.createBoard(board);
+        if(projectId != null){
+            boardService.createBoard(projectId, board);
+        }else if(projectId == null){
+            boardService.createDefaultBoardForNewUsers(currentUser, boardName, description, Status.valueOf(status), true);
+        }
+        //boardService.createBoard(board);
         return "redirect:/";
     }
 

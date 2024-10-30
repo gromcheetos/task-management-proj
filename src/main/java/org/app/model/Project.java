@@ -5,6 +5,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 
@@ -20,14 +21,14 @@ import lombok.NoArgsConstructor;
 public class Project {
 
     @Id
-    private int projectId;
+    private Integer projectId;
     private String projectName;
 
     @OneToMany
     private Set<User> teamMembers;
 
     @OneToMany
-    private Set<Board> boards;
+    private List<Board> boards;
 
     @OneToOne
     private User projectOwner;
@@ -40,14 +41,13 @@ public class Project {
     public Project() {
         this.projectName = "NOT SET";
         this.teamMembers = new HashSet<>();
-        this.boards = new HashSet<>();
         this.projectOwner = new User();
     }
 
-    public Project(String projectName, Set<User> teamMembers, Set<Board> boards, User projectOwner) {
+    public Project(String projectName, Set<User> teamMembers, List<Board> boards, User projectOwner) {
         this.projectName = projectName;
         this.teamMembers = new HashSet<>();
-        this.boards = new HashSet<>();
+        this.boards = boards;
         this.projectOwner = projectOwner;
     }
 

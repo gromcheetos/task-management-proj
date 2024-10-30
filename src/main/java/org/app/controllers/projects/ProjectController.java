@@ -39,7 +39,9 @@ public class ProjectController {
         Project project = new Project(projectName);
         project.setProjectOwner(currentUser);
         projectService.createProject(project);
-        List<Board> boards = Collections.singletonList(boardService.createBoard((Board) boardNames)); //board
+        Integer newProjectId = project.getProjectId();
+        List<Board> boards = Collections.singletonList(boardService.createBoard(newProjectId, (Board) boardNames)); //board
+        project.setBoards(boards);
         project.setTeamMembers(teamMembers);
         return "redirect:/";
     }
