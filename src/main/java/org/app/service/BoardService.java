@@ -4,6 +4,7 @@ import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import java.util.ArrayList;
 import org.app.exceptions.BoardNotFoundException;
+import org.app.mocks.MockData;
 import org.app.model.Board;
 import org.app.model.Project;
 import org.app.model.User;
@@ -25,15 +26,13 @@ public class BoardService {
     private final ProjectRepository projectRepository;
 
     // TODO: modify the singature of this method to accept a project object
-    public Board createBoard(Integer newProjectId, Board board) {
-        if(newProjectId != null){
-            boardRepository.saveBoardsByProject(String.valueOf(board));
-        }
+    public Board createBoard(int newProjectId, Board board) {
+        Project project = projectRepository.findById(newProjectId).orElseThrow();
+        project.getBoards().add(board);
+        projectRepository.save(project);
         return boardRepository.save(board);
     }
-    public Board createBoard(Board board) {
-        return createBoard(null, board);
-    }
+
     public Board updateBoard(int boardId, String boardName, String description) throws BoardNotFoundException {
         Board toUpdateBoard = boardRepository.findById(boardId)
             .orElseThrow(() -> new BoardNotFoundException("No Found Board"));
@@ -50,6 +49,7 @@ public class BoardService {
     public Board findBoardById(Integer boardId) throws BoardNotFoundException {
         return boardRepository.findById(boardId).orElseThrow(() -> new BoardNotFoundException("No Found Board"));
     }
+
     public List<Board> getAllDefaultBoards() {
         List<Board> filteredList = new ArrayList<>();
         List<Board> allBoards = (List<Board>) boardRepository.findAll();
@@ -82,11 +82,12 @@ public class BoardService {
     }
 
     public void createDefaultBoardForNewUsers(User user, String boardName, String description, Status status,
-                                              boolean isDefault) {
+        boolean isDefault) {
         Board defaultBoard = new Board(boardName, description, isDefault, Status.TO_DO, new ArrayList<>(), user);
         defaultBoard.setDefault(true);
         defaultBoard.setStatus(Status.TO_DO);
-        createBoard(defaultBoard);
+        Project defaultProject = projectRepository.findProjectByProjectName(MockData.DEFAULT_PROJECT_NAME);
+        createBoard(defaultProject.getProjectId(), defaultBoard);
     }
 
 }

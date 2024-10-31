@@ -1,6 +1,10 @@
 package org.app.model;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
@@ -12,7 +16,6 @@ import java.util.Set;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 
 @Entity
 @Data
@@ -21,13 +24,14 @@ import lombok.NoArgsConstructor;
 public class Project {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private Integer projectId;
     private String projectName;
 
     @OneToMany
     private Set<User> teamMembers;
 
-    @OneToMany
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private List<Board> boards;
 
     @OneToOne
@@ -42,13 +46,6 @@ public class Project {
         this.projectName = "NOT SET";
         this.teamMembers = new HashSet<>();
         this.projectOwner = new User();
-    }
-
-    public Project(String projectName, Set<User> teamMembers, List<Board> boards, User projectOwner) {
-        this.projectName = projectName;
-        this.teamMembers = new HashSet<>();
-        this.boards = boards;
-        this.projectOwner = projectOwner;
     }
 
     protected void addBoard(Board board) {

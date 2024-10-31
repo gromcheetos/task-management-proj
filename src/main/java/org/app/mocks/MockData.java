@@ -8,11 +8,13 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 import org.app.model.Board;
+import org.app.model.Project;
 import org.app.model.TodoTask;
 import org.app.model.User;
 import org.app.model.enums.Priority;
 import org.app.model.enums.Status;
 import org.app.service.BoardService;
+import org.app.service.ProjectService;
 import org.app.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -28,12 +30,22 @@ public class MockData {
     @Autowired
     private BoardService boardService;
 
+    @Autowired
+    private ProjectService projectService;
+
     private User testUser;
+
+    private Project defaultProject;
+
+    public static final String DEFAULT_PROJECT_NAME = "Default Project";
 
     @PostConstruct
     public void createMockData() {
         User mockUser = new User("Lara Kroft", "lara@gmail.com", "lara");
         User defaultUser = new User("John Doe", "johndoe@gmail.com", "john");
+
+        defaultProject = new Project(DEFAULT_PROJECT_NAME);
+        projectService.createProject(defaultProject);
 
         testUser = userService.createUser(mockUser, "pass");
         userService.createUser(defaultUser, "pass");
@@ -123,6 +135,6 @@ public class MockData {
 
     private void createDefaultBoard() {
         Board defaultBoard = new Board();
-        boardService.createBoard(defaultBoard);
+        boardService.createBoard(defaultProject.getProjectId(), defaultBoard);
     }
 }
