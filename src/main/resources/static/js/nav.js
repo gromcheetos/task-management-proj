@@ -18,3 +18,30 @@ function showProfileImageUpload(){
         console.error("Close button or slide menu not found.");
     }
 }
+
+
+// Get references to elements
+const menuBtn = document.getElementById('showSlideBtn');
+const slideMenu = document.getElementById('slideMenu');
+const closeBtn = document.getElementById('close');
+
+// Open the slide-in menu
+menuBtn.addEventListener('click', () => {
+    slideMenu.classList.add('active');
+});
+
+// Close the slide-in menu
+closeBtn.addEventListener('click', () => {
+    slideMenu.classList.remove('active');
+});
+
+// Optionally, close menu when clicking outside (if desired)
+document.addEventListener('click', (e) => {
+    if (!slideMenu.contains(e.target) && !menuBtn.contains(e.target)) {
+        slideMenu.classList.remove('active');
+    }
+});
+
+
+
+

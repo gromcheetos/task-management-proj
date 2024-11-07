@@ -6,8 +6,8 @@
 <body>
   <div class="navbar" th:fragment="navigation">
     <div class="navbar-left">
-      <button class="menu-button">☰</button>
-      <h1>Task Management</h1>
+      <button class="menu-button" id="showSlideBtn">☰</button>
+      <h1>My Project Name</h1>
     </div>
 
     <form action="#" th:action="@{/search}" method="get">
@@ -36,6 +36,16 @@
         <a th:href="@{/users/logout}">Log out</a>
       </form>
     </div>
+  </div>
+
+
+  <!-- Slide-in menu -->
+  <div id="slideMenu" class="slide-menu">
+    <a href="javascript:void(0)" class="close-btn" id="close">&times;</a>
+    <a href="#">Home</a>
+    <a href="#">About</a>
+    <a href="#">Services</a>
+    <a href="#">Contact</a>
   </div>
 
 </body>
