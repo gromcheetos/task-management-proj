@@ -6,7 +6,7 @@
 <body>
   <div class="navbar" th:fragment="navigation">
     <div class="navbar-left">
-      <button class="menu-button" id="showSlideBtn">☰</button>
+      <button class="menu-button" id="showSlideBtn" onclick="showProjectMenuItem();">☰</button>
       <h1>My Project Name</h1>
     </div>
 
@@ -36,17 +36,20 @@
         <a th:href="@{/users/logout}">Log out</a>
       </form>
     </div>
+
+    <div id="projects-slider" class="slide-menu">
+      <a href="javascript:void(0)" class="close-btn" id="projSlider-close">&times;</a>
+      <a href="#">Home</a>
+      <a href="#">About</a>
+      <a href="#">Services</a>
+      <a href="#">Contact</a>
+    </div>
   </div>
 
 
-  <!-- Slide-in menu -->
-  <div id="slideMenu" class="slide-menu">
-    <a href="javascript:void(0)" class="close-btn" id="close">&times;</a>
-    <a href="#">Home</a>
-    <a href="#">About</a>
-    <a href="#">Services</a>
-    <a href="#">Contact</a>
-  </div>
+  <!-- Slide-in menu for projects -->
 
+
+<!--  <script type="text/javascript" th:src="@{/js/nav.js}"></script>-->
 </body>
 </html>

@@ -156,10 +156,8 @@ body {
 }
 
 
-
-
-* Slide-In Menu Styling */
-.slide-menu {
+/* Slide-In Menu Styling */
+.slide-menu{
     height: 100%;
     width: 0; /* Initially hidden */
     position: fixed;
