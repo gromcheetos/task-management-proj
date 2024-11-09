@@ -71,7 +71,7 @@ body {
 }
 
 /* Slide-In Menu Styling */
-.slide-menu {
+.slide-right {
     height: 100%;
     width: 0;
     position: fixed;
@@ -85,7 +85,7 @@ body {
     color: white;
 }
 
-.slide-menu a {
+.slide-right a {
     padding: 8px 8px 8px 32px;
     text-decoration: none;
     font-size: 25px;
@@ -94,12 +94,12 @@ body {
     transition: 0.3s;
 }
 
-.slide-menu a:hover {
+.slide-right a:hover {
     background-color: #1F3A57;
     color: #ffeb3b;
 }
 
-.slide-menu .close-btn {
+.slide-right .close-btn {
     position: absolute;
     top: 20px;
     right: 25px;
@@ -108,18 +108,18 @@ body {
     color: #ffffff;
 }
 
-.slide-menu .close-btn:hover {
+.slide-right .close-btn:hover {
     color: #ffeb3b;
 }
 
 /* When the slide-in menu is active (open) */
-.slide-menu.active {
+.slide-right.active {
     width: 250px;
 }
 
 @media screen and (max-height: 450px) {
-  .slide-menu {padding-top: 15px;}
-  .slide-menu a {font-size: 18px;}
+  .slide-right {padding-top: 15px;}
+  .slide-right a {font-size: 18px;}
 }
 
 .navbar-center {
@@ -157,108 +157,86 @@ body {
 
 
 /* Slide-In Menu Styling */
-.slide-menu{
+.slide-left {
     height: 100%;
-    width: 0; /* Initially hidden */
+    width: 0;
     position: fixed;
-    z-index: 1;
+    z-index: 2;
     top: 0;
     left: 0; /* Slide in from left */
-    background-color: #28587B;
+    background-color: #eeeee4;
     overflow-x: hidden;
-    transition: 0.5s;
+    transition: width 0.3s ease-in-out;
     padding-top: 60px;
     color: white;
+    box-shadow: 2px 0 6px rgba(0, 0, 0, 0.2);
 }
 
-.slide-menu a {
-    padding: 8px 8px 8px 32px;
+/* Slide-In Menu Links */
+.slide-left a {
+    padding: 12px 16px;
     text-decoration: none;
-    font-size: 25px;
-    color: #ffffff;
+    font-size: 20px;
+    color: #000306;
     display: block;
-    transition: 0.3s;
+    transition: background-color 0.2s ease, color 0.2s ease;
+}
+.slide-left h1 {
+    color: #000306;
 }
 
-.slide-menu a:hover {
-    background-color: #1F3A57;
-    color: #ffeb3b;
+.slide-left a:hover {
+    background-color: #80b9f1;
+    color: #FFEB3B; /* Yellow text on hover */
 }
 
-.slide-menu .close-btn {
+/* Close Button (X) */
+.slide-left .close-btn {
     position: absolute;
     top: 20px;
-    left: 25px; /* Adjusted to be on the left */
+    right: 25px; /* Adjust to the right side */
     font-size: 36px;
-    margin-left: 50px;
-    color: #ffffff;
+    color: ##80b9f1;
+    cursor: pointer;
+    transition: color 0.3s ease;
 }
 
-.slide-menu .close-btn:hover {
-    color: #ffeb3b;
+.slide-left .close-btn:hover {
+    color: #FFEB3B; /* Yellow on hover */
 }
 
 /* When the slide-in menu is active (open) */
-.slide-menu.active {
-    width: 250px; /* Show the menu with this width */
+.slide-left.active {
+    width: 280px; /* Show the menu with this width */
+}
+
+/* Smaller Screens */
+@media screen and (max-width: 768px) {
+    .slide-left {
+        padding-top: 50px; /* Adjust padding for smaller screens */
+    }
+
+    .slide-left a {
+        font-size: 18px; /* Smaller text size */
+    }
+
+    .slide-left .close-btn {
+        top: 15px; /* Adjust the close button position */
+        right: 15px;
+    }
+}
+
+/* Additional styles for smoother user experience */
+.slide-left a:focus,
+.slide-left .close-btn:focus {
+    outline: none; /* Remove default focus outline */
 }
 
 @media screen and (max-height: 450px) {
-  .slide-menu {padding-top: 15px;}
-  .slide-menu a {font-size: 18px;}
-}
-
-.navbar-center {
-    display: flex;
-    justify-content: center;
-    width: 100%;
-}
-
-.search-container {
-    display: flex;
-    align-items: center;
-}
-
-.search-container input {
-    padding: 5px;
-    font-size: 16px;
-    border-radius: 5px;
-    border: 1px solid #ccc;
-    margin-right: 5px; /* Space between input and button */
-}
-
-.search-container button {
-    padding: 5px 10px;
-    font-size: 16px;
-    border: none;
-    border-radius: 5px;
-    background-color: #17a2b8;
-    color: white;
-    cursor: pointer;
-}
-
-.search-container button:hover {
-    background-color: #138496;
-}
-
-body {
-    margin: 0;
-    font-family: 'Roboto', Arial, sans-serif;
-    display: flex;
-    flex-direction: column;
-    height: 100vh;
-    background-color: #f5f7fb;
-    color: #333;
-}
-
-.content {
-    display: flex;
-    flex-grow: 1;
-    overflow: hidden;
-}
-
-@media screen and (max-width: 768px) {
-    .content {
-        flex-direction: column;
+    .slide-left a {
+        font-size: 16px; /* Smaller font size for very short screens */
     }
+}
+
+
 }

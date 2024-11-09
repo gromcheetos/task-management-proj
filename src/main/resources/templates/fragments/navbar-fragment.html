@@ -23,7 +23,7 @@
       <img src="/images/profile.png" alt="Profile Photo" class="profile-photo" id="profileImage" onclick="showProfileImageUpload();">
     </div>
 
-    <div id="slider-menu" class="slide-menu">
+    <div id="slider-menu" class="slide-right">
       <a href="javascript:void(0)" class="close-btn" id="closeBtn">&times;</a>
       <a href="#">Profile</a>
       <a sec:authorize="isAuthenticated()">My page</a>
@@ -37,12 +37,13 @@
       </form>
     </div>
 
-    <div id="projects-slider" class="slide-menu">
+    <div id="projects-slider" class="slide-left">
       <a href="javascript:void(0)" class="close-btn" id="projSlider-close">&times;</a>
-      <a href="#">Home</a>
-      <a href="#">About</a>
-      <a href="#">Services</a>
-      <a href="#">Contact</a>
+      <h1> Project List </h1>
+      <a href="#">project1</a>
+      <a href="#">project2</a>
+      <a href="#">project3</a>
+      <a href="#">project4</a>
     </div>
   </div>
 

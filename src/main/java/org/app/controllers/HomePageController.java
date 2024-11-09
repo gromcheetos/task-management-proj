@@ -35,7 +35,7 @@ public class HomePageController {
         List<Board> boards;
         int completedTasks = 0;
         int totalTasks = 0;
-        if (currentUser.getBoards().isEmpty()) {
+        if (currentUser != null && currentUser.getBoards().isEmpty()) {
             boards = boardService.getAllDefaultBoards();
         } else {
             boards = boardService.findBoardsByUserId(currentUser.getId());
