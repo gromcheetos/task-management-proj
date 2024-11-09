@@ -86,7 +86,6 @@ public class BoardController {
             Map<Integer, List<TodoTask>> tasksByBoardId = tasks.stream()
                 .filter(task -> priorities.contains(task.getPriority().name()))
                 .collect(Collectors.groupingBy(TodoTask::getBoardId));
-
             filteredBoards = filteredBoards.stream()
                 .peek(board -> board.setTasks(tasksByBoardId.getOrDefault(board.getBoardId(), Collections.emptyList())))
                 .filter(board -> !board.getTasks().isEmpty()) // Remove boards with no tasks after filtering

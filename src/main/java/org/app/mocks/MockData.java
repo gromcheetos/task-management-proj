@@ -2,7 +2,6 @@ package org.app.mocks;
 
 import static org.app.model.enums.Priority.*;
 
-import jakarta.annotation.PostConstruct;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -22,8 +21,6 @@ import org.springframework.stereotype.Component;
 @Component
 public class MockData {
 
-    // TODO: add functionality here to add mock projects and make sure they are saved into the database
-
     @Autowired
     private UserService userService;
 
@@ -39,7 +36,6 @@ public class MockData {
 
     public static final String DEFAULT_PROJECT_NAME = "Default Project";
 
-    @PostConstruct
     public void createMockData() {
         User mockUser = new User("Lara Kroft", "lara@gmail.com", "lara");
         User defaultUser = new User("John Doe", "johndoe@gmail.com", "john");
