@@ -28,7 +28,7 @@ public class ProjectController {
     private final UserService userService;
     private final BoardService boardService;
 // TODO: add board to the project as well
-
+// changed
     @PostMapping("/create")
     public String createProject(@RequestParam("projectName") String projectName,
                                 @RequestParam(value = "boardName", required = false) List<String> boardNames,
