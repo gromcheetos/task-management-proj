@@ -6,7 +6,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.app.exceptions.UserNotFoundException;
 import org.app.model.Board;
 import org.app.model.Project;
-import org.app.model.TodoTask;
 import org.app.model.User;
 import org.app.model.enums.Status;
 import org.app.service.BoardService;
@@ -30,38 +29,26 @@ public class HomePageController {
     private final TodoTaskService taskService;
     private final ProjectService projectService;
 
-    // TODO: check why statuses is not used
     @GetMapping
-    public String getUserBoards(Model model, @RequestParam(required = false) List<Status> statuses)
+    public String showHomePage(Model model, @RequestParam(required = false) List<Status> statuses)
         throws UserNotFoundException {
         User currentUser = userService.getCurrentUser();
-        List<Board> boards;
-        int completedTasks = 0;
-        int totalTasks = 0;
-        if (currentUser != null && currentUser.getBoards().isEmpty()) {
-            boards = boardService.getAllDefaultBoards();
+        if (currentUser == null) {
+            return "redirect:/login";
+        } else if (currentUser.getProjects().isEmpty()) {
+            return "redirect:/project/show";
         } else {
-            boards = boardService.findBoardsByUserId(currentUser.getId());
-            totalTasks = taskService.getTasksByUserId(currentUser.getId()).size();
-            completedTasks = taskService.getCompletedTasksCount(currentUser.getId());
+            List<Board> boards = boardService.findBoardsByUserId(currentUser.getId());
+            List<Project> projects = projectService.getAllProjects();
+            int totalTasks = taskService.getTasksByUserId(currentUser.getId()).size();
+            int completedTasks = taskService.getCompletedTasksCount(currentUser.getId());
+            model.addAttribute("userBoards", boards);
+            model.addAttribute("currentUser", currentUser);
+            model.addAttribute("totalTasks", totalTasks);
+            model.addAttribute("completedTasks", completedTasks);
+            model.addAttribute("allProjects", projects);
+            return "home";
         }
-        model.addAttribute("userBoards", boards);
-        model.addAttribute("currentUser", currentUser);
-        model.addAttribute("totalTasks", totalTasks);
-        model.addAttribute("completedTasks", completedTasks);
-
-        return "home";
     }
-    @GetMapping
-    public String getUserProject(Model model)
-            throws UserNotFoundException {
-        User currentUser = userService.getCurrentUser();
-        List<Project> projects = projectService.findProjectsByUserId(currentUser.getId());
-        model.addAttribute("currentUser", currentUser);
-        model.addAttribute("projects", projects);
-
-        return "home";
-    }
-
 
 }

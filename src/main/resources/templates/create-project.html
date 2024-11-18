@@ -1,10 +1,6 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Create a New Project</title>
-    <link rel="stylesheet" th:href="@{/css/create_prj.css}">
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/header-fragment.html :: head}"></head>
 <body>
 <div th:replace="~{fragments/navbar-fragment :: navigation}"></div>
 <div class="content">
@@ -31,7 +27,7 @@
     </div>
 </div>
 </div>
-<div th:replace="~{fragments/createPrj-fragment :: createPrj}"></div>
+<div th:replace="~{fragments/create-project-fragment :: createPrj}"></div>
 
 </body>
 </html>

@@ -6,6 +6,7 @@ import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 import java.util.HashSet;
@@ -34,7 +35,7 @@ public class Project {
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private List<Board> boards;
 
-    @OneToOne
+    @ManyToOne
     private User projectOwner;
 
 

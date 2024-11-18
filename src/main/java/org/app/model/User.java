@@ -36,6 +36,9 @@ public class User implements UserDetails {
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private List<Board> boards;
 
+    @OneToMany(mappedBy = "projectOwner", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    private List<Project> projects;
+
     public User(String name, String email, String username, String password){
         this.name = name;
         this.email = email;

@@ -1,6 +1,8 @@
 package org.app.service;
 
 import jakarta.transaction.Transactional;
+import java.util.Collections;
+import java.util.Optional;
 import lombok.AllArgsConstructor;
 import java.util.ArrayList;
 import org.app.exceptions.BoardNotFoundException;
@@ -43,7 +45,7 @@ public class BoardService {
     }
 
     public List<Board> findBoardsByUserId(Integer userId) {
-        return boardRepository.findBoardsByUserId(userId);
+        return Optional.ofNullable(boardRepository.findBoardsByUserId(userId)).orElse(Collections.emptyList());
     }
 
     public Board findBoardById(Integer boardId) throws BoardNotFoundException {

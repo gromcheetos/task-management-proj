@@ -2,6 +2,7 @@ package org.app.service;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.Random;
@@ -94,11 +95,7 @@ public class TodoTaskService {
     }
 
     public List<TodoTask> getTasksByUserId(Integer userId) throws UserNotFoundException {
-        List<TodoTask> tasks = taskRepository.findTodoTaskByUserId(userId);
-        if(tasks.isEmpty()){
-            throw new UserNotFoundException("No Found User");
-        }
-        return tasks;
+        return Optional.ofNullable(taskRepository.findTodoTaskByUserId(userId)).orElse(Collections.emptyList());
     }
 
     public List<TodoTask> findTasksByTitle(String title) {
