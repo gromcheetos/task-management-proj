@@ -5,10 +5,12 @@ import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.app.exceptions.UserNotFoundException;
 import org.app.model.Board;
+import org.app.model.Project;
 import org.app.model.TodoTask;
 import org.app.model.User;
 import org.app.model.enums.Status;
 import org.app.service.BoardService;
+import org.app.service.ProjectService;
 import org.app.service.TodoTaskService;
 import org.app.service.UserService;
 import org.springframework.stereotype.Controller;
@@ -26,6 +28,7 @@ public class HomePageController {
     private final BoardService boardService;
     private final UserService userService;
     private final TodoTaskService taskService;
+    private final ProjectService projectService;
 
     // TODO: check why statuses is not used
     @GetMapping
@@ -49,5 +52,16 @@ public class HomePageController {
 
         return "home";
     }
+    @GetMapping
+    public String getUserProject(Model model)
+            throws UserNotFoundException {
+        User currentUser = userService.getCurrentUser();
+        List<Project> projects = projectService.findProjectsByUserId(currentUser.getId());
+        model.addAttribute("currentUser", currentUser);
+        model.addAttribute("projects", projects);
+
+        return "home";
+    }
+
 
 }

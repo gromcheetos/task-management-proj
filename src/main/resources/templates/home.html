@@ -4,7 +4,32 @@
 <head th:replace="~{fragments/header-fragment.html :: head}">
 <body>
 <div th:replace="~{fragments/navbar-fragment :: navigation}"></div>
-<div class="content">
+<th:block class="content">
+  <th:if="${currentUser.projectId} == null">
+    <div class="container">
+      <h1>Create a new project</h1>
+      <p>How would you like to start?</p>
+      <div class="options">
+        <div class="option selected">
+          <button data-toggle="modal" alt="Blank project icon" data-target="#createProject"></button>
+          <div class="option-title">Blank project</div>
+          <div class="option-description">Start from scratch</div>
+        </div>
+        <div class="option">
+          <img src="https://via.placeholder.com/40" alt="Use a template icon">
+          <div class="option-title">Use a template</div>
+          <div class="option-description">Choose from library</div>
+        </div>
+        <div class="option">
+          <img src="https://via.placeholder.com/40" alt="Import spreadsheet icon">
+          <div class="option-title">Import spreadsheet</div>
+          <div class="option-description">Add from another tool</div>
+        </div>
+      </div>
+    </div>
+    <div th:replace="~{fragments/createPrj-fragment :: createPrj}"></div>
+</th:block>
+
   <div th:replace="~{fragments/sidebar-fragment :: sidebar}" class="sidebar"></div>
   <div class="main-content">
     <div sec:authorize="!isAuthenticated()">
