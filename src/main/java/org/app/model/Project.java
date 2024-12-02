@@ -28,6 +28,7 @@ public class Project {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Integer projectId;
     private String projectName;
+    private String description;
 
     @OneToMany
     private Set<User> teamMembers;

@@ -32,7 +32,7 @@ public class AuthenticationController {
         List<Board> defaultBoards = boardService.getAllDefaultBoards();
         newUser.setBoards(defaultBoards);
         userService.createUser(newUser, password);
-        return "create-project";
+        return "login-page";
     }
 
 }

@@ -1,7 +1,8 @@
 package org.app.service;
 
 import lombok.AllArgsConstructor;
-import org.app.model.Board;
+import org.app.exceptions.BoardNotFoundException;
+import org.app.exceptions.ProjectNotFoundException;
 import org.app.model.Project;
 import org.app.model.User;
 import org.app.repository.ProjectRepository;
@@ -9,6 +10,7 @@ import org.app.repository.UserRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 // TODO: Implement the ProjectService class
 @Service
@@ -22,6 +24,9 @@ public class ProjectService {
         return projectRepository.save(project);
     }
 
+    public Project findProjectByProjectId(Integer projectId) throws ProjectNotFoundException {
+        return projectRepository.findById(projectId).orElseThrow(() -> new ProjectNotFoundException("No Found Board"));
+    }
     public Project getProjectByName(String projectName){
         return projectRepository.findProjectByProjectName(projectName);
     }

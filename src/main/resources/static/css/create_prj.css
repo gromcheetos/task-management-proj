@@ -4,23 +4,25 @@
     padding: 0;
     font-family: Arial, sans-serif;
 }
-
-body {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    height: 100vh;
-    background-color: #f7f7f7;
-}
-
 .container {
     text-align: center;
 }
 
-h1 {
+.main-content-create-prj {
+    flex-grow: 1;
+    padding: 40px;
+    overflow-y: auto;
+    background-color: #ffffff;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    margin: 40px;
+}
+
+.header-contents{
+    text-align: center;
+    margin: 40px;
     font-size: 2rem;
     color: #333;
-    margin-bottom: 8px;
 }
 
 p {
@@ -31,14 +33,14 @@ p {
 
 .options {
     display: flex;
-    gap: 24px;
+    gap: 100px;
     justify-content: center;
 }
 
 .option {
     width: 150px;
     padding: 20px;
-    border: 2px dashed #ccc;
+    border: 3px dashed #ccc;
     border-radius: 8px;
     text-align: center;
     transition: all 0.3s ease;
@@ -70,4 +72,10 @@ p {
 
 .selected {
     border-color: #8a4baf;
+}
+
+.new-prj-btn{
+    background: transparent;
+    border-radius: 7px;
+    padding: 2px 8px;
 }

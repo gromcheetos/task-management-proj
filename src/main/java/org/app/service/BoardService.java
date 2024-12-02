@@ -92,4 +92,8 @@ public class BoardService {
         createBoard(defaultProject.getProjectId(), defaultBoard);
     }
 
+    public void createDefaultBoardsForNewProject(User currentUser, String boardName) {
+        Board defaultBoard = new Board(boardName, currentUser);
+        boardRepository.save(defaultBoard);
+    }
 }

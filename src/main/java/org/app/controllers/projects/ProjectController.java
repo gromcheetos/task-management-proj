@@ -2,10 +2,12 @@ package org.app.controllers.projects;
 
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.app.exceptions.ProjectNotFoundException;
 import org.app.exceptions.UserNotFoundException;
 import org.app.model.Board;
 import org.app.model.Project;
 import org.app.model.User;
+import org.app.model.enums.Status;
 import org.app.service.BoardService;
 import org.app.service.ProjectService;
 import org.app.service.UserService;
@@ -34,7 +36,7 @@ public class ProjectController {
     @PostMapping("/create")
     public String createProject(@RequestParam("projectName") String projectName,
         @RequestParam(value = "boardName", required = false) List<String> boardNames,
-        @RequestParam(value = "teamMembers", required = false) Set<User> teamMembers,
+        @RequestParam(value = "description", required = false) String description,
         Model model) throws UserNotFoundException {
 
         User currentUser = userService.getCurrentUser();
@@ -44,8 +46,23 @@ public class ProjectController {
         Integer newProjectId = project.getProjectId();
         List<Board> boards = Collections.singletonList(
             boardService.createBoard(newProjectId, (Board) boardNames));
+        if(boardNames == null){
+            for(Status status : Status.values()){
+                boardService.createDefaultBoardsForNewProject(currentUser, status.getValue());
+            }
+        }
         project.setBoards(boards);
-        project.setTeamMembers(teamMembers);
+        project.setDescription(description);
+        return "redirect:/";
+    }
+
+    @PostMapping("/add/member")
+    public String insertTeamMember(@RequestParam("projectId") int projectId,
+            @RequestParam(value = "teamMembers", required = false) Set<User> teamMembers,
+                                   Model model) throws UserNotFoundException, ProjectNotFoundException {
+        User currentUser = userService.getCurrentUser();
+        Project teamProject = projectService.findProjectByProjectId(projectId);
+        teamProject.setTeamMembers(teamMembers);
         return "redirect:/";
     }
 

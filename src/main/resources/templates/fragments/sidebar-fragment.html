@@ -3,7 +3,7 @@
       xmlns:sec="http://www.thymeleaf.org/extras/spring-security" xmlns:th="http://www.thymeleaf.org"
       xmlns:javascript="http://www.w3.org/1999/xhtml">
 <head th:replace="~{fragments/header-fragment.html :: head}">
-<body><
+<body>
 <div th:fragment="sidebar" class="sidebar">
     <div class="sidebar">
         <div class="sidebar-menu">
@@ -18,7 +18,9 @@
             <a sec:authorize="isAuthenticated()">Project</a>
             <ul sec:authorize="isAuthenticated()">
                 <li>
-                    Add team member
+                    <a id="add-member-btn" class="add-member-btn" data-toggle="modal" data-target="#addMemberModal" >
+                        Add team member
+                    </a>
                 </li>
             </ul>
 
@@ -32,6 +34,12 @@
 
             $('.add-board-btn').click(function () {
                 $('#addBoardModal').modal('show');
+            });
+
+            $('#addMemberModal').modal('hide');
+
+            $('.add-member-btn').click(function () {
+                $('#addMemberModal').modal('show');
             });
         });
 
