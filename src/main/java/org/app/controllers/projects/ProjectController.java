@@ -17,9 +17,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-
-import java.util.Collections;
-import java.util.List;
 import java.util.Set;
 
 @Controller
@@ -35,31 +32,23 @@ public class ProjectController {
     // TODO: add board to the project as well changed
     @PostMapping("/create")
     public String createProject(@RequestParam("projectName") String projectName,
-        @RequestParam(value = "boardName", required = false) List<String> boardNames,
-        @RequestParam(value = "description", required = false) String description,
-        Model model) throws UserNotFoundException {
-
+        @RequestParam(value = "description", required = false) String description) throws UserNotFoundException {
         User currentUser = userService.getCurrentUser();
         Project project = new Project(projectName);
         project.setProjectOwner(currentUser);
-        projectService.createProject(project);
-        Integer newProjectId = project.getProjectId();
-        List<Board> boards = Collections.singletonList(
-            boardService.createBoard(newProjectId, (Board) boardNames));
-        if(boardNames == null){
-            for(Status status : Status.values()){
-                boardService.createDefaultBoardsForNewProject(currentUser, status.getValue());
-            }
+        for (Status status : Status.values()) {
+            Board board = boardService.createDefaultBoardsForNewProject(status.getValue());
+            project.getBoards().add(board);
         }
-        project.setBoards(boards);
         project.setDescription(description);
+        projectService.createProject(project);
         return "redirect:/";
     }
 
     @PostMapping("/add/member")
     public String insertTeamMember(@RequestParam("projectId") int projectId,
-            @RequestParam(value = "teamMembers", required = false) Set<User> teamMembers,
-                                   Model model) throws UserNotFoundException, ProjectNotFoundException {
+        @RequestParam(value = "teamMembers", required = false) Set<User> teamMembers,
+        Model model) throws UserNotFoundException, ProjectNotFoundException {
         User currentUser = userService.getCurrentUser();
         Project teamProject = projectService.findProjectByProjectId(projectId);
         teamProject.setTeamMembers(teamMembers);

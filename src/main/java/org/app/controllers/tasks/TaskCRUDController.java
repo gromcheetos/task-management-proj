@@ -7,7 +7,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.app.exceptions.*;
 import org.app.model.*;
-import org.app.model.dto.TaskData;
 import org.app.model.enums.*;
 import org.app.service.*;
 import org.springframework.http.ResponseEntity;

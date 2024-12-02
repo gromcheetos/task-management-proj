@@ -6,7 +6,6 @@ import org.app.exceptions.TaskNotFoundException;
 import org.app.exceptions.UserNotFoundException;
 import org.app.model.TodoTask;
 import org.app.model.enums.Status;
-import org.app.service.UserService;
 import org.app.service.TodoTaskService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -24,7 +23,6 @@ import java.time.LocalDate;
 public class TaskFilterController {
 
     private final TodoTaskService taskService;
-    private final UserService userService;
 
     @GetMapping("/filter/deadline")
     public ResponseEntity<List<TodoTask>> getTaskByDeadline(@RequestParam("deadline") LocalDate deadline) {

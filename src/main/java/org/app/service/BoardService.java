@@ -13,7 +13,6 @@ import org.app.model.User;
 import org.app.model.enums.Status;
 import org.app.repository.BoardRepository;
 import org.app.repository.ProjectRepository;
-import org.app.repository.UserRepository;
 import org.springframework.stereotype.Service;
 import java.util.List;
 
@@ -22,8 +21,6 @@ import java.util.List;
 public class BoardService {
 
     private final BoardRepository boardRepository;
-
-    private final UserRepository userRepository;
 
     private final ProjectRepository projectRepository;
 
@@ -68,15 +65,12 @@ public class BoardService {
     }
 
     @Transactional
-    public void deleteBoardById(Integer userId, Integer boardId) throws BoardNotFoundException {
+    public void deleteBoardById(Integer boardId) throws BoardNotFoundException {
         Board board = boardRepository.findById(boardId).orElse(null);
         if (board == null) {
             throw new BoardNotFoundException("No found board");
         }
         boardRepository.deleteById(boardId);
-        User user = userRepository.findById(userId).get();
-        user.getBoards().remove(board);
-        userRepository.save(user);
     }
 
     public void saveAll(List<Board> boards) {
@@ -92,8 +86,8 @@ public class BoardService {
         createBoard(defaultProject.getProjectId(), defaultBoard);
     }
 
-    public void createDefaultBoardsForNewProject(User currentUser, String boardName) {
-        Board defaultBoard = new Board(boardName, currentUser);
-        boardRepository.save(defaultBoard);
+    public Board createDefaultBoardsForNewProject(String boardName) {
+        Board defaultBoard = new Board(boardName, "");
+        return boardRepository.save(defaultBoard);
     }
 }

@@ -1,25 +1,19 @@
 package org.app.service;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
-import java.util.Random;
-
-import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import org.app.exceptions.BoardNotFoundException;
 import org.app.exceptions.TaskNotFoundException;
 import org.app.exceptions.UserNotFoundException;
 import org.app.model.Board;
 import org.app.model.TodoTask;
-import org.app.model.User;
 import org.app.model.enums.Priority;
 import org.app.model.enums.Status;
 import org.app.repository.BoardRepository;
 import org.app.repository.TaskRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -50,7 +44,7 @@ public class TodoTaskService {
     }
 
     public TodoTask updateTask(Integer taskId, String title, String description, Priority priority, LocalDate deadline, Status status, String boardName)
-            throws TaskNotFoundException, BoardNotFoundException{
+            throws TaskNotFoundException {
 
         Board newBoard = boardRepository.findBoardByBoardName(Status.valueOf(boardName).getValue());
         TodoTask toUpdateTask = taskRepository.findById(taskId) .orElseThrow(() -> new TaskNotFoundException("No Found Task"));
@@ -76,7 +70,6 @@ public class TodoTaskService {
             throw new TaskNotFoundException("No Found Task");
         }
         taskRepository.deleteById(taskId);
-
     }
 
     public List<TodoTask> getTaskByDeadline(LocalDate deadline) throws TaskNotFoundException {

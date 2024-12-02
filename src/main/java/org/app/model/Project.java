@@ -9,6 +9,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
@@ -42,11 +43,14 @@ public class Project {
 
     public Project(String projectName) {
         this.projectName = projectName;
+        this.boards = new ArrayList<>();
+        this.teamMembers = new HashSet<>();
     }
 
     public Project() {
         this.projectName = "NOT SET";
         this.teamMembers = new HashSet<>();
+        this.boards = new ArrayList<>();
         this.projectOwner = new User();
     }
 

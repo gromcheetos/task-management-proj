@@ -8,9 +8,7 @@ import java.util.List;
 
 @Repository
 public interface BoardRepository extends CrudRepository<Board, Integer> {
+
     List<Board> findBoardsByUserId(Integer userId);
     Board findBoardByBoardName(String boardName);
-
-//    void saveBoardsByProject(String boardsName);
-
 }

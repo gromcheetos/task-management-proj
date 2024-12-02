@@ -18,9 +18,8 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-
 @Data
-@Entity(name = "secured-users")
+@Entity(name = "secured_users")
 @AllArgsConstructor
 @NoArgsConstructor
 public class User implements UserDetails {

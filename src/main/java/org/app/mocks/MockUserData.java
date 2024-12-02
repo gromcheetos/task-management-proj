@@ -17,5 +17,4 @@ public class MockUserData {
         User mockUser = new User("Lara Kroft", "lara@gmail.com", "lara");
         userService.createUser(mockUser, "pass");
     }
-
 }

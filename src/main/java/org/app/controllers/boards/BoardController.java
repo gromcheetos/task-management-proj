@@ -51,13 +51,11 @@ public class BoardController {
         }else if(projectId == null){
             boardService.createDefaultBoardForNewUsers(currentUser, boardName, description, Status.valueOf(status), true);
         }
-        //boardService.createBoard(board);
         return "redirect:/";
     }
 
     @PostMapping("/update")
-    public ResponseEntity<Board> updateBoard(
-        @RequestParam("boardId") Integer boardId,
+    public ResponseEntity<Board> updateBoard(@RequestParam("boardId") Integer boardId,
         @RequestParam("boardName") String boardName,
         @RequestParam("description") String description) {
         try {
@@ -101,10 +99,8 @@ public class BoardController {
     @PostMapping("/delete/{id}")
     public String deleteBoard(@PathVariable("id") Integer boardId) {
         try {
-            User currentUser = userService.getCurrentUser();
-
-            boardService.deleteBoardById(currentUser.getId(), boardId);
-        } catch (UserNotFoundException | BoardNotFoundException exception) {
+            boardService.deleteBoardById(boardId);
+        } catch (BoardNotFoundException exception) {
             // fix this
         }
         return "redirect:/";
