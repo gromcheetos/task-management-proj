@@ -3,8 +3,8 @@
 <head th:replace="fragments/header-fragment.html :: head"></head>
 <body>
 <div class="modal fade" id="addMemberModal" tabindex="-1" role="dialog" aria-hidden="true" th:fragment="addMember">
-
-        <div class="modal">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
             <div class="modal-header">
                 <h2>Share board</h2>
                 <button class="close-btn">&times;</button>
@@ -55,5 +55,6 @@
                 </div>
             </div>
         </div>
+    </div>
 </body>
 </html>

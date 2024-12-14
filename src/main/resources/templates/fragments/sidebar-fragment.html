@@ -15,6 +15,10 @@
                     </a>
                 </li>
             </ul>
+           <!-- <div th:if="${allProjects = null}">
+                <h1></h1>
+                <p>Create a project First</p>
+            </div>-->
             <a sec:authorize="isAuthenticated()">Project</a>
             <ul sec:authorize="isAuthenticated()">
                 <li>
