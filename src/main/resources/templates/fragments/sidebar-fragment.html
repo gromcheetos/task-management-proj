@@ -10,9 +10,7 @@
             <a sec:authorize="isAuthenticated()">Board</a>
             <ul sec:authorize="isAuthenticated()">
                 <li>
-                    <a id="add-board-btn" class="add-board-btn" data-toggle="modal" data-target="#addBoardModal" >
-                        Add new board
-                    </a>
+                    <a id="add-board-btn" class="add-board-btn" data-toggle="modal" data-target="#addBoardModal">Add new board</a>
                 </li>
             </ul>
            <!-- <div th:if="${allProjects = null}">
@@ -22,9 +20,7 @@
             <a sec:authorize="isAuthenticated()">Project</a>
             <ul sec:authorize="isAuthenticated()">
                 <li>
-                    <a id="add-member-btn" class="add-member-btn" data-toggle="modal" data-target="#addMemberModal" >
-                        Add team member
-                    </a>
+                    <a id="add-member-btn" class="add-member-btn" data-toggle="modal" data-target="#addMemberModal">Add team member</a>
                 </li>
             </ul>
 
@@ -33,20 +29,19 @@
     </div>
 
 <script>
-        $(document).ready(function () {
-            $('#addBoardModal').modal('hide');
+    $(document).ready(function () {
+        $('#addBoardModal').modal('hide');
 
-            $('.add-board-btn').click(function () {
-                $('#addBoardModal').modal('show');
-            });
-
-            $('#addMemberModal').modal('hide');
-
-            $('.add-member-btn').click(function () {
-                $('#addMemberModal').modal('show');
-            });
+        $('.add-board-btn').click(function () {
+            $('#addBoardModal').modal('show');
         });
 
+        $('#addMemberModal').modal('hide');
+
+        $('.add-member-btn').click(function () {
+            $('#addMemberModal').modal('show');
+        });
+    });
 </script>
 </body>
 </html>

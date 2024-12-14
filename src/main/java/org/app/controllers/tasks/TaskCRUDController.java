@@ -38,7 +38,7 @@ public class TaskCRUDController {
         LocalDate convertedDeadline = LocalDate.parse(deadline);
 
         TodoTask todoTask = new TodoTask(title, description, Priority.valueOf(priority), convertedDeadline,
-            Status.valueOf(board.getBoardName()));
+           Status.fromValue(board.getBoardName()));
         log.info("After creating TodoTask");
         todoTask.setUser(user);
         todoTask.setBoard(board);
