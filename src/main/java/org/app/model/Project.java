@@ -40,7 +40,6 @@ public class Project {
     @ManyToOne
     private User projectOwner;
 
-
     public Project(String projectName) {
         this.projectName = projectName;
         this.boards = new ArrayList<>();
@@ -86,15 +85,5 @@ public class Project {
     @Override
     public int hashCode() {
         return Objects.hash(projectId, projectName, teamMembers, projectOwner);
-    }
-
-    @Override
-    public String toString() {
-        return "Project{" +
-            "projectId=" + projectId +
-            ", projectName='" + projectName + '\'' +
-            ", teamMembers=" + teamMembers +
-            ", projectOwner=" + projectOwner +
-            '}';
     }
 }

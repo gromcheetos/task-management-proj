@@ -2,6 +2,7 @@ package org.app.controllers.projects;
 
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.app.controllers.util.ProjectCommon;
 import org.app.exceptions.ProjectNotFoundException;
 import org.app.exceptions.UserNotFoundException;
 import org.app.model.Board;
@@ -14,6 +15,7 @@ import org.app.service.UserService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -28,12 +30,13 @@ public class ProjectController {
     private final ProjectService projectService;
     private final UserService userService;
     private final BoardService boardService;
+    private final ProjectCommon projectCommon;
 
     // TODO: add board to the project as well changed
     @PostMapping("/create")
     public String createProject(@RequestParam("projectName") String projectName,
         @RequestParam(value = "description", required = false) String description,
-    Model model) throws UserNotFoundException {
+        Model model) throws UserNotFoundException {
         User currentUser = userService.getCurrentUser();
         Project project = new Project(projectName);
         project.setProjectOwner(currentUser);
@@ -43,7 +46,6 @@ public class ProjectController {
         }
         project.setDescription(description);
         projectService.createProject(project);
-        model.addAttribute("project", project.getProjectName());
         return "redirect:/";
     }
 
@@ -62,5 +64,12 @@ public class ProjectController {
         User currentUser = userService.getCurrentUser();
         model.addAttribute("currentUser", currentUser);
         return "create-project";
+    }
+
+    @GetMapping("/find/{projectId}")
+    public String getProjectById(@PathVariable("projectId") int id, Model model)
+        throws UserNotFoundException, ProjectNotFoundException {
+        Project activeProject = projectService.findProjectByProjectId(id);
+        return projectCommon.getHomePageUtility(model, activeProject);
     }
 }
