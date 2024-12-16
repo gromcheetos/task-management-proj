@@ -14,7 +14,7 @@
                 </button>
             </div>
             <div class="modal-body" >
-                <form id="editTaskForm">
+<!--                <form th:action="@{/tasks/update}" method="post" id="editTaskForm">-->
                     <input type="hidden" id="editTaskId">
 
                     <div class="form-group">
@@ -39,9 +39,9 @@
                     <div class="form-group">
                         <label for="editTaskStatus">Status</label>
                         <select id="editTaskStatus" class="form-control">
-                            <option value="To Do">To Do</option>
-                            <option value="In Progress">In Progress</option>
-                            <option value="Done">Done</option>
+                            <option value="TO_DO">To Do</option>
+                            <option value="IN_PROGRESS">In Progress</option>
+                            <option value="DONE">Done</option>
                         </select>
                     </div>
 
@@ -50,8 +50,8 @@
                         <input type="date" class="form-control" id="editTaskDeadline">
                     </div>
 
-                    <button type="submit" class="btn btn-primary">Save changes</button>
-                </form>
+                    <button type="submit" id="saveChangesButton" class="btn btn-primary">Save changes</button>
+<!--                </form>-->
             </div>
         </div>
     </div>

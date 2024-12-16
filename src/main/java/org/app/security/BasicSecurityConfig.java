@@ -7,6 +7,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configurers.HeadersConfigurer.FrameOptionsConfig;
 import org.springframework.security.web.SecurityFilterChain;
 
 @Configuration
@@ -18,6 +19,7 @@ public class BasicSecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity httpSecurity) throws Exception {
         httpSecurity
             .csrf(csrf -> csrf.disable())
+            .headers(headers -> headers.frameOptions(FrameOptionsConfig::disable)) // Disable frame options
             .authorizeHttpRequests(auth -> auth
                 .requestMatchers("/signup", "/users/**", "/", "/css/**", "/js/**", "/images/**")
                 .permitAll()

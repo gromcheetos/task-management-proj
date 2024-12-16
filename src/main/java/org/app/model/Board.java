@@ -42,6 +42,10 @@ public class Board {
         this.description = description;
     }
 
+    public Board(String boardName, User user) {
+        this.boardName = boardName;
+        this.user = user;
+    }
 
     public Board(String boardName, String description, boolean isDefault,
         Status status, List<TodoTask> tasks, User user) {
@@ -61,7 +65,14 @@ public class Board {
         if (!(o instanceof Board board)) {
             return false;
         }
-        return boardId == board.boardId && Objects.equals(boardName, board.boardName);
+        return boardId == board.boardId && isDefault == board.isDefault && Objects.equals(boardName,
+            board.boardName) && Objects.equals(description, board.description) && status == board.status
+            && Objects.equals(tasks, board.tasks) && Objects.equals(user, board.user);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(boardId, boardName, description, isDefault, status, tasks, user);
     }
 
     @Override

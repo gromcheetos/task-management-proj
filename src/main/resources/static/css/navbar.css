@@ -1,156 +1,245 @@
 body {
-    margin: 0;
-    font-family: 'Roboto', Arial, sans-serif;
+  margin: 0;
+  font-family: 'Roboto', Arial, sans-serif;
 }
 
 .navbar {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    background-color: #28587B;
-    color: white;
-    padding: 10px 20px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #28587B;
+  color: white;
+  padding: 10px 20px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
 .navbar-left {
-    display: flex;
-    align-items: center;
+  display: flex;
+  align-items: center;
 }
 
 .menu-button {
-    font-size: 24px;
-    background: none;
-    border: none;
-    color: white;
-    margin-right: 10px;
-    cursor: pointer;
-    transition: color 0.3s;
+  font-size: 24px;
+  background: none;
+  border: none;
+  color: white;
+  margin-right: 10px;
+  cursor: pointer;
+  transition: color 0.3s;
 }
 
 .menu-button:hover {
-    color: #ffeb3b;
+  color: #ffeb3b;
 }
 
 .navbar h1 {
-    margin: 0;
-    font-size: 24px;
-    color: white;
+  margin: 0;
+  font-size: 24px;
+  color: white;
 }
 
 .navbar-center input {
-    padding: 5px;
-    font-size: 16px;
-    border-radius: 5px;
-    border: 1px solid #ccc;
+  padding: 5px;
+  font-size: 16px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
 }
 
 .navbar-right {
-    display: flex;
-    align-items: center;
+  display: flex;
+  align-items: center;
 }
 
 .add-task {
-    font-size: 24px;
-    padding: 5px 10px;
-    margin-right: 10px;
-    cursor: pointer;
-    transition: color 0.3s;
+  font-size: 24px;
+  padding: 5px 10px;
+  margin-right: 10px;
+  cursor: pointer;
+  transition: color 0.3s;
 }
 
 .add-task:hover {
-    color: #ffeb3b;
+  color: #ffeb3b;
 }
 
 .profile-photo {
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-    border: 2px solid white;
-    cursor: pointer;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  border: 2px solid white;
+  cursor: pointer;
 }
 
 /* Slide-In Menu Styling */
-.slide-menu {
-    height: 100%;
-    width: 0;
-    position: fixed;
-    z-index: 1;
-    top: 0;
-    right: 0;
-    background-color: #28587B;
-    overflow-x: hidden;
-    transition: 0.5s;
-    padding-top: 60px;
-    color: white;
+.slide-right {
+  height: 100%;
+  width: 0;
+  position: fixed;
+  z-index: 1;
+  top: 0;
+  right: 0;
+  background-color: #28587B;
+  overflow-x: hidden;
+  transition: 0.5s;
+  padding-top: 60px;
+  color: white;
 }
 
-.slide-menu a {
-    padding: 8px 8px 8px 32px;
-    text-decoration: none;
-    font-size: 25px;
-    color: #ffffff;
-    display: block;
-    transition: 0.3s;
+.slide-right a {
+  padding: 8px 8px 8px 32px;
+  text-decoration: none;
+  font-size: 25px;
+  color: #ffffff;
+  display: block;
+  transition: 0.3s;
 }
 
-.slide-menu a:hover {
-    background-color: #1F3A57;
-    color: #ffeb3b;
+.slide-right a:hover {
+  background-color: #1F3A57;
+  color: #ffeb3b;
 }
 
-.slide-menu .close-btn {
-    position: absolute;
-    top: 20px;
-    right: 25px;
-    font-size: 36px;
-    margin-left: 50px;
-    color: #ffffff;
+.slide-right .close-btn {
+  position: absolute;
+  top: 20px;
+  right: 25px;
+  font-size: 36px;
+  margin-left: 50px;
+  color: #ffffff;
 }
 
-.slide-menu .close-btn:hover {
-    color: #ffeb3b;
+.slide-right .close-btn:hover {
+  color: #ffeb3b;
 }
 
 /* When the slide-in menu is active (open) */
-.slide-menu.active {
-    width: 250px;
+.slide-right.active {
+  width: 250px;
 }
 
 @media screen and (max-height: 450px) {
-  .slide-menu {padding-top: 15px;}
-  .slide-menu a {font-size: 18px;}
+  .slide-right {
+    padding-top: 15px;
+  }
+
+  .slide-right a {
+    font-size: 18px;
+  }
 }
 
 .navbar-center {
-    display: flex;
-    justify-content: center;
-    width: 100%;
+  display: flex;
+  justify-content: center;
+  width: 100%;
 }
 
 .search-container {
-    display: flex;
-    align-items: center;
+  display: flex;
+  align-items: center;
 }
 
 .search-container input {
-    padding: 5px;
-    font-size: 16px;
-    border-radius: 5px;
-    border: 1px solid #ccc;
-    margin-right: 5px; /* Space between input and button */
+  padding: 5px;
+  font-size: 16px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+  margin-right: 5px; /* Space between input and button */
 }
 
 .search-container button {
-    padding: 5px 10px;
-    font-size: 16px;
-    border: none;
-    border-radius: 5px;
-    background-color: #17a2b8;
-    color: white;
-    cursor: pointer;
+  padding: 5px 10px;
+  font-size: 16px;
+  border: none;
+  border-radius: 5px;
+  background-color: #17a2b8;
+  color: white;
+  cursor: pointer;
 }
 
 .search-container button:hover {
-    background-color: #138496;
+  background-color: #138496;
+}
+
+
+/* Slide-In Menu Styling */
+.slide-left {
+  height: 100%;
+  width: 0;
+  position: fixed;
+  z-index: 2;
+  top: 0;
+  left: 0; /* Slide in from left */
+  background-color: #eeeee4;
+  overflow-x: hidden;
+  transition: width 0.3s ease-in-out;
+  padding-top: 60px;
+  color: white;
+  box-shadow: 2px 0 6px rgba(0, 0, 0, 0.2);
+}
+
+/* Slide-In Menu Links */
+.slide-left a {
+  padding: 12px 16px;
+  text-decoration: none;
+  font-size: 20px;
+  color: #000306;
+  display: block;
+  transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+.slide-left h1 {
+  color: #000306;
+}
+
+.slide-left a:hover {
+  background-color: #80b9f1;
+  color: #FFEB3B; /* Yellow text on hover */
+}
+
+/* Close Button (X) */
+.slide-left .close-btn {
+  position: absolute;
+  top: 20px;
+  right: 25px; /* Adjust to the right side */
+  font-size: 36px;
+  color: #80b9f1;
+  cursor: pointer;
+  transition: color 0.3s ease;
+}
+
+.slide-left .close-btn:hover {
+  color: #FFEB3B; /* Yellow on hover */
+}
+
+/* When the slide-in menu is active (open) */
+.slide-left.active {
+  width: 280px; /* Show the menu with this width */
+}
+
+/* Smaller Screens */
+@media screen and (max-width: 768px) {
+  .slide-left {
+    padding-top: 50px; /* Adjust padding for smaller screens */
+  }
+
+  .slide-left a {
+    font-size: 18px; /* Smaller text size */
+  }
+
+  .slide-left .close-btn {
+    top: 15px; /* Adjust the close button position */
+    right: 15px;
+  }
+}
+
+/* Additional styles for smoother user experience */
+.slide-left a:focus,
+.slide-left .close-btn:focus {
+  outline: none; /* Remove default focus outline */
+}
+
+@media screen and (max-height: 450px) {
+  .slide-left a {
+    font-size: 16px; /* Smaller font size for very short screens */
+  }
 }

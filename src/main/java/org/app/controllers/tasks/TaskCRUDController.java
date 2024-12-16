@@ -2,19 +2,15 @@ package org.app.controllers.tasks;
 
 import java.time.LocalDate;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
-
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.app.exceptions.*;
 import org.app.model.*;
 import org.app.model.enums.*;
 import org.app.service.*;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 @Controller
@@ -42,7 +38,7 @@ public class TaskCRUDController {
         LocalDate convertedDeadline = LocalDate.parse(deadline);
 
         TodoTask todoTask = new TodoTask(title, description, Priority.valueOf(priority), convertedDeadline,
-            Status.valueOf(board.getBoardName()));
+           Status.fromValue(board.getBoardName()));
         log.info("After creating TodoTask");
         todoTask.setUser(user);
         todoTask.setBoard(board);
@@ -50,20 +46,41 @@ public class TaskCRUDController {
         return "redirect:/";
     }
 
-    @PostMapping("/update")
-    @ResponseBody  // Ensure the response is JSON
-    public ResponseEntity<Map<String, Object>> updateTask(
-            @RequestParam("taskId") Integer taskId,
-            @RequestParam("newBoardId") Integer newBoardId)
-            throws TaskNotFoundException, BoardNotFoundException {
+    @PostMapping("/move")
+    @ResponseBody
+    public ResponseEntity<Map<String, Object>> moveTask(
+        @RequestParam("taskId") Integer taskId,
+        @RequestParam("boardId") Integer boardId)
+        throws TaskNotFoundException, BoardNotFoundException {
 
-        TodoTask todoTask = taskService.updateTask(taskId, newBoardId);
+        TodoTask todoTask = taskService.moveTask(taskId, boardId);
 
         Map<String, Object> response = new HashMap<>();
         response.put("message", "Task moved successfully");
         response.put("task", todoTask);
 
-        return ResponseEntity.ok(response);  // Send JSON response
+        return ResponseEntity.ok(response);
+    }
+
+    @PostMapping("/update")
+    @ResponseBody
+    public ResponseEntity<Map<String, Object>> updateTask(
+        @RequestParam("taskId") Integer taskId,
+        @RequestParam("boardName") String boardName,
+        @RequestParam("title") String title,
+        @RequestParam("description") String description,
+        @RequestParam("priority") String priority,
+        @RequestParam("deadline") String deadline)
+            throws TaskNotFoundException, BoardNotFoundException, UserNotFoundException {
+        Status status = Status.valueOf(boardName);
+        LocalDate convertedDeadline = LocalDate.parse(deadline);
+        TodoTask todoTask = taskService.updateTask(taskId, title, description,
+            Priority.valueOf(priority), convertedDeadline, status,
+            Status.valueOf(boardName).toString());
+        Map<String, Object> response = new HashMap<>();
+        response.put("task", todoTask);
+
+        return ResponseEntity.ok(response);
     }
 
 
@@ -79,12 +96,9 @@ public class TaskCRUDController {
         return "redirect:/";
     }
 
-
     @GetMapping("/detail/{taskId}")
-    public String getTaskDetail(@PathVariable("taskId") int id, Model model) throws TaskNotFoundException {
-        TodoTask task = taskService.getTaskById(id);
-        model.addAttribute("task", task);
-        return "task-detail";
+    public ResponseEntity<TodoTask> getTaskDetail(@PathVariable Integer taskId) throws TaskNotFoundException {
+        TodoTask task = taskService.getTaskById(taskId);
+        return ResponseEntity.ok(task);
     }
-
 }

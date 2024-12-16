@@ -3,25 +3,34 @@
       xmlns:sec="http://www.thymeleaf.org/extras/spring-security" xmlns:th="http://www.thymeleaf.org"
       xmlns:javascript="http://www.w3.org/1999/xhtml">
 <head th:replace="~{fragments/header-fragment.html :: head}">
-<body><
+<body>
 <div th:fragment="sidebar" class="sidebar">
     <div class="sidebar">
         <div class="sidebar-menu">
+            <div>
+                <h3 th:text="${activeProject.projectName}"></h3>
+            </div>
+            <a sec:authorize="isAuthenticated()">Project</a>
+            <ul sec:authorize="isAuthenticated()">
+                <li>
+                    <a id="add-project-btn" class="add-project-btn" data-toggle="modal" data-target="#newProjectModal">Add new project</a>
+                </li>
+            </ul>
             <a sec:authorize="isAuthenticated()">Board</a>
             <ul sec:authorize="isAuthenticated()">
                 <li>
-                    <a id="add-board-btn" class="add-board-btn" data-toggle="modal" data-target="#addBoardModal" >
-                        Add new board
-                    </a>
+                    <a id="add-board-btn" class="add-board-btn" data-toggle="modal" data-target="#addBoardModal">Add new board</a>
                 </li>
-                <li>Setting</li>
             </ul>
-            <a sec:authorize="isAuthenticated()">Work Space</a>
+           <!-- <div th:if="${allProjects = null}">
+                <h1></h1>
+                <p>Create a project First</p>
+            </div>-->
+            <a sec:authorize="isAuthenticated()">Team</a>
             <ul sec:authorize="isAuthenticated()">
                 <li>
-                    Add team member
+                    <a id="add-member-btn" class="add-member-btn" data-toggle="modal" data-target="#addMemberModal">Add team member</a>
                 </li>
-                <li>Setting</li>
             </ul>
 
             </div>
@@ -29,14 +38,25 @@
     </div>
 
 <script>
-        $(document).ready(function () {
-            $('#addBoardModal').modal('hide');
+    $(document).ready(function () {
+        $('#addBoardModal').modal('hide');
 
-            $('.add-board-btn').click(function () {
-                $('#addBoardModal').modal('show');
-            });
+        $('.add-board-btn').click(function () {
+            $('#addBoardModal').modal('show');
         });
 
+        $('#addMemberModal').modal('hide');
+
+        $('.add-member-btn').click(function () {
+            $('#addMemberModal').modal('show');
+        });
+
+        $('#newProjectModal').modal('hide');
+
+        $('.add-project-btn').click(function () {
+            $('#newProjectModal').modal('show');
+        });
+    });
 </script>
 </body>
 </html>

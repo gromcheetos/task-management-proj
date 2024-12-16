@@ -17,5 +17,4 @@ public class PagesHandlerController {
     public String showLoginPage() {
         return "login-page";
     }
-
 }

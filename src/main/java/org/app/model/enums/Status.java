@@ -15,4 +15,12 @@ public enum Status {
 
     private final String value;
 
+    public static Status fromValue(String value) {
+        for (Status status : Status.values()) {
+            if (status.getValue().equalsIgnoreCase(value)) {
+                return status;
+            }
+        }
+        throw new IllegalArgumentException("Unknown value: " + value);
+    }
 }

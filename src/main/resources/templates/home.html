@@ -85,7 +85,7 @@
           </div>
           <div class="task-list" ondrop="drop(event)" ondragover="allowDrop(event)">
             <div class="task" th:each="task : ${board.tasks}" draggable="true" ondragstart="drag(event)"
-                 th:attr="data-task-id=${task.Id}" data-toggle="modal" data-target="#editTaskModal">
+                 th:attr="data-task-id=${task.Id}" data-toggle="modal" data-target="#editTaskModal" onclick="openEditTaskModal(this)">
               <p th:text="${task.title}"></p>
               <span class="tag" th:class="'tag ' + ${task.priority.toString().toLowerCase()}"
                     th:text="${task.priority.toString().toUpperCase()}"></span>
@@ -104,8 +104,11 @@
   </div>
 </div>
 <div th:replace="~{fragments/addtask-fragment :: addtask}"></div>
-<div th:replace="~{fragments/addboard-fragment :: addboard}"></div>
 <div th:replace="~{fragments/editTaskModal-fragment :: editTaskModal}"></div>
+<div th:replace="~{fragments/addboard-fragment :: addboard}"></div>
+<div th:replace="~{fragments/create-project-fragment :: create-project}"></div>
+<div th:replace="~{fragments/addMember-fragment :: addMember}"></div>
+<script type="text/javascript" th:src="@{/js/nav.js}"></script>
 
 </body>
 </html>

@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.w3.org/1999/xhtml">
+<head th:replace="~{fragments/header-fragment.html :: head}">
+<body>
+<div th:replace="~{fragments/navbar-fragment :: navigation}"></div>
+<div class="content">
+    <div class="main-content-create-prj">
+        <div class="header-contents">
+        <h1>Create a new project</h1>
+        <p>How would you like to start?</p>
+        </div>
+        <div class="options">
+            <div class="option selected">
+                <button class="new-prj-btn" data-toggle="modal" data-target="#newProjectModal">
+                <div class="option-title">Blank project</div>
+                <div class="option-description">Start from scratch</div></button>
+            </div>
+            <div class="option">
+                <img src="" alt="">
+                <div class="option-title">Use a template</div>
+                <div class="option-description">We are Working on it</div>
+            </div>
+            <div class="option">
+                <img src="" alt="">
+                <div class="option-title">Import spreadsheet</div>
+                <div class="option-description">Coming soon</div>
+            </div>
+        </div>
+    </div>
+</div>
+<div th:replace="~{fragments/create-project-fragment :: create-project}"></div>
+<script type="text/javascript" th:src="@{/js/nav.js}"></script>
+</body>
+</html>

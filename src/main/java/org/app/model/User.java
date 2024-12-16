@@ -18,9 +18,8 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-
 @Data
-@Entity(name = "secured-users")
+@Entity(name = "secured_users")
 @AllArgsConstructor
 @NoArgsConstructor
 public class User implements UserDetails {
@@ -35,6 +34,9 @@ public class User implements UserDetails {
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private List<Board> boards;
+
+    @OneToMany(mappedBy = "projectOwner", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    private List<Project> projects;
 
     public User(String name, String email, String username, String password){
         this.name = name;
@@ -89,5 +91,15 @@ public class User implements UserDetails {
     @Override
     public boolean isEnabled() {
         return true;
+    }
+
+    @Override
+    public String toString() {
+        return "User{" +
+            "id=" + id +
+            ", email='" + email + '\'' +
+            ", name='" + name + '\'' +
+            ", username='" + username + '\'' +
+            '}';
     }
 }

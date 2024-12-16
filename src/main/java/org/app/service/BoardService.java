@@ -1,16 +1,18 @@
 package org.app.service;
 
 import jakarta.transaction.Transactional;
+import java.util.Collections;
+import java.util.Optional;
 import lombok.AllArgsConstructor;
 import java.util.ArrayList;
 import org.app.exceptions.BoardNotFoundException;
+import org.app.mocks.MockData;
 import org.app.model.Board;
-import org.app.model.TodoTask;
+import org.app.model.Project;
 import org.app.model.User;
 import org.app.model.enums.Status;
 import org.app.repository.BoardRepository;
-import org.app.repository.TaskRepository;
-import org.app.repository.UserRepository;
+import org.app.repository.ProjectRepository;
 import org.springframework.stereotype.Service;
 import java.util.List;
 
@@ -18,14 +20,15 @@ import java.util.List;
 @AllArgsConstructor
 public class BoardService {
 
-
     private final BoardRepository boardRepository;
 
-    private final TaskRepository taskRepository;
+    private final ProjectRepository projectRepository;
 
-    private final UserRepository userRepository;
-
-    public Board createBoard(Board board) {
+    // TODO: modify the singature of this method to accept a project object
+    public Board createBoard(int newProjectId, Board board) {
+        Project project = projectRepository.findById(newProjectId).orElseThrow();
+        project.getBoards().add(board);
+        projectRepository.save(project);
         return boardRepository.save(board);
     }
 
@@ -39,7 +42,7 @@ public class BoardService {
     }
 
     public List<Board> findBoardsByUserId(Integer userId) {
-        return boardRepository.findBoardsByUserId(userId);
+        return Optional.ofNullable(boardRepository.findBoardsByUserId(userId)).orElse(Collections.emptyList());
     }
 
     public Board findBoardById(Integer boardId) throws BoardNotFoundException {
@@ -62,27 +65,29 @@ public class BoardService {
     }
 
     @Transactional
-    public void deleteBoardById(Integer userId, Integer boardId) throws BoardNotFoundException {
+    public void deleteBoardById(Integer boardId) throws BoardNotFoundException {
         Board board = boardRepository.findById(boardId).orElse(null);
         if (board == null) {
             throw new BoardNotFoundException("No found board");
         }
         boardRepository.deleteById(boardId);
-        User user = userRepository.findById(userId).get();
-        user.getBoards().remove(board);
-        userRepository.save(user);
     }
 
     public void saveAll(List<Board> boards) {
         boardRepository.saveAll(boards);
     }
 
-    private void createDefaultBoardForNewUsers(User user, String boardName, String description, Status status,
+    public void createDefaultBoardForNewUsers(User user, String boardName, String description, Status status,
         boolean isDefault) {
         Board defaultBoard = new Board(boardName, description, isDefault, Status.TO_DO, new ArrayList<>(), user);
         defaultBoard.setDefault(true);
         defaultBoard.setStatus(Status.TO_DO);
-        createBoard(defaultBoard);
+        Project defaultProject = projectRepository.findProjectByProjectName(MockData.DEFAULT_PROJECT_NAME);
+        createBoard(defaultProject.getProjectId(), defaultBoard);
     }
 
+    public Board createDefaultBoardsForNewProject(String boardName) {
+        Board defaultBoard = new Board(boardName, "");
+        return boardRepository.save(defaultBoard);
+    }
 }

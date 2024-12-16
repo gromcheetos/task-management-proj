@@ -2,12 +2,8 @@ package org.app.model;
 
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
+import jakarta.persistence.*;
+
 import java.time.LocalDate;
 import lombok.*;
 import org.app.model.enums.Priority;
@@ -26,16 +22,19 @@ public class TodoTask {
     private String description;
     private Priority priority;
     private LocalDate deadline;
+    @Enumerated(EnumType.STRING)
     private Status status;
 
     @ManyToOne
     @JoinColumn(name = "board_id")
+    @JsonIgnore
     private Board board;
 
     @ManyToOne
     @JoinColumn(name = "user_id")
     @JsonIgnore
     private User user;
+
 
     public TodoTask(String title, String description, Priority priority, LocalDate deadline, Status status) {
         this.title = title;

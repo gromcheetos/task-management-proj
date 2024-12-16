@@ -7,6 +7,7 @@ import org.app.exceptions.UserNotFoundException;
 import org.app.model.Board;
 import org.app.model.TodoTask;
 import org.app.model.User;
+import org.app.model.enums.Status;
 import org.app.service.BoardService;
 import org.app.service.SearchService;
 import org.app.service.TodoTaskService;
@@ -38,18 +39,23 @@ public class BoardController {
 
     @PostMapping("/create")
     public String createBoard(@RequestParam("boardName") String boardName,
-        @RequestParam("description") String description, Model model) throws UserNotFoundException {
-
+                              @RequestParam("description") String description,
+                              @RequestParam("status") String status,
+                              @RequestParam(value = "projectId",  required = true) Integer projectId) throws UserNotFoundException {
+        // TODO: add board to the project as well
         User currentUser = userService.getCurrentUser();
         Board board = new Board(boardName, description);
         board.setUser(currentUser);
-        boardService.createBoard(board);
+        if(projectId != null){
+            boardService.createBoard(projectId, board);
+        }else if(projectId == null){
+            boardService.createDefaultBoardForNewUsers(currentUser, boardName, description, Status.valueOf(status), true);
+        }
         return "redirect:/";
     }
 
     @PostMapping("/update")
-    public ResponseEntity<Board> updateBoard(
-        @RequestParam("boardId") Integer boardId,
+    public ResponseEntity<Board> updateBoard(@RequestParam("boardId") Integer boardId,
         @RequestParam("boardName") String boardName,
         @RequestParam("description") String description) {
         try {
@@ -78,7 +84,6 @@ public class BoardController {
             Map<Integer, List<TodoTask>> tasksByBoardId = tasks.stream()
                 .filter(task -> priorities.contains(task.getPriority().name()))
                 .collect(Collectors.groupingBy(TodoTask::getBoardId));
-
             filteredBoards = filteredBoards.stream()
                 .peek(board -> board.setTasks(tasksByBoardId.getOrDefault(board.getBoardId(), Collections.emptyList())))
                 .filter(board -> !board.getTasks().isEmpty()) // Remove boards with no tasks after filtering
@@ -94,10 +99,8 @@ public class BoardController {
     @PostMapping("/delete/{id}")
     public String deleteBoard(@PathVariable("id") Integer boardId) {
         try {
-            User currentUser = userService.getCurrentUser();
-
-            boardService.deleteBoardById(currentUser.getId(), boardId);
-        } catch (UserNotFoundException | BoardNotFoundException exception) {
+            boardService.deleteBoardById(boardId);
+        } catch (BoardNotFoundException exception) {
             // fix this
         }
         return "redirect:/";

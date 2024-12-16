@@ -7,8 +7,6 @@ import org.app.model.Board;
 import org.app.model.User;
 import org.app.service.BoardService;
 import org.app.service.UserService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -31,12 +29,10 @@ public class AuthenticationController {
         @RequestParam("password") String password) {
         log.info("Request received to register the user");
         User newUser = new User(name, userEmail, username);
-        // TODO: create default boards here
-//        boardService.createDefaultBoardForNewUsers();
         List<Board> defaultBoards = boardService.getAllDefaultBoards();
         newUser.setBoards(defaultBoards);
         userService.createUser(newUser, password);
-        return "redirect:/";
+        return "login-page";
     }
 
 }
