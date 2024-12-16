@@ -37,12 +37,10 @@
       </form>
     </div>
 
-    <div id="projects-slider" class="slide-left">
+    <div id="projects-slider" class="slide-left"  th:each="project : ${allProjects}" th:attr="data-board-id=${project.projectId}">
       <a href="javascript:void(0)" class="close-btn" id="projSlider-close">&times;</a>
-      <a href="#">project1</a>
-      <a href="#">project2</a>
-      <a href="#">project3</a>
-      <a href="#">project4</a>
+      <a href="#" th:text="${project.projectName}"></a>
+
     </div>
   </div>
 

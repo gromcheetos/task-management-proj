@@ -32,7 +32,8 @@ public class ProjectController {
     // TODO: add board to the project as well changed
     @PostMapping("/create")
     public String createProject(@RequestParam("projectName") String projectName,
-        @RequestParam(value = "description", required = false) String description) throws UserNotFoundException {
+        @RequestParam(value = "description", required = false) String description,
+    Model model) throws UserNotFoundException {
         User currentUser = userService.getCurrentUser();
         Project project = new Project(projectName);
         project.setProjectOwner(currentUser);
@@ -42,6 +43,7 @@ public class ProjectController {
         }
         project.setDescription(description);
         projectService.createProject(project);
+        model.addAttribute("project", project.getProjectName());
         return "redirect:/";
     }
 
