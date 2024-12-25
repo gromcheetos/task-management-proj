@@ -14,7 +14,9 @@ public class MockUserData {
 
     @PostConstruct
     public void createMockData() {
-        User mockUser = new User("Lara Kroft", "lara@gmail.com", "lara");
-        userService.createUser(mockUser, "pass");
+        if (userService.getUserByUsername("lara") == null) {
+            User mockUser = new User("Lara Kroft", "lara@gmail.com", "lara");
+            userService.createUser(mockUser, "pass");
+        }
     }
 }

@@ -90,4 +90,5 @@ public class BoardService {
         Board defaultBoard = new Board(boardName, "");
         return boardRepository.save(defaultBoard);
     }
+
 }

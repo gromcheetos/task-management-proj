@@ -3,12 +3,15 @@ package org.app.controllers.boards;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.app.exceptions.BoardNotFoundException;
+import org.app.exceptions.ProjectNotFoundException;
 import org.app.exceptions.UserNotFoundException;
 import org.app.model.Board;
+import org.app.model.Project;
 import org.app.model.TodoTask;
 import org.app.model.User;
 import org.app.model.enums.Status;
 import org.app.service.BoardService;
+import org.app.service.ProjectService;
 import org.app.service.SearchService;
 import org.app.service.TodoTaskService;
 import org.app.service.UserService;
@@ -36,6 +39,7 @@ public class BoardController {
     private final BoardService boardService;
     private final SearchService searchService;
     private final TodoTaskService todoTaskService;
+    private final ProjectService projectService;
 
     @PostMapping("/create")
     public String createBoard(@RequestParam("boardName") String boardName,
@@ -65,12 +69,15 @@ public class BoardController {
         }
     }
 
-    @GetMapping("/filter")
-    public String boardsByNameAndPriority(@RequestParam(value = "boardName", required = false) List<String> boardNames,
+    @GetMapping("/filter/{id}")
+    public String boardsByNameAndPriority(@PathVariable("id") Integer projectId,
+        @RequestParam(value = "boardName", required = false) List<String> boardNames,
         @RequestParam(value = "priority", required = false) List<String> priorities,
-        @RequestParam("userId") Integer userId, Model model) throws UserNotFoundException {
+        @RequestParam("userId") Integer userId, Model model) throws UserNotFoundException, ProjectNotFoundException {
 
-        List<Board> boards = boardService.findBoardsByUserId(userId);
+        log.info("[boardsByNameAndPriority] --- FILTERING!");
+        Project project = projectService.findProjectByProjectId(projectId);
+        List<Board> boards = project.getBoards();
         List<TodoTask> tasks = todoTaskService.getTasksByUserId(userId);
         // Filter boards by name if specified
         List<Board> filteredBoards = searchService.filterBoardsByBoardNames(boardNames, boards);

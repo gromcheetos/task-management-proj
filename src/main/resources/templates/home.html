@@ -29,6 +29,7 @@
               </div>
             </div>
           </div>
+
           <div class="header-filters">
             <form method="get" id="boardFilter">
               <div class="custom-dropdown">
@@ -67,8 +68,6 @@
                   </label>
                 </div>
               </div>
-
-              <input type="hidden" id="userId" name="userId" th:value="${currentUser.id}">
               <button type="submit">Apply</button>
             </form>
           </div>
@@ -109,6 +108,10 @@
 <div th:replace="~{fragments/create-project-fragment :: create-project}"></div>
 <div th:replace="~{fragments/addMember-fragment :: addMember}"></div>
 <script type="text/javascript" th:src="@{/js/nav.js}"></script>
-
+<script>
+  const currentUserId = /*[[${currentUser.id}]]*/ '';
+  const activeProjectId = /*[[${activeProject.projectId}]]*/ '';
+</script>
+<script type="text/javascript" th:src="@{/js/script.js}"></script>
 </body>
 </html>
