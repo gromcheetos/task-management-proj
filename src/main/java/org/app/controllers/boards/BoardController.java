@@ -42,7 +42,6 @@ public class BoardController {
                               @RequestParam("description") String description,
                               @RequestParam("status") String status,
                               @RequestParam(value = "projectId",  required = true) Integer projectId) throws UserNotFoundException {
-        // TODO: add board to the project as well
         User currentUser = userService.getCurrentUser();
         Board board = new Board(boardName, description);
         board.setUser(currentUser);

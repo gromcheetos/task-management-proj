@@ -1,10 +1,13 @@
 package org.app.service;
 
 import java.util.List;
+import java.util.stream.Collectors;
+
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.app.exceptions.UserNotFoundException;
 import org.app.model.User;
+import org.app.model.dto.UserData;
 import org.app.repository.UserRepository;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -54,6 +57,13 @@ public class UserService {
         }
         String username = authentication.getName();
         return getUserByUsername(username);
+    }
+
+    public List<UserData> searchUsers(String keyword) {
+        List<User> users = userRepository.findByNameContainingIgnoreCaseOrEmailContainingIgnoreCase(keyword, keyword);
+        return users.stream()
+                .map(user -> new UserData(user.getId(), user.getName(), user.getEmail()))
+                .collect(Collectors.toList());
     }
 
 }

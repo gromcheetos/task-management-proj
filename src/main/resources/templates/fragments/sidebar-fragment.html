@@ -7,15 +7,9 @@
 <div th:fragment="sidebar" class="sidebar">
     <div class="sidebar">
         <div class="sidebar-menu">
-            <div>
+            <div class="project-title">
                 <h3 th:text="${activeProject.projectName}"></h3>
             </div>
-            <a sec:authorize="isAuthenticated()">Project</a>
-            <ul sec:authorize="isAuthenticated()">
-                <li>
-                    <a id="add-project-btn" class="add-project-btn" data-toggle="modal" data-target="#newProjectModal">Add new project</a>
-                </li>
-            </ul>
             <a sec:authorize="isAuthenticated()">Board</a>
             <ul sec:authorize="isAuthenticated()">
                 <li>
@@ -49,12 +43,6 @@
 
         $('.add-member-btn').click(function () {
             $('#addMemberModal').modal('show');
-        });
-
-        $('#newProjectModal').modal('hide');
-
-        $('.add-project-btn').click(function () {
-            $('#newProjectModal').modal('show');
         });
     });
 </script>

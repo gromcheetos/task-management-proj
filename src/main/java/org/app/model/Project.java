@@ -1,5 +1,6 @@
 package org.app.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -38,6 +39,7 @@ public class Project {
     private List<Board> boards;
 
     @ManyToOne
+    @JsonBackReference
     private User projectOwner;
 
     public Project(String projectName) {

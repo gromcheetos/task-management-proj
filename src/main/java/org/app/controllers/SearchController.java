@@ -5,12 +5,16 @@ import lombok.AllArgsConstructor;
 import org.app.exceptions.UserNotFoundException;
 import org.app.model.Board;
 import org.app.model.User;
+import org.app.model.dto.UserData;
 import org.app.service.SearchService;
 import org.app.service.TodoTaskService;
 import org.app.service.UserService;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 @Controller
 @AllArgsConstructor
@@ -32,5 +36,12 @@ public class SearchController {
         }
 
         return "home";
+    }
+
+    @GetMapping("/search/members")
+    public  ResponseEntity<List<UserData>> searchMembers(@RequestParam(value = "keyword", required = false) String keyword) {
+
+        List<UserData> users = userService.searchUsers(keyword);
+        return ResponseEntity.ok(users);
     }
 }

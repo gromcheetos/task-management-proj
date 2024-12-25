@@ -132,3 +132,14 @@
   font-size: 0.8rem;
   color: #555;
 }
+
+.autocomplete-results {
+    display: block; /* Ensure it's visible */
+    border: 1px solid #ccc;
+    background-color: white;
+    max-height: 150px;
+    overflow-y: auto;
+    position: absolute;
+    z-index: 1000;
+    width: 100%;
+}
