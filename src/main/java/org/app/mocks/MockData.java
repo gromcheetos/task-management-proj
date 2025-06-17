@@ -1,11 +1,5 @@
 package org.app.mocks;
 
-import static org.app.model.enums.Priority.*;
-
-import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
 import org.app.model.Board;
 import org.app.model.Project;
 import org.app.model.TodoTask;
@@ -17,6 +11,13 @@ import org.app.service.ProjectService;
 import org.app.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
+
+import static org.app.model.enums.Priority.*;
 
 @Component
 public class MockData {
@@ -42,7 +43,7 @@ public class MockData {
 
         defaultProject = new Project(DEFAULT_PROJECT_NAME);
         projectService.createProject(defaultProject);
-
+        int defaultProjectId = defaultProject.getProjectId();
         testUser = userService.createUser(mockUser, "pass");
         userService.createUser(defaultUser, "pass");
 

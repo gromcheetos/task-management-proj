@@ -1,18 +1,16 @@
 package org.app.controllers.users;
 
-import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.app.exceptions.UserNotFoundException;
 import org.app.model.User;
+import org.app.service.ProjectService;
 import org.app.service.UserService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.Set;
 
 @RequestMapping("/users")
 @RestController
@@ -21,6 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class UserController {
 
     private final UserService userService;
+    private final ProjectService projectService;
 
     @PostMapping("/update")
     public ResponseEntity<User> updateUser(
@@ -37,9 +36,11 @@ public class UserController {
         }
     }
 
-    @GetMapping("/list")
-    public ResponseEntity<List<User>> getAllUsers() {
-        return ResponseEntity.ok(userService.getAllUsers());
+    @GetMapping("/list/{projectId}")
+    public ResponseEntity<Set<User>> getAllUsers(@PathVariable("projectId") Integer projectId) throws UserNotFoundException {
+        Set<User> userList =  projectService.getTeamMembers(projectId);
+        return ResponseEntity.ok(userList);
+
     }
 
     @GetMapping("/search")

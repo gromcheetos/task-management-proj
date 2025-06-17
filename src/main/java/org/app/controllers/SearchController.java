@@ -1,6 +1,5 @@
 package org.app.controllers;
 
-import java.util.List;
 import lombok.AllArgsConstructor;
 import org.app.exceptions.UserNotFoundException;
 import org.app.model.Board;
@@ -11,6 +10,11 @@ import org.app.service.UserService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Controller
 @AllArgsConstructor
@@ -32,5 +36,17 @@ public class SearchController {
         }
 
         return "home";
+    }
+
+    @ResponseBody
+    @GetMapping("/search/users")
+    public List<String> searchUsers(@RequestParam("keyword") String keyword){
+        List<User> userList = userService.getAllUsers();
+        return userList.stream()
+                .filter(user -> user.getName().toLowerCase().contains(keyword.toLowerCase()) ||
+                        user.getEmail().toLowerCase().contains(keyword.toLowerCase()) ||
+                        user.getUsername().toLowerCase().contains(keyword.toLowerCase()))
+                .map(User::getName)
+                .collect(Collectors.toList());
     }
 }

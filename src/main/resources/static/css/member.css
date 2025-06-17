@@ -98,7 +98,7 @@
   font-weight: bold;
 }
 
-.board-members .member {
+.project-members .member {
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -131,4 +131,41 @@
   margin: 0;
   font-size: 0.8rem;
   color: #555;
+}
+
+.search-wrapper {
+  position: relative;
+  flex: 1;
+}
+
+.search-wrapper input {
+  width: 100%;
+  padding: 0.5rem;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+#suggestions {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  z-index: 1000;
+  background-color: white;
+  border: 1px solid #ccc;
+  border-top: none;
+  max-height: 150px;
+  overflow-y: auto;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+  border-radius: 0 0 4px 4px;
+}
+
+.suggestion-item {
+  padding: 8px;
+  font-size: 0.9rem;
+  cursor: pointer;
+}
+
+.suggestion-item:hover {
+  background-color: #f0f0f0;
 }

@@ -7,16 +7,22 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h2>Invite a memeber</h2>
-                <button class="close-btn">&times;</button>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
             </div>
             <div class="modal-body">
+                <input type="hidden" id="projectId" name="projectId">
                 <div class="input-group">
-                    <input type="email" placeholder="Email address or name">
+                    <div class="search-wrapper">
+                        <input type="text" placeholder="Email address or name" id="searchBox" autocomplete="off">
+                        <div id="suggestions"></div>
+                    </div>
                     <select class="role-select">
                         <option value="member">Member</option>
                         <option value="admin">Admin</option>
                     </select>
-                    <button class="share-btn">Share</button>
+                    <button class="share-btn" id="invite">Invite</button>
                 </div>
                 <div class="link-share">
                     <input type="checkbox" id="share-link">
@@ -25,15 +31,15 @@
                 </div>
                 <div class="board-info">
                     <ul class="tabs">
-                        <li class="tab active">Board members (2)</li>
-                        <li class="tab">Join requests</li>
+                        <li class="tab active">Project members (2)</li>
+                        <li class="tab"></li>
                     </ul>
-                    <div class="board-members">
-                        <div class="member">
-                            <span class="avatar">HG</span>
+                    <div class="project-members" id="userList">
+                        <div class="member" th:each="user : ${teamMembers}">
+                            <span class="avatar" th:attr="data-username=${user.username}"></span>
                             <div class="info">
-                                <p class="name">Hanna</p>
-                                <p class="role">Workspace admin</p>
+                                <p class="name" id="username" th:text="${user.username}">
+                                <p class="role" th:text="${user.roles}"></p>
                             </div>
                             <select class="role-select">
                                 <option value="admin">Admin</option>
