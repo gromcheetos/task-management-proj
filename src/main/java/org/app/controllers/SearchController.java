@@ -13,7 +13,9 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @Controller
@@ -40,13 +42,20 @@ public class SearchController {
 
     @ResponseBody
     @GetMapping("/search/users")
-    public List<String> searchUsers(@RequestParam("keyword") String keyword){
+    public List<Map<String, Object>> searchUsers(@RequestParam("keyword") String keyword){
         List<User> userList = userService.getAllUsers();
         return userList.stream()
-                .filter(user -> user.getName().toLowerCase().contains(keyword.toLowerCase()) ||
-                        user.getEmail().toLowerCase().contains(keyword.toLowerCase()) ||
-                        user.getUsername().toLowerCase().contains(keyword.toLowerCase()))
-                .map(User::getName)
+                .filter(user ->
+                        (user.getName() != null && user.getName().toLowerCase().contains(keyword.toLowerCase())) ||
+                                (user.getEmail() != null && user.getEmail().toLowerCase().contains(keyword.toLowerCase())) ||
+                                (user.getUsername() != null && user.getUsername().toLowerCase().contains(keyword.toLowerCase()))
+                )
+                .map(user -> {
+                    Map<String, Object> m = new HashMap<>();
+                    m.put("userId", user.getId()); // or getUserId() or whatever your ID method is
+                    m.put("username", user.getName());
+                    return m;
+                })
                 .collect(Collectors.toList());
     }
 }

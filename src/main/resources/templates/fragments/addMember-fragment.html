@@ -12,15 +12,15 @@
                 </button>
             </div>
             <div class="modal-body">
-                <input type="hidden" id="projectId" name="projectId">
                 <div class="input-group">
                     <div class="search-wrapper">
                         <input type="text" placeholder="Email address or name" id="searchBox" autocomplete="off">
                         <div id="suggestions"></div>
+                        <input type="hidden" id="projectId" name="projectId" >
                     </div>
-                    <select class="role-select">
-                        <option value="member">Member</option>
-                        <option value="admin">Admin</option>
+                    <select class="role-select" id="roleSelect">
+                        <option value="MEMBER">Member</option>
+                        <option value="ADMIN">Admin</option>
                     </select>
                     <button class="share-btn" id="invite">Invite</button>
                 </div>
@@ -31,7 +31,7 @@
                 </div>
                 <div class="board-info">
                     <ul class="tabs">
-                        <li class="tab active">Project members (2)</li>
+                        <li class="tab active">Project members(<span th:text="${memberCnt}"></span>)</li>
                         <li class="tab"></li>
                     </ul>
                     <div class="project-members" id="userList">
@@ -42,19 +42,8 @@
                                 <p class="role" th:text="${user.roles}"></p>
                             </div>
                             <select class="role-select">
-                                <option value="admin">Admin</option>
-                                <option value="member">Member</option>
-                            </select>
-                        </div>
-                        <div class="member">
-                            <span class="avatar">MP</span>
-                            <div class="info">
-                                <p class="name">maria</p>
-                                <p class="role">Workspace admin</p>
-                            </div>
-                            <select class="role-select">
-                                <option value="admin">Admin</option>
-                                <option value="member">Member</option>
+                                <option value="ADMIN">Admin</option>
+                                <option value="MEMBER">Member</option>
                             </select>
                         </div>
                     </div>

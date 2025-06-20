@@ -13,13 +13,11 @@ import org.app.model.enums.Status;
 import org.app.service.BoardService;
 import org.app.service.ProjectService;
 import org.app.service.UserService;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
+
 import java.util.Set;
 
 @Controller
@@ -49,17 +47,22 @@ public class ProjectController {
         }
         project.setDescription(description);
         projectService.createProject(project);
+        model.addAttribute("project", project);
         return "redirect:/";
     }
 
     @PostMapping("/add/member")
-    public String insertTeamMember(@RequestParam("projectId") int projectId,
-        @RequestParam(value = "teamMembers", required = false) Set<User> teamMembers,
-        Model model) throws UserNotFoundException, ProjectNotFoundException {
-        User currentUser = userService.getCurrentUser();
+    public ResponseEntity<Project> insertTeamMember(@RequestParam("projectId") int projectId,
+        @RequestParam(value = "userId") int userId,
+        @RequestParam(value="userRole") String userRole
+         ) throws UserNotFoundException, ProjectNotFoundException {
         Project teamProject = projectService.findProjectByProjectId(projectId);
-        teamProject.setTeamMembers(teamMembers);
-        return "redirect:/";
+        User user = userService.getUserById(userId);
+        Set<User> currentMembers = teamProject.getTeamMembers();
+        currentMembers.add(user);
+        teamProject.setTeamMembers(currentMembers);
+        userService.updatUserRole(userId,userRole);
+        return ResponseEntity.ok(teamProject);
     }
 
     @GetMapping("/show")

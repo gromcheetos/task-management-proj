@@ -15,15 +15,13 @@ import org.app.service.UserService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-
-import java.util.*;
-import java.util.stream.Collectors;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 
 @Controller
@@ -48,7 +46,7 @@ public class BoardController {
         board.setUser(currentUser);
         if(projectId != null){
             boardService.createBoard(projectId, board);
-        }else if(projectId == null){
+        }else {
             boardService.createDefaultBoardForNewUsers(currentUser, boardName, description, Status.valueOf(status), true);
         }
         return "redirect:/";
