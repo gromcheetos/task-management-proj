@@ -29,7 +29,7 @@
             <a sec:authorize="isAuthenticated()">Team</a>
             <ul sec:authorize="isAuthenticated()">
                 <li>
-                    <a id="add-member-btn" class="add-member-btn" data-toggle="modal" data-target="#addMemberModal">Add team member</a>
+                    <a id="add-member-btn"  th:attr="data-project-id=${activeProject.projectId}" class="add-member-btn" data-toggle="modal" data-target="#addMemberModal">Add team member</a>
                 </li>
             </ul>
 
@@ -48,6 +48,7 @@
         $('#addMemberModal').modal('hide');
 
         $('.add-member-btn').click(function () {
+            const projectId = $(this).attr('data-project-id');
             $('#addMemberModal').modal('show');
         });
 

@@ -1,6 +1,5 @@
 package org.app.controllers.util;
 
-import java.util.List;
 import lombok.AllArgsConstructor;
 import org.app.exceptions.UserNotFoundException;
 import org.app.model.Board;
@@ -11,6 +10,9 @@ import org.app.service.TodoTaskService;
 import org.app.service.UserService;
 import org.springframework.stereotype.Component;
 import org.springframework.ui.Model;
+
+import java.util.List;
+import java.util.Set;
 
 @Component
 @AllArgsConstructor
@@ -34,7 +36,12 @@ public class ProjectCommon {
             List<Board> boards = activeProject.getBoards();
             int totalTasks = taskService.getTasksByUserId(currentUser.getId()).size();
             int completedTasks = taskService.getCompletedTasksCount(currentUser.getId());
+            Set<User> teamMembers = activeProject.getTeamMembers();
+            if(activeProject.getProjectOwner() == currentUser){
+               currentUser.getAuthorities();
+            }
             model.addAttribute("activeProject", activeProject);
+            model.addAttribute("teamMembers", teamMembers);
             model.addAttribute("userBoards", boards);
             model.addAttribute("currentUser", currentUser);
             model.addAttribute("totalTasks", totalTasks);

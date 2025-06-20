@@ -8,6 +8,7 @@ import org.app.exceptions.UserNotFoundException;
 import org.app.model.Board;
 import org.app.model.Project;
 import org.app.model.User;
+import org.app.model.enums.Roles;
 import org.app.model.enums.Status;
 import org.app.service.BoardService;
 import org.app.service.ProjectService;
@@ -40,6 +41,8 @@ public class ProjectController {
         User currentUser = userService.getCurrentUser();
         Project project = new Project(projectName);
         project.setProjectOwner(currentUser);
+        project.setTeamMembers(Set.of(currentUser));
+        currentUser.setRoles(Roles.ADMIN);
         for (Status status : Status.values()) {
             Board board = boardService.createDefaultBoardsForNewProject(status.getValue());
             project.getBoards().add(board);

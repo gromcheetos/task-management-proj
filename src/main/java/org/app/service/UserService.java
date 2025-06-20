@@ -1,6 +1,5 @@
 package org.app.service;
 
-import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.app.exceptions.UserNotFoundException;
@@ -10,6 +9,8 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 @Slf4j
@@ -54,6 +55,10 @@ public class UserService {
         }
         String username = authentication.getName();
         return getUserByUsername(username);
+    }
+
+    public List<User> getAllUsersByProjectId(Integer projectId) throws UserNotFoundException{
+        return userRepository.findAllUsersByProjectId(projectId);
     }
 
 }
