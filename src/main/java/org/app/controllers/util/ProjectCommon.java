@@ -37,11 +37,10 @@ public class ProjectCommon {
             int totalTasks = taskService.getTasksByUserId(currentUser.getId()).size();
             int completedTasks = taskService.getCompletedTasksCount(currentUser.getId());
             Set<User> teamMembers = activeProject.getTeamMembers();
-            if(activeProject.getProjectOwner() == currentUser){
-               currentUser.getAuthorities();
-            }
+            int memberCnt = teamMembers.size();
             model.addAttribute("activeProject", activeProject);
             model.addAttribute("teamMembers", teamMembers);
+            model.addAttribute("memberCnt", memberCnt);
             model.addAttribute("userBoards", boards);
             model.addAttribute("currentUser", currentUser);
             model.addAttribute("totalTasks", totalTasks);

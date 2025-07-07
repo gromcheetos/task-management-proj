@@ -109,6 +109,29 @@
 <div th:replace="~{fragments/create-project-fragment :: create-project}"></div>
 <div th:replace="~{fragments/addMember-fragment :: addMember}"></div>
 <script type="text/javascript" th:src="@{/js/nav.js}"></script>
+<script>
+  $(document).ready(function () {
+    $('#addBoardModal').modal('hide');
+    $('#addMemberModal').modal('hide');
+    $('#newProjectModal').modal('hide');
 
+    $('.add-board-btn').click(function () {
+      $('#addBoardModal').modal('show');
+    });
+
+    $('.add-project-btn').click(function () {
+      $('#newProjectModal').modal('show');
+    });
+
+    $(document).on('click', '.add-member-btn', function (e) {
+      e.preventDefault();
+      const projectId = $(this).attr('data-project-id');
+      console.log('Setting projectId:', projectId);
+      $('#projectId').val(projectId);
+      $('#addMemberModal').modal('show');
+    });
+  });
+
+</script>
 </body>
 </html>

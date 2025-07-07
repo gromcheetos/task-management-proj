@@ -57,8 +57,10 @@ public class UserService {
         return getUserByUsername(username);
     }
 
-    public List<User> getAllUsersByProjectId(Integer projectId) throws UserNotFoundException{
-        return userRepository.findAllUsersByProjectId(projectId);
+    public User updatUserRole(int userId, String role) throws UserNotFoundException{
+        User toUpdateUser = userRepository.findById(userId).orElseThrow(() -> new UserNotFoundException("No Found User"));
+        toUpdateUser.setName(role);
+        return userRepository.save(toUpdateUser);
     }
 
 }

@@ -29,7 +29,7 @@
                         success: function (data) {
                             let html = "";
                             data.forEach(item => {
-                                html += `<div class="suggestion-item">${item}</div>`;
+                                html += `<div class="suggestion-item" data-user-id="${item.userId}">${item.username}</div>`;
                             });
                             $("#suggestions").html(html).show();
                         }
@@ -39,24 +39,44 @@
                 }
                 $(document).on("click", ".suggestion-item", function () {
                     $("#searchBox").val($(this).text());
+                    $("#searchBox").attr('data-user-id', $(this).data('user-id'));
                     $("#suggestions").hide();
                 });
             });
             document.getElementById('invite').addEventListener('click',
                 function (event) {
                     event.preventDefault();
-                    const username = document.getElementById('searchBox').value;
+                    const userId = $("#searchBox").attr('data-user-id');
+                    const projectId = document.getElementById('projectId').value;
+                    const userName = $("#searchBox").val();
+                    const userRole = $("#roleSelect").val();
                     const params = new URLSearchParams({
-                        teamMembers: username
+                        userId: userId,
+                        userRole: userRole,
+                        projectId: projectId
                     });
-                    fetch(`/add/member?${params.toString()}`,
+                    fetch(`/project/add/member?${params.toString()}`,
                         {
                             method: 'POST',
                             headers: {
                                 'Content-Type': 'application/json',
                             }
-                        }
-                    )
+                        })
+                        .then(teamProject => {
+                            if (!teamProject.ok) {
+                                throw new Error("Failed to add member");
+                            }
+                            return teamProject.json();
+                        })
+                        .then(data => {
+                            alert('Sent invitation to ' + userName + ' ');
+                            alert('Invited successfully');
+
+                            $('#addMemberModal').modal('hide');
+                        })
+                        .catch((error) => {
+                            console.error('Error updating members:', error);
+                        });
             });
         });
 
