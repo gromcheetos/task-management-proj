@@ -69,9 +69,14 @@
                             return teamProject.json();
                         })
                         .then(data => {
-                            alert('Sent invitation to ' + userName + ' ');
+                         //   alert('Sent invitation to ' + userName + ' ');
                             alert('Invited successfully');
-
+                            //TODO : refresh data
+                            $('#userList').append('<span class="avatar" data-username=' + userName + '></span>' +
+                                '<div class="info">' +
+                                '<p class="name" id="username">' + userName + '</p>' +
+                                '<p class="role">'+ userRole +'</p>' +
+                        '</div>');
                             $('#addMemberModal').modal('hide');
                         })
                         .catch((error) => {
