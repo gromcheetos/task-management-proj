@@ -7,7 +7,7 @@
             avatars.forEach(avatar => {
                 const username = avatar.dataset.username;
                 if (username) {
-                    const initials = username
+                   const initials = username
                         .split(' ')
                         .map(word => word.charAt(0))
                         .join('')
@@ -70,12 +70,25 @@
                         })
                         .then(data => {
                          //   alert('Sent invitation to ' + userName + ' ');
+
+                            const userName = $("#searchBox").val();
+                            const userRole = $("#roleSelect").val();
+
+                            const userInitials = userName
+                            .split(' ')
+                            .map(word => word.charAt(0))
+                            .join('')
+                            .toUpperCase()
+                            .substring(0, 2);
+
                             alert('Invited successfully');
                             //TODO : refresh data
-                            $('#userList').append('<span class="avatar" data-username=' + userName + '></span>' +
+                            $('#userList').append('<div class="member">' +
+                                '<span class="avatar" data-username=' + initials + '></span>' +
                                 '<div class="info">' +
                                 '<p class="name" id="username">' + userName + '</p>' +
                                 '<p class="role">'+ userRole +'</p>' +
+                                '</div>' +
                         '</div>');
                             $('#addMemberModal').modal('hide');
                         })
@@ -89,5 +102,3 @@
             setTimeout(waitForJQuery, 100);
         }
     })();
-
-
