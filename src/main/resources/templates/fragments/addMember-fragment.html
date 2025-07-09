@@ -24,11 +24,11 @@
                     </select>
                     <button class="share-btn" id="invite">Invite</button>
                 </div>
-                <div class="link-share">
+               <!-- <div class="link-share">
                     <input type="checkbox" id="share-link">
                     <label for="share-link">Share this project with a link</label>
                     <a href="#" class="create-link">Create link</a>
-                </div>
+                </div>-->
                 <div class="board-info">
                     <ul class="tabs">
                         <li class="tab active">Project members(<span th:text="${memberCnt}"></span>)</li>
@@ -41,10 +41,10 @@
                                 <p class="name" id="username" th:text="${user.username}">
                                 <p class="role" th:text="${user.roles}"></p>
                             </div>
-                            <select class="role-select">
+                            <!--<select class="role-select">
                                 <option value="ADMIN">Admin</option>
                                 <option value="MEMBER">Member</option>
-                            </select>
+                            </select>-->
                         </div>
                     </div>
                 </div>

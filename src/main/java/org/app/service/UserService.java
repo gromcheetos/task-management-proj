@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.app.exceptions.UserNotFoundException;
 import org.app.model.User;
+import org.app.model.enums.Roles;
 import org.app.repository.UserRepository;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -59,7 +60,7 @@ public class UserService {
 
     public User updatUserRole(int userId, String role) throws UserNotFoundException{
         User toUpdateUser = userRepository.findById(userId).orElseThrow(() -> new UserNotFoundException("No Found User"));
-        toUpdateUser.setName(role);
+        toUpdateUser.setRoles(Roles.valueOf(role));
         return userRepository.save(toUpdateUser);
     }
 
