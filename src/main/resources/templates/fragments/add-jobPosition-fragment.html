@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/header-fragment.html :: head"></head>
+<body>
+<div class="modal fade" id="addJobPosition" tabindex="-1" role="dialog" aria-labelledby="addJobPosition"
+     aria-hidden="true" th:fragment="add-jobPosition">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="addJob">Add Job Position</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form th:action="@{/project/add/position}" method="post" id="addJobPositionForm">
+                    <div>
+                        <h2 th:text="${activeProject.projectName}"></h2>
+                    </div>
+                    <input type="hidden" id="userId" name="userId" th:value="${activeProject.projectId}">
+                    <div class="form-group">
+                        <label for="positionTitle">Title</label>
+                        <input type="button" class="btn btn-plus" id="plus" value="-" style="float: right;">
+                        <input type="button" class="btn btn-minus" id="minus" value="+" style="float: right;" onclick="addInput()">
+                        <input type="text" class="form-control" id="positionTitle" name="positionTitle" placeholder="ex)Frontend Software Engineer" required>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary">Save</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript" th:src="@{/js/script.js}"></script>
+
+</body>
+</html>

@@ -6,6 +6,7 @@ import org.app.controllers.util.ProjectCommon;
 import org.app.exceptions.ProjectNotFoundException;
 import org.app.exceptions.UserNotFoundException;
 import org.app.model.Board;
+import org.app.model.JobPosition;
 import org.app.model.Project;
 import org.app.model.User;
 import org.app.model.enums.Roles;
@@ -18,6 +19,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Set;
 
 @Controller
@@ -77,5 +79,15 @@ public class ProjectController {
         throws UserNotFoundException, ProjectNotFoundException {
         Project activeProject = projectService.findProjectByProjectId(id);
         return projectCommon.getHomePageUtility(model, activeProject);
+    }
+
+    @PostMapping("/add/position")
+    public ResponseEntity<Project> insertJobPosition(@RequestParam("projectId") int projectId,
+                                                     @RequestParam("positions") List<JobPosition> positions) throws ProjectNotFoundException {
+        Project project = projectService.findProjectByProjectId(projectId);
+        List<JobPosition> addPositions = project.getJobPositions();
+        addPositions.addAll(positions);
+        project.setJobPositions(addPositions);
+        return ResponseEntity.ok(project);
     }
 }
