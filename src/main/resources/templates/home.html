@@ -108,6 +108,7 @@
 <div th:replace="~{fragments/addboard-fragment :: addboard}"></div>
 <div th:replace="~{fragments/create-project-fragment :: create-project}"></div>
 <div th:replace="~{fragments/addMember-fragment :: addMember}"></div>
+<div th:replace="~{fragments/add-jobPosition-fragment :: add-jobPosition}"></div>
 <script type="text/javascript" th:src="@{/js/nav.js}"></script>
 <script>
   $(document).ready(function () {
@@ -121,6 +122,10 @@
 
     $('.add-project-btn').click(function () {
       $('#newProjectModal').modal('show');
+    });
+
+    $('.add-job-position-btn').click(function () {
+      $('#addJobPosition').modal('show');
     });
 
     $(document).on('click', '.add-member-btn', function (e) {

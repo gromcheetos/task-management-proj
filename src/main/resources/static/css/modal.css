@@ -37,3 +37,19 @@
         .btn-primary:hover {
             background-color: #2980b9;
         }
+        .btn-minus {
+            background-color: #3498db;
+            margin-left: 10px;
+        }
+        .btn-plus {
+            background-color: #3498db;
+        }
+        .btn-minus:hover {
+            background-color: #2980b9;
+        }
+        .btn-plus:hover {
+            background-color: #2980b9;
+        }
+
+
+

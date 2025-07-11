@@ -3,8 +3,11 @@ package org.app.controllers.util;
 import lombok.AllArgsConstructor;
 import org.app.exceptions.UserNotFoundException;
 import org.app.model.Board;
+import org.app.model.JobPosition;
 import org.app.model.Project;
 import org.app.model.User;
+import org.app.model.dto.JobPositionDto;
+import org.app.service.JobPositionService;
 import org.app.service.ProjectService;
 import org.app.service.TodoTaskService;
 import org.app.service.UserService;
@@ -21,6 +24,7 @@ public class ProjectCommon {
     private final UserService userService;
     private final TodoTaskService taskService;
     private final ProjectService projectService;
+    private final JobPositionService jobPositionService;
 
     public String getHomePageUtility(Model model, Project activeProject) throws UserNotFoundException {
         User currentUser = userService.getCurrentUser();
@@ -38,6 +42,8 @@ public class ProjectCommon {
             int completedTasks = taskService.getCompletedTasksCount(currentUser.getId());
             Set<User> teamMembers = activeProject.getTeamMembers();
             int memberCnt = teamMembers.size();
+            List<JobPosition> positions = jobPositionService.findJobPositionById(activeProject.getProjectId()); // or by project
+            model.addAttribute("positions", JobPositionDto.fromEntity(positions));
             model.addAttribute("activeProject", activeProject);
             model.addAttribute("teamMembers", teamMembers);
             model.addAttribute("memberCnt", memberCnt);
