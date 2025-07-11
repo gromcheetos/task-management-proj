@@ -42,11 +42,6 @@ function showProjectMenuItem() {
 
 }
 
-//
-// // Optionally, close menu when clicking outside (if desired)
-// document.addEventListener('click', (e) => {
-//
-// });
 
 
 

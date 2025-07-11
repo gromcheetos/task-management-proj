@@ -82,7 +82,6 @@
                             .substring(0, 2);
 
                             alert('Invited successfully');
-                            //TODO : refresh data
                             $('#userList').append('<div class="member">' +
                                 '<span class="avatar" data-username=' + initials + '></span>' +
                                 '<div class="info">' +
@@ -91,6 +90,8 @@
                                 '</div>' +
                         '</div>');
                             $('#addMemberModal').modal('hide');
+                            $('#searchBox')[0].reset();
+
                         })
                         .catch((error) => {
                             console.error('Error updating members:', error);

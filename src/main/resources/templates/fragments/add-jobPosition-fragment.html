@@ -14,24 +14,20 @@
             </div>
             <div class="modal-body">
                 <form th:action="@{/project/add/position}" method="post" id="addJobPositionForm">
+                    <input type="hidden" id="projectId" name="projectId" th:value="${activeProject.projectId}">
                     <div>
                         <h2 th:text="${activeProject.projectName}"></h2>
                     </div>
-                    <input type="hidden" id="userId" name="userId" th:value="${activeProject.projectId}">
-                    <div class="form-group">
-                        <label for="positionTitle">Title</label>
-                        <input type="button" class="btn btn-plus" id="plus" value="-" style="float: right;">
-                        <input type="button" class="btn btn-minus" id="minus" value="+" style="float: right;" onclick="addInput()">
-                        <input type="text" class="form-control" id="positionTitle" name="positionTitle" placeholder="ex)Frontend Software Engineer" required>
+                        <input type="button" class="btn btn-minus" id="minus" value="-" style="float: right;" onclick="removeInput()">
+                        <input type="button" class="btn btn-plus" id="plus" value="+" style="float: right;" onclick="addInput()">
+                    <div class="form-group" id="jobPositionInputs">
+                        <input type="text" class="form-control job-input" name="plusInput" placeholder="Ex) Frontend Software Engineer..." required>
                     </div>
-
                     <button type="submit" class="btn btn-primary">Save</button>
                 </form>
             </div>
         </div>
     </div>
 </div>
-<script type="text/javascript" th:src="@{/js/script.js}"></script>
-
 </body>
 </html>

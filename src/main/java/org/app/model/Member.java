@@ -13,7 +13,4 @@ public class Member {
 
     private String name;
 
-    @ManyToOne
-    private JobPosition jobPosition;
-
 }

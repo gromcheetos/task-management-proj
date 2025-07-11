@@ -28,7 +28,7 @@ public class Project {
     @ManyToOne
     private User projectOwner;
 
-    @OneToMany(mappedBy = "project", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "project")
     private List<JobPosition> jobPositions = new ArrayList<>();
 
     public Project(String projectName) {

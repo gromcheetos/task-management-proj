@@ -12,6 +12,7 @@ import org.app.model.User;
 import org.app.model.enums.Roles;
 import org.app.model.enums.Status;
 import org.app.service.BoardService;
+import org.app.service.JobPositionService;
 import org.app.service.ProjectService;
 import org.app.service.UserService;
 import org.springframework.http.ResponseEntity;
@@ -19,8 +20,10 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Controller
 @Slf4j
@@ -32,6 +35,7 @@ public class ProjectController {
     private final UserService userService;
     private final BoardService boardService;
     private final ProjectCommon projectCommon;
+    private final JobPositionService jobPositionService;
 
     // TODO: add board to the project as well changed
     @PostMapping("/create")
@@ -82,12 +86,20 @@ public class ProjectController {
     }
 
     @PostMapping("/add/position")
-    public ResponseEntity<Project> insertJobPosition(@RequestParam("projectId") int projectId,
-                                                     @RequestParam("positions") List<JobPosition> positions) throws ProjectNotFoundException {
+    public String insertJobPosition(@RequestParam("projectId") int projectId,
+                                                     @RequestParam("positions") String positions
+                                    ) throws ProjectNotFoundException {
         Project project = projectService.findProjectByProjectId(projectId);
-        List<JobPosition> addPositions = project.getJobPositions();
-        addPositions.addAll(positions);
+        List<String> positionList = Arrays.asList(positions.split(","));
+        List<JobPosition> addPositions = positionList.stream()
+                .map(JobPosition::new)
+                .collect(Collectors.toList());
+        for (JobPosition jp : addPositions) {
+            jobPositionService.createJobPosition(jp);
+        }
         project.setJobPositions(addPositions);
-        return ResponseEntity.ok(project);
+        return "redirect:/";
     }
+
+
 }
