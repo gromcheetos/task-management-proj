@@ -60,14 +60,14 @@ public class ProjectController {
     @PostMapping("/add/member")
     public ResponseEntity<Project> insertTeamMember(@RequestParam("projectId") int projectId,
         @RequestParam(value = "userId") int userId,
-        @RequestParam(value="userRole") String userRole
-         ) throws UserNotFoundException, ProjectNotFoundException {
+        @RequestParam(value = "userRole") String userRole
+    ) throws UserNotFoundException, ProjectNotFoundException {
         Project teamProject = projectService.findProjectByProjectId(projectId);
         User user = userService.getUserById(userId);
         Set<User> currentMembers = teamProject.getTeamMembers();
         currentMembers.add(user);
         teamProject.setTeamMembers(currentMembers);
-        userService.updatUserRole(userId,userRole);
+        userService.updatUserRole(userId, userRole);
         return ResponseEntity.ok(teamProject);
     }
 
@@ -87,14 +87,14 @@ public class ProjectController {
 
     @PostMapping("/add/position")
     public String insertJobPosition(@RequestParam("projectId") int projectId,
-                                                     @RequestParam("positions") String positions
-                                    ) throws ProjectNotFoundException {
+        @RequestParam("positions") String positions) throws ProjectNotFoundException {
         Project project = projectService.findProjectByProjectId(projectId);
         List<String> positionList = Arrays.asList(positions.split(","));
         List<JobPosition> addPositions = positionList.stream()
-                .map(JobPosition::new)
-                .collect(Collectors.toList());
+            .map(JobPosition::new)
+            .toList();
         for (JobPosition jp : addPositions) {
+            jp.setProject(project);
             jobPositionService.createJobPosition(jp);
         }
         project.setJobPositions(addPositions);

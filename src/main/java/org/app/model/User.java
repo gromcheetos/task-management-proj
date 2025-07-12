@@ -21,6 +21,7 @@ public class User implements UserDetails {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(name = "user_id")
     private int id;
     private String name;
     private String email;
@@ -37,13 +38,17 @@ public class User implements UserDetails {
     @OneToMany(mappedBy = "projectOwner", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private List<Project> projects;
 
-    public User(String name, String email, String username, String password){
+    @OneToOne(mappedBy = "user")
+    private JobPosition jobPosition;
+
+    public User(String name, String email, String username, String password) {
         this.name = name;
         this.email = email;
         this.username = username;
         this.password = password;
     }
-    public User(int id, String name, String email, String username, String password){
+
+    public User(int id, String name, String email, String username, String password) {
         this.id = id;
         this.name = name;
         this.email = email;

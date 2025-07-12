@@ -10,6 +10,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @EqualsAndHashCode
 public class JobPosition {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer jobPositionId;
@@ -17,7 +18,12 @@ public class JobPosition {
     private String description;
 
     @ManyToOne
+    @JoinColumn(name = "project_id")
     private Project project;
+
+    @OneToOne
+    @JoinColumn(name = "user_id", unique = true)
+    private User user;
 
     public JobPosition(String title) {
         this.title = title;

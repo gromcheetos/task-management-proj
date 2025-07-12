@@ -15,6 +15,7 @@ public class Project {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(name = "project_id")
     private Integer projectId;
     private String projectName;
     private String description;
