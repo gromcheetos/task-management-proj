@@ -3,6 +3,7 @@ package org.app.service;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.app.exceptions.UserNotFoundException;
+import org.app.model.JobPosition;
 import org.app.model.User;
 import org.app.model.enums.Roles;
 import org.app.repository.UserRepository;
@@ -58,9 +59,10 @@ public class UserService {
         return getUserByUsername(username);
     }
 
-    public User updatUserRole(int userId, String role) throws UserNotFoundException{
+    public User updatUserRole(int userId, String role, JobPosition userPosition) throws UserNotFoundException{
         User toUpdateUser = userRepository.findById(userId).orElseThrow(() -> new UserNotFoundException("No Found User"));
         toUpdateUser.setRoles(Roles.valueOf(role));
+        toUpdateUser.setJobPosition(userPosition);
         return userRepository.save(toUpdateUser);
     }
 

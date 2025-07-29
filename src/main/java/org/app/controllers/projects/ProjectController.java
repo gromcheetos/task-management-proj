@@ -23,7 +23,6 @@ import org.springframework.web.bind.annotation.*;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 @Controller
 @Slf4j
@@ -60,14 +59,18 @@ public class ProjectController {
     @PostMapping("/add/member")
     public ResponseEntity<Project> insertTeamMember(@RequestParam("projectId") int projectId,
         @RequestParam(value = "userId") int userId,
-        @RequestParam(value = "userRole") String userRole
+        @RequestParam(value = "userRole") String userRole,
+        @RequestParam(value = "jobId") int jobId
     ) throws UserNotFoundException, ProjectNotFoundException {
         Project teamProject = projectService.findProjectByProjectId(projectId);
         User user = userService.getUserById(userId);
         Set<User> currentMembers = teamProject.getTeamMembers();
         currentMembers.add(user);
         teamProject.setTeamMembers(currentMembers);
-        userService.updatUserRole(userId, userRole);
+        JobPosition userPosition = jobPositionService.updateJobPosition(jobId, user);
+        userService.updatUserRole(userId, userRole, userPosition);
+
+
         return ResponseEntity.ok(teamProject);
     }
 

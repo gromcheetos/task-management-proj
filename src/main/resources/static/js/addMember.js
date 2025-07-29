@@ -48,12 +48,14 @@
                     event.preventDefault();
                     const userId = $("#searchBox").attr('data-user-id');
                     const projectId = document.getElementById('projectId').value;
-                    const userName = $("#searchBox").val();
+                //    const userName = $("#searchBox").val();
                     const userRole = $("#roleSelect").val();
+                    const jobId = $("#positionSelect").val();
                     const params = new URLSearchParams({
                         userId: userId,
                         userRole: userRole,
-                        projectId: projectId
+                        projectId: projectId,
+                        jobId: jobId
                     });
                     fetch(`/project/add/member?${params.toString()}`,
                         {

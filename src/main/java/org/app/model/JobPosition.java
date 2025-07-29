@@ -5,6 +5,8 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
+import java.util.Objects;
+
 @Entity
 @Data
 @NoArgsConstructor
@@ -29,4 +31,8 @@ public class JobPosition {
         this.title = title;
     }
 
+    @Override
+    public int hashCode() {
+        return Objects.hash(jobPositionId, title, description);
+    }
 }
