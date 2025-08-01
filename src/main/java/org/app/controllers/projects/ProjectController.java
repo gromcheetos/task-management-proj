@@ -20,6 +20,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
@@ -70,7 +71,6 @@ public class ProjectController {
         JobPosition userPosition = jobPositionService.updateJobPosition(jobId, user);
         userService.updatUserRole(userId, userRole, userPosition);
 
-
         return ResponseEntity.ok(teamProject);
     }
 
@@ -104,5 +104,11 @@ public class ProjectController {
         return "redirect:/";
     }
 
+    @GetMapping("/show/members")
+    public ResponseEntity<List<User>> getTeamMembers(@RequestParam int projectId) throws ProjectNotFoundException {
+        Project project = projectService.findProjectByProjectId(projectId);
+        Set<User> members = project.getTeamMembers();
+        return ResponseEntity.ok(new ArrayList<>(members));
+    }
 
 }

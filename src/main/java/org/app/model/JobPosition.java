@@ -1,9 +1,12 @@
 package org.app.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 import java.util.Objects;
 
@@ -11,6 +14,7 @@ import java.util.Objects;
 @Data
 @NoArgsConstructor
 @EqualsAndHashCode
+@ToString(exclude = {"project", "user"})
 public class JobPosition {
 
     @Id
@@ -21,10 +25,12 @@ public class JobPosition {
 
     @ManyToOne
     @JoinColumn(name = "project_id")
+    @JsonBackReference
     private Project project;
 
     @OneToOne
     @JoinColumn(name = "user_id", unique = true)
+    @JsonManagedReference(value = "job-position-user")
     private User user;
 
     public JobPosition(String title) {

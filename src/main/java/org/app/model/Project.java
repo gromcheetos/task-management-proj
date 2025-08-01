@@ -1,9 +1,11 @@
 package org.app.model;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.ToString;
 
 import java.util.*;
 
@@ -11,6 +13,7 @@ import java.util.*;
 @Data
 @Builder
 @AllArgsConstructor
+@ToString(exclude = {"teamMembers", "boards", "projectOwner", "jobPositions"})
 public class Project {
 
     @Id
@@ -21,15 +24,19 @@ public class Project {
     private String description;
 
     @OneToMany
+    @JsonManagedReference
     private Set<User> teamMembers;
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @JsonManagedReference
     private List<Board> boards;
 
     @ManyToOne
+    @JsonManagedReference(value = "owned-projects")
     private User projectOwner;
 
     @OneToMany(mappedBy = "project")
+    @JsonManagedReference
     private List<JobPosition> jobPositions = new ArrayList<>();
 
     public Project(String projectName) {

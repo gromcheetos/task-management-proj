@@ -1,9 +1,11 @@
 package org.app.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 import org.app.model.enums.Roles;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -17,6 +19,7 @@ import java.util.List;
 @Entity(name = "secured_users")
 @AllArgsConstructor
 @NoArgsConstructor
+@ToString(exclude = {"projects", "boards", "jobPosition"})
 public class User implements UserDetails {
 
     @Id
@@ -33,12 +36,15 @@ public class User implements UserDetails {
     private Roles roles;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @JsonBackReference
     private List<Board> boards;
 
     @OneToMany(mappedBy = "projectOwner", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @JsonBackReference(value = "owned-projects")
     private List<Project> projects;
 
     @OneToOne(mappedBy = "user")
+    @JsonBackReference(value = "job-position-user")
     private JobPosition jobPosition;
 
     public User(String name, String email, String username, String password) {
@@ -97,13 +103,20 @@ public class User implements UserDetails {
         return true;
     }
 
-    @Override
-    public String toString() {
-        return "User{" +
-            "id=" + id +
-            ", email='" + email + '\'' +
-            ", name='" + name + '\'' +
-            ", username='" + username + '\'' +
-            '}';
+    public String getInitials() {
+        if (name == null || name.isBlank()) return "";
+
+        String[] words = name.trim().split("\\s+");
+
+        StringBuilder initials = new StringBuilder();
+        for (String word : words) {
+            if (!word.isEmpty() && initials.length() < 2) {
+                initials.append(Character.toUpperCase(word.charAt(0)));
+            }
+        }
+
+        return initials.toString();
     }
+
+
 }
