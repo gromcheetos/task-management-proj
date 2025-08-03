@@ -2,6 +2,7 @@ package org.app.service;
 
 import lombok.AllArgsConstructor;
 import org.app.exceptions.ProjectNotFoundException;
+import org.app.model.Board;
 import org.app.model.Project;
 import org.app.model.User;
 import org.app.repository.ProjectRepository;
@@ -41,6 +42,13 @@ public class ProjectService {
     public Set<User> getTeamMembers(int projectId){
         Project project = projectRepository.findById(projectId).orElseThrow();
         return project.getTeamMembers();
+    }
+
+    public Project updateProject(int projectId, Board board) {
+        Project updatedProj = projectRepository.findById(projectId).orElseThrow();
+        List<Board> boards = updatedProj.getBoards();
+        boards.add(board);
+        return projectRepository.save(updatedProj);
     }
 
 }

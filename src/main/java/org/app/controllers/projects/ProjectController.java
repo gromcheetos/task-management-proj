@@ -3,6 +3,7 @@ package org.app.controllers.projects;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.app.controllers.util.ProjectCommon;
+import org.app.exceptions.JobPositionNotFoundException;
 import org.app.exceptions.ProjectNotFoundException;
 import org.app.exceptions.UserNotFoundException;
 import org.app.model.Board;
@@ -62,15 +63,15 @@ public class ProjectController {
         @RequestParam(value = "userId") int userId,
         @RequestParam(value = "userRole") String userRole,
         @RequestParam(value = "jobId") int jobId
-    ) throws UserNotFoundException, ProjectNotFoundException {
+    ) throws UserNotFoundException, ProjectNotFoundException, JobPositionNotFoundException {
         Project teamProject = projectService.findProjectByProjectId(projectId);
         User user = userService.getUserById(userId);
         Set<User> currentMembers = teamProject.getTeamMembers();
+        jobPositionService.updateJobPosition(jobId, user);
+        userService.updatUserRole(userId, userRole, jobId);
         currentMembers.add(user);
         teamProject.setTeamMembers(currentMembers);
-        JobPosition userPosition = jobPositionService.updateJobPosition(jobId, user);
-        userService.updatUserRole(userId, userRole, userPosition);
-
+     //   userService.joinProject(userId, projectId);
         return ResponseEntity.ok(teamProject);
     }
 
