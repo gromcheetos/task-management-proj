@@ -53,7 +53,7 @@ public class ProjectController {
             project.getBoards().add(board);
         }
         project.setDescription(description);
-        projectService.createProject(project);
+        projectService.createOrUpdateProject(project);
         model.addAttribute("project", project);
         return "redirect:/";
     }
@@ -62,8 +62,9 @@ public class ProjectController {
     public ResponseEntity<Project> insertTeamMember(@RequestParam("projectId") int projectId,
         @RequestParam(value = "userId") int userId,
         @RequestParam(value = "userRole") String userRole,
-        @RequestParam(value = "jobId") int jobId
-    ) throws UserNotFoundException, ProjectNotFoundException, JobPositionNotFoundException {
+        @RequestParam(value = "jobId") int jobId)
+        throws UserNotFoundException, ProjectNotFoundException, JobPositionNotFoundException {
+        log.info("[insertTeamMember] - Request received to add member to the project");
         Project teamProject = projectService.findProjectByProjectId(projectId);
         User user = userService.getUserById(userId);
         Set<User> currentMembers = teamProject.getTeamMembers();
@@ -71,7 +72,9 @@ public class ProjectController {
         userService.updatUserRole(userId, userRole, jobId);
         currentMembers.add(user);
         teamProject.setTeamMembers(currentMembers);
-     //   userService.joinProject(userId, projectId);
+        projectService.createOrUpdateProject(teamProject);
+        log.info("[insertTeamMember] - Added member to the project");
+        //   userService.joinProject(userId, projectId);
         return ResponseEntity.ok(teamProject);
     }
 

@@ -49,7 +49,7 @@ public class MockData {
         User defaultUser = new User("John Doe", "johndoe@gmail.com", "john");
 
         defaultProject = new Project(DEFAULT_PROJECT_NAME);
-        projectService.createProject(defaultProject);
+        projectService.createOrUpdateProject(defaultProject);
     //    int defaultProjectId = defaultProject.getProjectId();
         User testUser = userService.createUser(mockUser, "pass");
         userService.createUser(defaultUser, "pass");
