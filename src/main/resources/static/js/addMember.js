@@ -48,12 +48,13 @@
                     event.preventDefault();
                     const userId = $("#searchBox").attr('data-user-id');
                     const projectId = document.getElementById('projectId').value;
-                    const userName = $("#searchBox").val();
                     const userRole = $("#roleSelect").val();
+                    const jobId = $("#positionSelect").val();
                     const params = new URLSearchParams({
                         userId: userId,
                         userRole: userRole,
-                        projectId: projectId
+                        projectId: projectId,
+                        jobId: jobId
                     });
                     fetch(`/project/add/member?${params.toString()}`,
                         {
@@ -68,36 +69,46 @@
                             }
                             return teamProject.json();
                         })
-                        .then(data => {
-                         //   alert('Sent invitation to ' + userName + ' ');
+                        .then(() => {
+                            return fetch(`/project/show/members?projectId=${projectId}`);
+                        })
+                        .then(response => {
+                            if (!response.ok) {
+                                throw new Error("Failed to fetch updated member list");
+                            }
+                            return response.json();
+                        })
+                        .then(members => {
+                            $('#userList').empty();
 
-                            const userName = $("#searchBox").val();
-                            const userRole = $("#roleSelect").val();
+                            members.forEach(user => {
+                                const userInitials = user.username
+                                    .split(' ')
+                                    .map(word => word.charAt(0))
+                                    .join('')
+                                    .toUpperCase()
+                                    .substring(0, 2);
 
-                            const userInitials = userName
-                            .split(' ')
-                            .map(word => word.charAt(0))
-                            .join('')
-                            .toUpperCase()
-                            .substring(0, 2);
+                                $('#userList').append(`
+                                    <div class="member">
+                                        <span class="avatar" data-username="${userInitials}"></span>
+                                        <div class="info">
+                                            <p class="name" id="username">${user.username}</p>
+                                            <p class="role">${user.roles}</p>
+                                            <span class="position">${user.jobPosition?.title ?? ''}</span>
+                                        </div>
+                                    </div>
+                                `);
+                            });
 
-                            alert('Invited successfully');
-                            $('#userList').append('<div class="member">' +
-                                '<span class="avatar" data-username=' + initials + '></span>' +
-                                '<div class="info">' +
-                                '<p class="name" id="username">' + userName + '</p>' +
-                                '<p class="role">'+ userRole +'</p>' +
-                                '</div>' +
-                        '</div>');
                             $('#addMemberModal').modal('hide');
-                            $('#searchBox')[0].reset();
-
+                            $('#searchBox').val('');
                         })
                         .catch((error) => {
                             console.error('Error updating members:', error);
                         });
-            });
-        });
+                     });
+                });
 
         } else {
             setTimeout(waitForJQuery, 100);

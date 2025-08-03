@@ -11,6 +11,11 @@
       <h1>Welcome!</h1>
       <p>Pick up where you left off. To see your tasks for today, please log in or sign up.</p>
     </div>
+    <div class="project-members-inline">
+      <div class="member-avatar" th:each="user : ${teamMembers}">
+        <span class="avatar" th:attr="data-username=${user.initials}"></span>
+      </div>
+    </div>
     <div sec:authorize="isAuthenticated()">
       <div class="header">
         <div class="header-content">

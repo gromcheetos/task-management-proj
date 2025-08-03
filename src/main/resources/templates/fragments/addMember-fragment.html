@@ -29,8 +29,8 @@
                     <select class="position-select" id="positionSelect" name="positionId" required>
                         <option value="" disabled selected>Select position</option>
                         <option th:each="position : ${positions}"
-                                th:value="${position.id}"
-                                th:text="${position.name}">
+                                th:value="${position.jobPositionId}"
+                                th:text="${position.title}">
                         </option>
                     </select>
                 </div>
@@ -44,13 +44,14 @@
                         <div class="member" th:each="user : ${teamMembers}">
                             <span class="avatar" th:attr="data-username=${user.username}"></span>
                             <div class="info">
-                                <p class="name" id="username" th:text="${user.username}">
-                                <p class="role" th:text="${user.roles}"></p>
+                                <div class="top-row">
+                                    <div class="left">
+                                        <p class="name" id="username" th:text="${user.username}"></p>
+                                        <p class="role" th:text="${user.roles}"></p>
+                                    </div>
+                                    <span class="position" th:text="${user.jobPosition?.title}"></span>
+                                </div>
                             </div>
-                            <!--<select class="role-select">
-                                <option value="ADMIN">Admin</option>
-                                <option value="MEMBER">Member</option>
-                            </select>-->
                         </div>
                     </div>
                 </div>

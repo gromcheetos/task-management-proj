@@ -8,10 +8,7 @@ import org.app.model.Board;
 import org.app.model.TodoTask;
 import org.app.model.User;
 import org.app.model.enums.Status;
-import org.app.service.BoardService;
-import org.app.service.SearchService;
-import org.app.service.TodoTaskService;
-import org.app.service.UserService;
+import org.app.service.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -34,14 +31,14 @@ public class BoardController {
     private final BoardService boardService;
     private final SearchService searchService;
     private final TodoTaskService todoTaskService;
+    private final ProjectService projectService;
 
     @PostMapping("/create")
     public String createBoard(@RequestParam("boardName") String boardName,
                               @RequestParam("description") String description,
-                              @RequestParam("status") String status,
+                              @RequestParam(value = "status", required = false) String status,
                               @RequestParam(value = "projectId",  required = true) Integer projectId) throws UserNotFoundException {
-        // TODO: add board to the project as well
-        // boardname = status
+
         User currentUser = userService.getCurrentUser();
         Board board = new Board(boardName, description);
         board.setUser(currentUser);
@@ -50,6 +47,7 @@ public class BoardController {
         }else {
             boardService.createDefaultBoardForNewUsers(currentUser, boardName, description, Status.valueOf(status), true);
         }
+        projectService.updateProject(projectId, board);
         return "redirect:/";
     }
 

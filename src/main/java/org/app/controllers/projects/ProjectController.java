@@ -3,6 +3,7 @@ package org.app.controllers.projects;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.app.controllers.util.ProjectCommon;
+import org.app.exceptions.JobPositionNotFoundException;
 import org.app.exceptions.ProjectNotFoundException;
 import org.app.exceptions.UserNotFoundException;
 import org.app.model.Board;
@@ -20,10 +21,10 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 @Controller
 @Slf4j
@@ -52,7 +53,7 @@ public class ProjectController {
             project.getBoards().add(board);
         }
         project.setDescription(description);
-        projectService.createProject(project);
+        projectService.createOrUpdateProject(project);
         model.addAttribute("project", project);
         return "redirect:/";
     }
@@ -60,14 +61,20 @@ public class ProjectController {
     @PostMapping("/add/member")
     public ResponseEntity<Project> insertTeamMember(@RequestParam("projectId") int projectId,
         @RequestParam(value = "userId") int userId,
-        @RequestParam(value="userRole") String userRole
-         ) throws UserNotFoundException, ProjectNotFoundException {
+        @RequestParam(value = "userRole") String userRole,
+        @RequestParam(value = "jobId") int jobId)
+        throws UserNotFoundException, ProjectNotFoundException, JobPositionNotFoundException {
+        log.info("[insertTeamMember] - Request received to add member to the project");
         Project teamProject = projectService.findProjectByProjectId(projectId);
         User user = userService.getUserById(userId);
         Set<User> currentMembers = teamProject.getTeamMembers();
+        jobPositionService.updateJobPosition(jobId, user);
+        userService.updatUserRole(userId, userRole, jobId);
         currentMembers.add(user);
         teamProject.setTeamMembers(currentMembers);
-        userService.updatUserRole(userId,userRole);
+        projectService.createOrUpdateProject(teamProject);
+        log.info("[insertTeamMember] - Added member to the project");
+        //   userService.joinProject(userId, projectId);
         return ResponseEntity.ok(teamProject);
     }
 
@@ -87,19 +94,25 @@ public class ProjectController {
 
     @PostMapping("/add/position")
     public String insertJobPosition(@RequestParam("projectId") int projectId,
-                                                     @RequestParam("positions") String positions
-                                    ) throws ProjectNotFoundException {
+        @RequestParam("positions") String positions) throws ProjectNotFoundException {
         Project project = projectService.findProjectByProjectId(projectId);
         List<String> positionList = Arrays.asList(positions.split(","));
         List<JobPosition> addPositions = positionList.stream()
-                .map(JobPosition::new)
-                .collect(Collectors.toList());
+            .map(JobPosition::new)
+            .toList();
         for (JobPosition jp : addPositions) {
+            jp.setProject(project);
             jobPositionService.createJobPosition(jp);
         }
         project.setJobPositions(addPositions);
         return "redirect:/";
     }
 
+    @GetMapping("/show/members")
+    public ResponseEntity<List<User>> getTeamMembers(@RequestParam int projectId) throws ProjectNotFoundException {
+        Project project = projectService.findProjectByProjectId(projectId);
+        Set<User> members = project.getTeamMembers();
+        return ResponseEntity.ok(new ArrayList<>(members));
+    }
 
 }

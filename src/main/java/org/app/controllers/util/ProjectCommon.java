@@ -42,7 +42,7 @@ public class ProjectCommon {
             int completedTasks = taskService.getCompletedTasksCount(currentUser.getId());
             Set<User> teamMembers = activeProject.getTeamMembers();
             int memberCnt = teamMembers.size();
-            List<JobPosition> positions = jobPositionService.findJobPositionById(activeProject.getProjectId()); // or by project
+            List<JobPosition> positions = jobPositionService.findJobPositionById(activeProject.getProjectId());
             model.addAttribute("positions", JobPositionDto.fromEntity(positions));
             model.addAttribute("activeProject", activeProject);
             model.addAttribute("teamMembers", teamMembers);
