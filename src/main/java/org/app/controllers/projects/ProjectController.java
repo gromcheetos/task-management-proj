@@ -22,10 +22,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 @Controller
 @Slf4j
@@ -39,7 +36,6 @@ public class ProjectController {
     private final ProjectCommon projectCommon;
     private final JobPositionService jobPositionService;
 
-    // TODO: add board to the project as well changed
     @PostMapping("/create")
     public String createProject(@RequestParam("projectName") String projectName,
         @RequestParam(value = "description", required = false) String description,
@@ -47,7 +43,8 @@ public class ProjectController {
         User currentUser = userService.getCurrentUser();
         Project project = new Project(projectName);
         project.setProjectOwner(currentUser);
-        project.setTeamMembers(Set.of(currentUser));
+        Set<User> fullTeam = new HashSet<>(project.getTeamMembers());
+        fullTeam.add(project.getProjectOwner());
         currentUser.setRoles(Roles.ADMIN);
         for (Status status : Status.values()) {
             Board board = boardService.createDefaultBoardsForNewProject(status.getValue());
@@ -55,7 +52,7 @@ public class ProjectController {
         }
         project.setDescription(description);
         projectService.createOrUpdateProject(project);
-        model.addAttribute("project", project);
+        model.addAttribute("activeProject", project);
         return "redirect:/";
     }
 

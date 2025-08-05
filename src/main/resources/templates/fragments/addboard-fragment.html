@@ -15,6 +15,7 @@
             <div class="modal-body">
                 <form th:action="@{/board/create}" method="post" id="addBoardForm">
                     <input type="hidden" id="userId" name="userId" th:value="${currentUser.id}">
+                    <input type="hidden" id="projectId" name="projectId" th:value="${activeProject.projectId}">
                     <div class="form-group">
                         <label for="boardName">Board Name</label>
                         <input type="text" class="form-control" id="boardName" name="boardName" required>

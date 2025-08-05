@@ -7,7 +7,6 @@ import org.app.exceptions.UserNotFoundException;
 import org.app.model.Board;
 import org.app.model.TodoTask;
 import org.app.model.User;
-import org.app.model.enums.Status;
 import org.app.service.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -36,18 +35,12 @@ public class BoardController {
     @PostMapping("/create")
     public String createBoard(@RequestParam("boardName") String boardName,
                               @RequestParam("description") String description,
-                              @RequestParam(value = "status", required = false) String status,
                               @RequestParam(value = "projectId",  required = true) Integer projectId) throws UserNotFoundException {
 
         User currentUser = userService.getCurrentUser();
         Board board = new Board(boardName, description);
         board.setUser(currentUser);
-        if(projectId != null){
-            boardService.createBoard(projectId, board);
-        }else {
-            boardService.createDefaultBoardForNewUsers(currentUser, boardName, description, Status.valueOf(status), true);
-        }
-        projectService.updateProject(projectId, board);
+        boardService.createBoard(projectId, board);
         return "redirect:/";
     }
 
@@ -93,15 +86,16 @@ public class BoardController {
     }
 
 
-    @PostMapping("/delete/{id}")
-    public String deleteBoard(@PathVariable("id") Integer boardId) {
+    @DeleteMapping("/delete/{id}")
+    public String deleteBoard(@PathVariable("id") Integer boardId,
+                              @RequestParam("projectId") int projectId) {
         try {
-            boardService.deleteBoardById(boardId);
+            boardService.deleteBoardById(boardId, projectId);
+
         } catch (BoardNotFoundException exception) {
-            // fix this
+            log.error("Error while deleting board with id: {}", boardId, exception);
         }
         return "redirect:/";
     }
-
 
 }

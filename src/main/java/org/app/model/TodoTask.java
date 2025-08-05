@@ -3,11 +3,14 @@ package org.app.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
-
-import java.time.LocalDate;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
 import org.app.model.enums.Priority;
 import org.app.model.enums.Status;
+
+import java.time.LocalDate;
 
 @Entity
 @Data // Lombok annotation to generate getters and setters
@@ -43,13 +46,11 @@ public class TodoTask {
         this.deadline = deadline;
         this.status = status;
     }
-    public TodoTask(Integer id, String title, String description, Priority priority, LocalDate deadline, Status status) {
-        this.id = id;
+    public TodoTask(String title, String description, Priority priority, LocalDate deadline) {
         this.title = title;
         this.description = description;
         this.priority = priority;
         this.deadline = deadline;
-        this.status = status;
     }
     public int getBoardId() {
         return board != null ? board.getBoardId() : null;
