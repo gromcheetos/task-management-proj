@@ -84,7 +84,8 @@
         <div class="column" th:each="board : ${userBoards}" th:attr="data-board-id=${board.boardId}">
           <div class="column-header">
             <h3 th:text="${board.boardName}"></h3>
-            <form th:action="@{/board/delete/{id}(id=${board.boardId})}" method="post" class="delete-board-form">
+            <form th:action="@{/board/delete/{id}(id=${board.boardId})}" th:method="delete" class="delete-board-form">
+              <input type="hidden" name="projectId" th:value="${activeProject.projectId}">
               <button type="submit" class="delete-board-btn">x</button>
             </form>
           </div>

@@ -1,17 +1,25 @@
 package org.app.controllers.tasks;
 
-import java.time.LocalDate;
-import java.util.HashMap;
-import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.app.exceptions.*;
-import org.app.model.*;
-import org.app.model.enums.*;
-import org.app.service.*;
+import org.app.exceptions.BoardNotFoundException;
+import org.app.exceptions.TaskNotFoundException;
+import org.app.exceptions.UserNotFoundException;
+import org.app.model.Board;
+import org.app.model.TodoTask;
+import org.app.model.User;
+import org.app.model.enums.Priority;
+import org.app.model.enums.Status;
+import org.app.service.BoardService;
+import org.app.service.TodoTaskService;
+import org.app.service.UserService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
+
+import java.time.LocalDate;
+import java.util.HashMap;
+import java.util.Map;
 
 @Controller
 @RequiredArgsConstructor
@@ -28,7 +36,6 @@ public class TaskCRUDController {
         @RequestParam("description") String description,
         @RequestParam("priority") String priority,
         @RequestParam("deadline") String deadline,
-        @RequestParam("status") String status,
         @RequestParam("userId") int userId,
         @RequestParam("boardId") int boardId) throws UserNotFoundException, BoardNotFoundException {
 
@@ -37,8 +44,7 @@ public class TaskCRUDController {
 
         LocalDate convertedDeadline = LocalDate.parse(deadline);
 
-        TodoTask todoTask = new TodoTask(title, description, Priority.valueOf(priority), convertedDeadline,
-           Status.fromValue(board.getBoardName()));
+        TodoTask todoTask = new TodoTask(title, description, Priority.valueOf(priority), convertedDeadline);
         log.info("After creating TodoTask");
         todoTask.setUser(user);
         todoTask.setBoard(board);

@@ -1,10 +1,7 @@
 package org.app.service;
 
 import jakarta.transaction.Transactional;
-import java.util.Collections;
-import java.util.Optional;
 import lombok.AllArgsConstructor;
-import java.util.ArrayList;
 import org.app.exceptions.BoardNotFoundException;
 import org.app.mocks.MockData;
 import org.app.model.Board;
@@ -14,7 +11,11 @@ import org.app.model.enums.Status;
 import org.app.repository.BoardRepository;
 import org.app.repository.ProjectRepository;
 import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @AllArgsConstructor
@@ -24,12 +25,11 @@ public class BoardService {
 
     private final ProjectRepository projectRepository;
 
-    // TODO: modify the singature of this method to accept a project object
-    public Board createBoard(int newProjectId, Board board) {
+    public void createBoard(int newProjectId, Board board) {
         Project project = projectRepository.findById(newProjectId).orElseThrow();
         project.getBoards().add(board);
         projectRepository.save(project);
-        return boardRepository.save(board);
+        boardRepository.save(board);
     }
 
     public Board updateBoard(int boardId, String boardName, String description) throws BoardNotFoundException {
@@ -65,8 +65,15 @@ public class BoardService {
     }
 
     @Transactional
-    public void deleteBoardById(Integer boardId) throws BoardNotFoundException {
+    public void deleteBoardById(int boardId, int projectId) throws BoardNotFoundException {
         Board board = boardRepository.findById(boardId).orElse(null);
+        Project project = projectRepository.findById(projectId).orElse(null);
+        if (project != null) {
+            List<Board> boards = project.getBoards();
+            boards.remove(board);
+            project.setBoards(boards);
+            projectRepository.save(project);
+        }
         if (board == null) {
             throw new BoardNotFoundException("No found board");
         }
