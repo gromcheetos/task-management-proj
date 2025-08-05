@@ -7,6 +7,7 @@ import org.app.repository.JobPositionRepository;
 import org.app.repository.ProjectRepository;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -16,8 +17,9 @@ public class JobPositionService {
     private final JobPositionRepository jobPositionRepository;
     private final ProjectRepository projectRepository;
 
-    public JobPosition createJobPosition(JobPosition jobPosition) {
-        return jobPositionRepository.save(jobPosition);
+    public void addJobPosition(JobPosition jobPosition, int projectId) {
+        jobPosition.setProject(projectRepository.findById(projectId).get());
+        jobPositionRepository.save(jobPosition);
     }
 
     public List<JobPosition> findJobPositionById(Integer projectId) {
@@ -28,6 +30,16 @@ public class JobPositionService {
         JobPosition jobPosition = jobPositionRepository.findById(jobPositionId).get();
         jobPosition.setUser(user);
         return jobPositionRepository.save(jobPosition);
+    }
+
+    public List<String> findExistingTitles(int projectId, List<String> titles) {
+        List<String> jobPositions = new ArrayList<>();
+        for(String title : titles) {
+            if(jobPositionRepository.existsByProjectAndTitle(projectRepository.findById(projectId).get(), title)) {
+                jobPositions.add(title);
+            }
+        }
+        return jobPositions;
     }
 
 }

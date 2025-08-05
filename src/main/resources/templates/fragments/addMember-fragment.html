@@ -42,7 +42,7 @@
                     </ul>
                     <div class="project-members" id="userList">
                         <div class="member" th:each="user : ${teamMembers}">
-                            <span class="avatar" th:attr="data-username=${user.username}"></span>
+                            <span class="avatar" th:text="${user.initials}"></span>
                             <div class="info">
                                 <div class="top-row">
                                     <div class="left">

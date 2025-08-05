@@ -10,6 +10,7 @@ import org.app.model.Board;
 import org.app.model.JobPosition;
 import org.app.model.Project;
 import org.app.model.User;
+import org.app.model.dto.DuplicateCheckDto;
 import org.app.model.enums.Roles;
 import org.app.model.enums.Status;
 import org.app.service.BoardService;
@@ -62,19 +63,24 @@ public class ProjectController {
     public ResponseEntity<Project> insertTeamMember(@RequestParam("projectId") int projectId,
         @RequestParam(value = "userId") int userId,
         @RequestParam(value = "userRole") String userRole,
-        @RequestParam(value = "jobId") int jobId)
+        @RequestParam(value = "jobId") Integer jobId)
         throws UserNotFoundException, ProjectNotFoundException, JobPositionNotFoundException {
         log.info("[insertTeamMember] - Request received to add member to the project");
         Project teamProject = projectService.findProjectByProjectId(projectId);
         User user = userService.getUserById(userId);
         Set<User> currentMembers = teamProject.getTeamMembers();
-        jobPositionService.updateJobPosition(jobId, user);
-        userService.updatUserRole(userId, userRole, jobId);
         currentMembers.add(user);
         teamProject.setTeamMembers(currentMembers);
+        userService.joinProject(userId, projectId, userRole);
+
+        if(jobId != null){
+            jobPositionService.updateJobPosition(jobId, user);
+            userService.updateUserPosition(userId, jobId);
+        }
+
         projectService.createOrUpdateProject(teamProject);
         log.info("[insertTeamMember] - Added member to the project");
-        //   userService.joinProject(userId, projectId);
+
         return ResponseEntity.ok(teamProject);
     }
 
@@ -102,17 +108,27 @@ public class ProjectController {
             .toList();
         for (JobPosition jp : addPositions) {
             jp.setProject(project);
-            jobPositionService.createJobPosition(jp);
+            jobPositionService.addJobPosition(jp, projectId);
         }
         project.setJobPositions(addPositions);
         return "redirect:/";
     }
 
     @GetMapping("/show/members")
-    public ResponseEntity<List<User>> getTeamMembers(@RequestParam int projectId) throws ProjectNotFoundException {
-        Project project = projectService.findProjectByProjectId(projectId);
-        Set<User> members = project.getTeamMembers();
+    public ResponseEntity<List<User>> getTeamMembers(@RequestParam int projectId){
+        List<User> members = userService.findByProjectId(projectId);
+
         return ResponseEntity.ok(new ArrayList<>(members));
     }
 
+    @PostMapping("/check/duplicate/positions")
+    @ResponseBody
+    public ResponseEntity<?> checkDuplicatePositions(@RequestBody DuplicateCheckDto dto) {
+        List<String> duplicates = jobPositionService.findExistingTitles(dto.getProjectId(), dto.getPositions());
+        if (!duplicates.isEmpty()) {
+            String msg = "Already exist: " + String.join(", ", duplicates);
+            return ResponseEntity.badRequest().body(msg);
+        }
+        return ResponseEntity.ok("No duplicates");
+    }
 }

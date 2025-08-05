@@ -103,6 +103,13 @@ public class User implements UserDetails {
         return true;
     }
 
+    public String getJobTitle(){
+        if(jobPosition != null){
+            return jobPosition.getTitle();
+        }
+        return null;
+    }
+
     public String getInitials() {
         if (name == null || name.isBlank()) return "";
 

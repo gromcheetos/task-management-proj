@@ -11,5 +11,7 @@ import java.util.List;
 public interface JobPositionRepository extends CrudRepository<JobPosition, Integer> {
 
     List<JobPosition> findAllByProject(Project project);
+    JobPosition findByUserId(int userId);
+    boolean existsByProjectAndTitle(Project project, String title);
 
 }
