@@ -63,18 +63,28 @@ public class UserService {
         return getUserByUsername(username);
     }
 
-    public User updatUserRole(int userId, String role, int jobId) throws UserNotFoundException, JobPositionNotFoundException {
+    public User updatUserRole(int userId, String role) throws UserNotFoundException {
         User toUpdateUser = userRepository.findById(userId).orElseThrow(() -> new UserNotFoundException("No Found User"));
         toUpdateUser.setRoles(Roles.valueOf(role));
-        JobPosition userPosition = jobPositionRepository.findById(jobId).orElseThrow(() -> new JobPositionNotFoundException("No Found JobPosition"));
-        toUpdateUser.setJobPosition(userPosition);
         return userRepository.save(toUpdateUser);
     }
 
-    public User joinProject(int userId, int projectId) throws UserNotFoundException {
+    public User joinProject(int userId, int projectId, String role) throws UserNotFoundException {
         User toUpdateUser = userRepository.findById(userId).orElseThrow(() -> new UserNotFoundException("No Found User"));
         toUpdateUser.setProjectId(projectId);
+        toUpdateUser.setRoles(Roles.valueOf(role));
         return userRepository.save(toUpdateUser);
+    }
+
+    public void updateUserPosition(int userId, int jobPositionId) throws UserNotFoundException, JobPositionNotFoundException {
+        User toUpdateUser = userRepository.findById(userId).orElseThrow(() -> new UserNotFoundException("No Found User"));
+        JobPosition userPosition = jobPositionRepository.findById(jobPositionId).orElseThrow(() -> new JobPositionNotFoundException("No Found JobPosition"));
+        toUpdateUser.setJobPosition(userPosition);
+        userRepository.save(toUpdateUser);
+    }
+
+    public List<User> findByProjectId(int projectId){
+        return userRepository.findAllUsersByProjectId(projectId);
     }
 
 }

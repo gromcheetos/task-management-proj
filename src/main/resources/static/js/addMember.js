@@ -79,10 +79,11 @@
                             return response.json();
                         })
                         .then(members => {
+
                             $('#userList').empty();
 
                             members.forEach(user => {
-                                const userInitials = user.username
+                                const userInitials = user.name
                                     .split(' ')
                                     .map(word => word.charAt(0))
                                     .join('')
@@ -91,15 +92,37 @@
 
                                 $('#userList').append(`
                                     <div class="member">
-                                        <span class="avatar" data-username="${userInitials}"></span>
+                                        <span class="avatar">${user.initials}</span>
                                         <div class="info">
-                                            <p class="name" id="username">${user.username}</p>
-                                            <p class="role">${user.roles}</p>
-                                            <span class="position">${user.jobPosition?.title ?? ''}</span>
+                                            <div class="top-row">
+                                                <div class="left">
+                                                    <p class="name" id="username">${user.username}</p>
+                                                    <p class="role">${user.roles}</p>                                           
+                                                </div>
+                                                <span class="position">${user.jobTitle ?? ''}</span>
+                                            </div>
                                         </div>
                                     </div>
                                 `);
                             });
+
+                            $('#topAvatars').empty();
+
+                            members.forEach(user => {
+                                const userInitials = user.name
+                                    .split(' ')
+                                    .map(word => word.charAt(0))
+                                    .join('')
+                                    .toUpperCase()
+                                    .substring(0, 2);
+
+                                $('#topAvatars').append(`
+                                    <div class="member-avatar">
+                                        <span class="avatar">${user.initials}</span>
+                                    </div>
+                                `);
+                            });
+
 
                             $('#addMemberModal').modal('hide');
                             $('#searchBox').val('');
@@ -107,7 +130,7 @@
                         .catch((error) => {
                             console.error('Error updating members:', error);
                         });
-                     });
+                    });
                 });
 
         } else {

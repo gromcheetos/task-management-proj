@@ -1,6 +1,7 @@
 package org.app.mocks;
 
 import jakarta.annotation.PostConstruct;
+import org.app.exceptions.UserNotFoundException;
 import org.app.model.Board;
 import org.app.model.Project;
 import org.app.model.TodoTask;
@@ -8,6 +9,7 @@ import org.app.model.User;
 import org.app.model.enums.Priority;
 import org.app.model.enums.Status;
 import org.app.repository.ProjectRepository;
+import org.app.repository.UserRepository;
 import org.app.service.BoardService;
 import org.app.service.ProjectService;
 import org.app.service.UserService;
@@ -21,6 +23,7 @@ import java.util.Random;
 import java.util.Set;
 
 import static org.app.model.enums.Priority.*;
+import static org.app.model.enums.Roles.ADMIN;
 
 @Component
 public class MockData {
@@ -43,21 +46,27 @@ public class MockData {
     @Autowired
     private ProjectRepository projectRepository;
 
+    private UserRepository userRepository;
+
     @PostConstruct
-    public void createMockData() {
+    public void createMockData() throws UserNotFoundException {
         User mockUser = new User("Lara Kroft", "lara@gmail.com", "lara");
         User defaultUser = new User("John Doe", "johndoe@gmail.com", "john");
 
         defaultProject = new Project(DEFAULT_PROJECT_NAME);
         projectService.createOrUpdateProject(defaultProject);
-    //    int defaultProjectId = defaultProject.getProjectId();
+        int defaultProjectId = defaultProject.getProjectId();
         User testUser = userService.createUser(mockUser, "pass");
         userService.createUser(defaultUser, "pass");
+        String role = "ADMIN";
+        userService.joinProject(testUser.getId(), defaultProjectId, role);
+
         defaultProject.setProjectOwner(testUser);
         Set<User> currentMembers = defaultProject.getTeamMembers();
         currentMembers.add(testUser);
         defaultProject.setTeamMembers(currentMembers);
         projectRepository.save(defaultProject);
+        testUser.setRoles(ADMIN);
         List<Board> boards = new ArrayList<>();
 
         for (Status status : Status.values()) {
