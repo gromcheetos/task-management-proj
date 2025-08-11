@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title th:text="'Error ' + ${status}">Error</title>
+    <style>
+        body { font-family: sans-serif; text-align: center; padding: 50px; }
+        h1 { font-size: 48px; color: #FF6F61; }
+        p { font-size: 20px; }
+    </style>
+</head>
+<body>
+<h1 th:switch="${status}">
+    <span th:case="404">Page Not Found (404)</span>
+    <span th:case="500">Internal Server Error (500)</span>
+    <span th:case="*">Unexpected Error</span>
+</h1>
+
+<p th:text="${message}">Something went wrong.</p>
+<a href="/">Back to Home</a>
+</body>
+</html>
