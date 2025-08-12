@@ -89,15 +89,13 @@ public class TaskCRUDController {
         return ResponseEntity.ok(response);
     }
 
-
-    // TODO: handle exceptions by redirecting to an error page
     @PostMapping("/remove/{id}")
     public String removeTask(@PathVariable("id") Integer taskId) {
         try {
             User currentUser = userService.getCurrentUser();
             taskService.deleteTaskById(currentUser.getId(), taskId);
         } catch (TaskNotFoundException | UserNotFoundException exception) {
-            //
+            return "/error/error";
         }
         return "redirect:/";
     }

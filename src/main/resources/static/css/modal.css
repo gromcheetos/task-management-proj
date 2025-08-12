@@ -29,6 +29,13 @@
             box-shadow: none;
             border: 1px solid #bdc3c7;
         }
+        .form-control-half {
+            width: 40%;
+            display: inline-block;
+            margin-right: 20%;
+            box-shadow: none;
+            border: 1px solid #bdc3c7;
+        }
         .btn-primary {
             background-color: #3498db;
             border: none;

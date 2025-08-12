@@ -2,10 +2,13 @@ package org.app.controllers;
 
 import jakarta.servlet.RequestDispatcher;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.app.controllers.util.ProjectCommon;
+import org.app.exceptions.ProjectNotFoundException;
 import org.app.exceptions.UserNotFoundException;
+import org.app.model.Project;
 import org.springframework.boot.web.servlet.error.ErrorController;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -21,9 +24,10 @@ public class HomePageController implements ErrorController {
     private final ProjectCommon projectCommon;
 
     @GetMapping
-    public String showHomePage(Model model)
-        throws UserNotFoundException {
-       return projectCommon.getHomePageUtility(model, null);
+    public String showHomePage(Model model, HttpSession session)
+            throws UserNotFoundException, ProjectNotFoundException {
+        Project currentProject = (Project) session.getAttribute("currentProject");
+       return projectCommon.getHomePageUtility(model, currentProject);
     }
 
     @RequestMapping("/error")

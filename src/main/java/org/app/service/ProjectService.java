@@ -40,10 +40,6 @@ public class ProjectService {
         return projectRepository.findProjectByProjectOwner(user);
     }
 
-    public List<Project> getAllProjects() {
-        return (List<Project>) projectRepository.findAll();
-    }
-
     public Set<User> getTeamMembers(int projectId) {
         Project project = projectRepository.findById(projectId).orElseThrow();
         return project.getTeamMembers();
@@ -56,4 +52,8 @@ public class ProjectService {
         return projectRepository.save(updatedProj);
     }
 
+    public List<Board> getAllBoardsByProjectId(int projectId) {
+        Project project = projectRepository.findById(projectId).orElseThrow();
+        return project.getBoards();
+    }
 }

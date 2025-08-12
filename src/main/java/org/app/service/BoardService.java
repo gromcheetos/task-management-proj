@@ -2,6 +2,7 @@ package org.app.service;
 
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.app.exceptions.BoardNotFoundException;
 import org.app.mocks.MockData;
 import org.app.model.Board;
@@ -19,6 +20,7 @@ import java.util.Optional;
 
 @Service
 @AllArgsConstructor
+@Slf4j
 public class BoardService {
 
     private final BoardRepository boardRepository;
@@ -28,6 +30,7 @@ public class BoardService {
     public void createBoard(int newProjectId, Board board) {
         Project project = projectRepository.findById(newProjectId).orElseThrow();
         project.getBoards().add(board);
+        log.info("New board added to the project");
         projectRepository.save(project);
         boardRepository.save(board);
     }
@@ -97,4 +100,5 @@ public class BoardService {
         Board defaultBoard = new Board(boardName, "");
         return boardRepository.save(defaultBoard);
     }
+
 }

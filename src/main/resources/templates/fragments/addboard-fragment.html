@@ -18,6 +18,12 @@
                     <input type="hidden" id="projectId" name="projectId" th:value="${activeProject.projectId}">
                     <div class="form-group">
                         <label for="boardName">Board Name</label>
+                        <select class="form-control-half" id="status" name="status">
+                            <option value="">Select Board</option>
+                            <option value="TO_DO">To Do</option>
+                            <option value="IN_PROGRESS">In Progress</option>
+                            <option value="DONE">Done</option>
+                        </select>
                         <input type="text" class="form-control" id="boardName" name="boardName" required>
                     </div>
                     <div class="form-group">

@@ -3,10 +3,13 @@ package org.app.controllers.boards;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.app.exceptions.BoardNotFoundException;
+import org.app.exceptions.ProjectNotFoundException;
 import org.app.exceptions.UserNotFoundException;
 import org.app.model.Board;
+import org.app.model.Project;
 import org.app.model.TodoTask;
 import org.app.model.User;
+import org.app.model.enums.Status;
 import org.app.service.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -35,8 +38,8 @@ public class BoardController {
     @PostMapping("/create")
     public String createBoard(@RequestParam("boardName") String boardName,
                               @RequestParam("description") String description,
-                              @RequestParam(value = "projectId",  required = true) Integer projectId) throws UserNotFoundException {
-
+                              @RequestParam("projectId")  Integer projectId) throws UserNotFoundException {
+        log.info("Received projectId: {}", projectId);
         User currentUser = userService.getCurrentUser();
         Board board = new Board(boardName, description);
         board.setUser(currentUser);
@@ -98,4 +101,13 @@ public class BoardController {
         return "redirect:/";
     }
 
+    @PostMapping("/create/default/board")
+    public String createDefaultBoards(@RequestParam("projectId") int projectId) throws UserNotFoundException, ProjectNotFoundException {
+        Project userProject = projectService.findProjectByProjectId(projectId);
+        for (Status status : Status.values()) {
+            Board board = boardService.createDefaultBoardsForNewProject(status.getValue());
+            userProject.getBoards().add(board);
+        }
+        return "redirect:/";
+    }
 }

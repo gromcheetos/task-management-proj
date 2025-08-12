@@ -1,9 +1,7 @@
 package org.app.controllers.users;
 
-import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.app.model.Board;
 import org.app.model.User;
 import org.app.service.BoardService;
 import org.app.service.UserService;
@@ -29,9 +27,10 @@ public class AuthenticationController {
         @RequestParam("password") String password) {
         log.info("Request received to register the user");
         User newUser = new User(name, userEmail, username);
-        List<Board> defaultBoards = boardService.getAllDefaultBoards();
-        newUser.setBoards(defaultBoards);
+    //    List<Board> defaultBoards = boardService.getAllDefaultBoards();
+    //    newUser.setBoards(defaultBoards);
         userService.createUser(newUser, password);
+        log.info("Created new the user");
         return "login-page";
     }
 

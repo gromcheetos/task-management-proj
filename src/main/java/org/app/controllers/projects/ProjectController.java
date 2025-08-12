@@ -1,18 +1,17 @@
 package org.app.controllers.projects;
 
+import jakarta.servlet.http.HttpSession;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.app.controllers.util.ProjectCommon;
 import org.app.exceptions.JobPositionNotFoundException;
 import org.app.exceptions.ProjectNotFoundException;
 import org.app.exceptions.UserNotFoundException;
-import org.app.model.Board;
 import org.app.model.JobPosition;
 import org.app.model.Project;
 import org.app.model.User;
 import org.app.model.dto.DuplicateCheckDto;
 import org.app.model.enums.Roles;
-import org.app.model.enums.Status;
 import org.app.service.BoardService;
 import org.app.service.JobPositionService;
 import org.app.service.ProjectService;
@@ -39,20 +38,23 @@ public class ProjectController {
     @PostMapping("/create")
     public String createProject(@RequestParam("projectName") String projectName,
         @RequestParam(value = "description", required = false) String description,
-        Model model) throws UserNotFoundException {
+        HttpSession session) throws UserNotFoundException {
         User currentUser = userService.getCurrentUser();
         Project project = new Project(projectName);
+        if(description != null){
+            project.setDescription(description);
+        }
         project.setProjectOwner(currentUser);
+        log.info("Project owner: {}", currentUser.getName());
         Set<User> fullTeam = new HashSet<>(project.getTeamMembers());
         fullTeam.add(project.getProjectOwner());
+        log.info("The owner is also a member of the project");
         currentUser.setRoles(Roles.ADMIN);
-        for (Status status : Status.values()) {
-            Board board = boardService.createDefaultBoardsForNewProject(status.getValue());
-            project.getBoards().add(board);
-        }
+        log.info("Project owner is now an admin");
         project.setDescription(description);
         projectService.createOrUpdateProject(project);
-        model.addAttribute("activeProject", project);
+        log.info("Project created successfully");
+        session.setAttribute("currentProject", project);
         return "redirect:/";
     }
 
@@ -84,6 +86,7 @@ public class ProjectController {
     @GetMapping("/show")
     public String showProjectPage(Model model) throws UserNotFoundException {
         User currentUser = userService.getCurrentUser();
+        log.info("");
         model.addAttribute("currentUser", currentUser);
         return "create-project";
     }
@@ -98,6 +101,7 @@ public class ProjectController {
     @PostMapping("/add/position")
     public String insertJobPosition(@RequestParam("projectId") int projectId,
         @RequestParam("positions") String positions) throws ProjectNotFoundException {
+        log.info("[Add Job position] - Request received to add position to the project");
         Project project = projectService.findProjectByProjectId(projectId);
         List<String> positionList = Arrays.asList(positions.split(","));
         List<JobPosition> addPositions = positionList.stream()
@@ -108,6 +112,7 @@ public class ProjectController {
             jobPositionService.addJobPosition(jp, projectId);
         }
         project.setJobPositions(addPositions);
+        log.info("[Add Job position] - added positions to the project");
         return "redirect:/";
     }
 
