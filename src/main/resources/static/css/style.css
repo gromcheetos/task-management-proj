@@ -307,3 +307,10 @@ color: #28587B;
 .task.dragging {
     opacity: 0.5;
 }
+
+#project-list{
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(23%, 1fr));
+    column-gap: 2%;
+    row-gap: 20px;
+}

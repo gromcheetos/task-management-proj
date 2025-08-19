@@ -5,6 +5,11 @@ document.addEventListener('DOMContentLoaded', (event) => {
     $('.add-task-btn').click(function () {
       $('#addTaskModal').modal('show');
     });
+
+    $('#userSelect').on('change', function() {
+        let selectedText = $('#userSelect option:selected').text();
+        $('#userInput').val(selectedText);
+    });
   });
   const boardFilterForm = document.getElementById("boardFilter");
   if (boardFilterForm) {

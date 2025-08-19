@@ -38,12 +38,23 @@ public class BoardController {
     @PostMapping("/create")
     public String createBoard(@RequestParam("boardName") String boardName,
                               @RequestParam("description") String description,
-                              @RequestParam("projectId")  Integer projectId) throws UserNotFoundException {
+                              @RequestParam("projectId")  Integer projectId,
+                              @RequestParam(value="userSelect", required = false) String status ) throws UserNotFoundException {
         log.info("Received projectId: {}", projectId);
         User currentUser = userService.getCurrentUser();
-        Board board = new Board(boardName, description);
-        board.setUser(currentUser);
-        boardService.createBoard(projectId, board);
+        if(status != null){
+            boardName = Status.valueOf(status).toString();
+            log.info("Received status: {}", status);
+            Board board = new Board(boardName, description);
+            board.setUser(currentUser);
+            board.setStatus(Status.valueOf(status));
+            boardService.createBoard(projectId, board);
+            return "redirect:/";
+        }else {
+            Board board = new Board(boardName, description);
+            board.setUser(currentUser);
+            boardService.createBoard(projectId, board);
+        }
         return "redirect:/";
     }
 

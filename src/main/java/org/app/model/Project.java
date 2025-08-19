@@ -23,15 +23,19 @@ public class Project {
     private String projectName;
     private String description;
 
-    @OneToMany
-    @JsonManagedReference
+    @ManyToMany
+    @JoinTable(
+            name = "project_team_members",
+            joinColumns = @JoinColumn(name = "project_id"), // FK to project
+            inverseJoinColumns = @JoinColumn(name = "user_id") // FK to user
+    )
     private Set<User> teamMembers;
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JsonManagedReference
     private List<Board> boards;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JsonManagedReference(value = "owned-projects")
     private User projectOwner;
 
@@ -43,6 +47,7 @@ public class Project {
         this.projectName = projectName;
         this.boards = new ArrayList<>();
         this.teamMembers = new HashSet<>();
+        this.projectOwner = new User();
     }
 
     public Project() {
@@ -56,10 +61,6 @@ public class Project {
         this.boards.add(board);
     }
 
-    protected void addTeamMember(User user) {
-        this.teamMembers.add(user);
-    }
-
     protected void removeTeamMember(User user) {
         this.teamMembers.remove(user);
     }
@@ -68,7 +69,10 @@ public class Project {
         this.boards.remove(board);
     }
 
-
+    public void addTeamMember(User user) {
+        this.teamMembers.add(user);
+        user.getProjects().add(this);
+    }
 
     @Override
     public boolean equals(Object o) {

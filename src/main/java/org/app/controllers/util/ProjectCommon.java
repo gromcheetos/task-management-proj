@@ -27,29 +27,31 @@ public class ProjectCommon {
     private final JobPositionService jobPositionService;
     private final BoardService boardService;
 
-    public String getHomePageUtility(Model model, Project activeProject) throws UserNotFoundException, ProjectNotFoundException {
+    public String getHomePageUtility(Model model, Project currentProject) throws UserNotFoundException, ProjectNotFoundException {
         User currentUser = userService.getCurrentUser();
-        log.info("activeProject: {}", activeProject);
+        log.info("currentProject: {}", currentProject);
         log.info("currentUser: {}", currentUser);
         if (currentUser == null) {
             return "redirect:/login";
-        } else if (currentUser.getProjects().isEmpty()) {
+        } else if (currentUser.getProjects().isEmpty() && currentUser.getOwnedProjects().isEmpty()) {
             log.info("The user has no projects. Redirecting to /project/show");
             return "redirect:/project/show";
         }
         else {
             List<Project> projects = currentUser.getProjects();
+            projects.addAll(currentUser.getOwnedProjects());
             log.info("Projects: {}", projects);
-            List<Board> boards = projectService.getAllBoardsByProjectId(activeProject.getProjectId());
+            List<Board> boards = projectService.getAllBoardsByProjectId(currentProject.getProjectId());
             int totalTasks = taskService.getTasksByUserId(currentUser.getId()).size();
             log.info(currentUser.getUsername() + " has " + totalTasks);
             int completedTasks = taskService.getCompletedTasksCount(currentUser.getId());
             log.info(currentUser.getUsername() + " competed " + completedTasks);
-            Set<User> teamMembers = activeProject.getTeamMembers();
+            Set<User> teamMembers = currentProject.getTeamMembers();
+            log.info("Team members: {}", teamMembers);
             int memberCnt = teamMembers.size();
-            List<JobPosition> positions = jobPositionService.findJobPositionById(activeProject.getProjectId());
+            List<JobPosition> positions = jobPositionService.findJobPositionById(currentProject.getProjectId());
             model.addAttribute("positions", JobPositionDto.fromEntity(positions));
-            model.addAttribute("activeProject", activeProject);
+            model.addAttribute("currentProject", currentProject);
             model.addAttribute("teamMembers", teamMembers);
             model.addAttribute("memberCnt", memberCnt);
             model.addAttribute("userBoards", boards);

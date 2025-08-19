@@ -11,7 +11,6 @@ import org.app.model.JobPosition;
 import org.app.model.Project;
 import org.app.model.User;
 import org.app.model.dto.DuplicateCheckDto;
-import org.app.model.enums.Roles;
 import org.app.service.BoardService;
 import org.app.service.JobPositionService;
 import org.app.service.ProjectService;
@@ -46,14 +45,14 @@ public class ProjectController {
         }
         project.setProjectOwner(currentUser);
         log.info("Project owner: {}", currentUser.getName());
-        Set<User> fullTeam = new HashSet<>(project.getTeamMembers());
-        fullTeam.add(project.getProjectOwner());
-        log.info("The owner is also a member of the project");
-        currentUser.setRoles(Roles.ADMIN);
-        log.info("Project owner is now an admin");
-        project.setDescription(description);
-        projectService.createOrUpdateProject(project);
+        project = projectService.createOrUpdateProject(project);
         log.info("Project created successfully");
+
+        project.getTeamMembers().add(currentUser);
+        projectService.createOrUpdateProject(project);
+        log.info("Team member added to the project");
+        userService.updateUserProject(currentUser.getId(), project);
+        log.info("User has new project assigned");
         session.setAttribute("currentProject", project);
         return "redirect:/";
     }
@@ -86,16 +85,29 @@ public class ProjectController {
     @GetMapping("/show")
     public String showProjectPage(Model model) throws UserNotFoundException {
         User currentUser = userService.getCurrentUser();
-        log.info("");
+        if(!currentUser.getProjects().isEmpty() || !currentUser.getOwnedProjects().isEmpty()){
+            log.info("The user has projects. Redirecting to /project/select");
+            showProjectList(model);
+        }
         model.addAttribute("currentUser", currentUser);
         return "create-project";
+    }
+
+    @GetMapping("/select")
+    public String showProjectList(Model model) throws UserNotFoundException {
+        User currentUser = userService.getCurrentUser();
+        List<Project> userProjects = projectService.findProjectsByUserId(currentUser.getId());
+        log.info("userProjects: " + userProjects);
+        model.addAttribute("currentUser", currentUser);
+        model.addAttribute("userProjects", userProjects);
+        return "select-projectList";
     }
 
     @GetMapping("/find/{projectId}")
     public String getProjectById(@PathVariable("projectId") int id, Model model)
         throws UserNotFoundException, ProjectNotFoundException {
-        Project activeProject = projectService.findProjectByProjectId(id);
-        return projectCommon.getHomePageUtility(model, activeProject);
+        Project currentProject = projectService.findProjectByProjectId(id);
+        return projectCommon.getHomePageUtility(model, currentProject);
     }
 
     @PostMapping("/add/position")

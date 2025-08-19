@@ -11,6 +11,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
@@ -19,11 +20,11 @@ import java.util.List;
 @Entity(name = "secured_users")
 @AllArgsConstructor
 @NoArgsConstructor
-@ToString(exclude = {"projects", "boards", "jobPosition"})
+@ToString(exclude = {"projects", "boards", "jobPosition","ownedProjects"})
 public class User implements UserDetails {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "user_id")
     private int id;
     private String name;
@@ -41,7 +42,10 @@ public class User implements UserDetails {
 
     @OneToMany(mappedBy = "projectOwner", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JsonBackReference(value = "owned-projects")
-    private List<Project> projects;
+    private List<Project> ownedProjects = new ArrayList<>();
+
+    @ManyToMany(mappedBy = "teamMembers", fetch = FetchType.EAGER)
+    private List<Project> projects = new ArrayList<>();
 
     @OneToOne(mappedBy = "user")
     @JsonBackReference(value = "job-position-user")
