@@ -20,7 +20,6 @@ function showProfileImageUpload() {
 }
 
 function showProjectMenuItem() {
-  // Get references to elements
   const menuBtn = document.getElementById('showSlideBtn');
   const slideMenu = document.getElementById('projects-slider');
   const closeBtn = document.getElementById('projSlider-close');

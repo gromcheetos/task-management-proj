@@ -3,10 +3,13 @@ package org.app.controllers.boards;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.app.exceptions.BoardNotFoundException;
+import org.app.exceptions.ProjectNotFoundException;
 import org.app.exceptions.UserNotFoundException;
 import org.app.model.Board;
+import org.app.model.Project;
 import org.app.model.TodoTask;
 import org.app.model.User;
+import org.app.model.enums.Status;
 import org.app.service.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -35,12 +38,23 @@ public class BoardController {
     @PostMapping("/create")
     public String createBoard(@RequestParam("boardName") String boardName,
                               @RequestParam("description") String description,
-                              @RequestParam(value = "projectId",  required = true) Integer projectId) throws UserNotFoundException {
-
+                              @RequestParam("projectId")  Integer projectId,
+                              @RequestParam(value="userSelect", required = false) String status ) throws UserNotFoundException {
+        log.info("Received projectId: {}", projectId);
         User currentUser = userService.getCurrentUser();
-        Board board = new Board(boardName, description);
-        board.setUser(currentUser);
-        boardService.createBoard(projectId, board);
+        if(status != null){
+            boardName = Status.valueOf(status).toString();
+            log.info("Received status: {}", status);
+            Board board = new Board(boardName, description);
+            board.setUser(currentUser);
+            board.setStatus(Status.valueOf(status));
+            boardService.createBoard(projectId, board);
+            return "redirect:/";
+        }else if(status == null || status.equals("")){
+            Board board = new Board(boardName, description);
+            board.setUser(currentUser);
+            boardService.createBoard(projectId, board);
+        }
         return "redirect:/";
     }
 
@@ -59,15 +73,14 @@ public class BoardController {
     @GetMapping("/filter")
     public String boardsByNameAndPriority(@RequestParam(value = "boardName", required = false) List<String> boardNames,
         @RequestParam(value = "priority", required = false) List<String> priorities,
-        @RequestParam("userId") Integer userId, Model model) throws UserNotFoundException {
+        @RequestParam("userId") Integer userId,
+        @RequestParam("projectId") Integer projectId,
+      Model model) throws UserNotFoundException {
 
         List<Board> boards = boardService.findBoardsByUserId(userId);
         List<TodoTask> tasks = todoTaskService.getTasksByUserId(userId);
-        // Filter boards by name if specified
         List<Board> filteredBoards = searchService.filterBoardsByBoardNames(boardNames, boards);
 
-        // TODO: check why this filteredTasks variable is empty and not used
-        // Filter tasks by priority if specified
         List<TodoTask> filteredTasks = searchService.filterTasksByPriority(priorities, tasks);
 
         if (priorities != null && !priorities.contains("all")) {
@@ -81,7 +94,8 @@ public class BoardController {
         }
 
         model.addAttribute("userBoards", filteredBoards);
-
+        model.addAttribute("userTasks", filteredTasks);
+        model.addAttribute("projectId", projectId);
         return "home :: #boardList";
     }
 
@@ -98,4 +112,13 @@ public class BoardController {
         return "redirect:/";
     }
 
+    @PostMapping("/create/default/board")
+    public String createDefaultBoards(@RequestParam("projectId") int projectId) throws UserNotFoundException, ProjectNotFoundException {
+        Project userProject = projectService.findProjectByProjectId(projectId);
+        for (Status status : Status.values()) {
+            Board board = boardService.createDefaultBoardsForNewProject(status.getValue());
+            userProject.getBoards().add(board);
+        }
+        return "redirect:/";
+    }
 }

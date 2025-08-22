@@ -14,9 +14,9 @@
             </div>
             <div class="modal-body">
                 <form th:action="@{/project/add/position}" method="post" id="addJobPositionForm">
-                    <input type="hidden" id="projectId" name="projectId" th:value="${activeProject.projectId}">
+                    <input type="hidden" id="projectId" name="projectId" th:value="${currentProject.projectId}">
                     <div>
-                        <h2 th:text="${activeProject.projectName}"></h2>
+                        <h2 th:text="${currentProject.projectName}"></h2>
                     </div>
                         <input type="button" class="btn btn-minus" id="minus" value="-" style="float: right;" onclick="removeInput()">
                         <input type="button" class="btn btn-plus" id="plus" value="+" style="float: right;" onclick="addInput()">

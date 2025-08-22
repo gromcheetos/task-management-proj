@@ -255,7 +255,12 @@ color: #28587B;
 }
 
 
-.custom-dropdown {
+.custom-dropdown-board {
+    position: relative;
+    display: inline-block;
+}
+
+.custom-dropdown-priority {
     position: relative;
     display: inline-block;
 }
@@ -282,6 +287,10 @@ color: #28587B;
     border: 1px solid #ddd;
 }
 
+.dropdown-content.show {
+    display: block;
+}
+
 .dropdown-content label {
     display: block;
 }
@@ -306,4 +315,11 @@ color: #28587B;
 
 .task.dragging {
     opacity: 0.5;
+}
+
+#project-list{
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(23%, 1fr));
+    column-gap: 2%;
+    row-gap: 20px;
 }

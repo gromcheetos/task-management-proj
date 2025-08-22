@@ -36,15 +36,16 @@
           </div>
           <div class="header-filters">
             <form method="get" id="boardFilter">
-              <div class="custom-dropdown">
+              <input type="hidden" id="projectId" name="projectId" th:value="${currentProject.projectId}">
+              <div class="custom-dropdown-board">
                 <button type="button" class="dropdown-toggle" onclick="toggleDropdown('boardDropdown')">
                   Select Board Category
                 </button>
                 <div id="boardDropdown" class="dropdown-content">
                   <label>
-                    <input type="checkbox" name="boardName" value="all"> All Boards
+                    <input type="checkbox" id ="allBoards" name="boardName" value="all"> All Boards
                   </label>
-                  <div th:each="board : ${userBoards}">
+                  <div th:each="board : ${userBoards}" class="board-list">
                     <label>
                       <input type="checkbox" name="boardName" th:value="${board.boardName}"
                              th:checked="${selectedBoardNames != null and selectedBoardNames.contains(board.boardName)}">
@@ -53,13 +54,13 @@
                   </div>
                 </div>
               </div>
-              <div class="custom-dropdown">
+              <div class="custom-dropdown-priority">
                 <button type="button" class="dropdown-toggle" onclick="toggleDropdown('priorityDropdown')">
                   Select Priority
                 </button>
                 <div id="priorityDropdown" class="dropdown-content">
                   <label>
-                    <input type="checkbox" name="priority" value="all"> All Priorities
+                    <input type="checkbox" name="priority" id = "allPriority" value="all"> All Priorities
                   </label>
                   <label>
                     <input type="checkbox" name="priority" value="HIGH"> High
@@ -85,7 +86,7 @@
           <div class="column-header">
             <h3 th:text="${board.boardName}"></h3>
             <form th:action="@{/board/delete/{id}(id=${board.boardId})}" th:method="delete" class="delete-board-form">
-              <input type="hidden" name="projectId" th:value="${activeProject.projectId}">
+              <input type="hidden" name="projectId" th:value="${currentProject.projectId}">
               <button type="submit" class="delete-board-btn">x</button>
             </form>
           </div>
@@ -140,6 +141,16 @@
       console.log('Setting projectId:', projectId);
       $('#projectId').val(projectId);
       $('#addMemberModal').modal('show');
+    });
+
+    $("#allBoards").click(function (){
+      var checked = $("#allBoards").is(":checked");
+      if (checked) {
+        $("input[name='boardName']").prop('checked', true);
+        $("#allBoards").prop('checked', true);
+      }else if(!checked){
+        $("input[name='boardName']").prop('checked', false);
+      }
     });
   });
 

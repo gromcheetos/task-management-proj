@@ -4,6 +4,7 @@ import lombok.Data;
 import org.app.model.Project;
 
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Data
@@ -11,6 +12,7 @@ public class ProjectDto {
     private int projectId;
     private String projectName;
     private List<JobPositionDto> positions;
+    private Set<UserDto> teamMembers;
 
     public static ProjectDto fromEntity(Project project) {
         ProjectDto dto = new ProjectDto();

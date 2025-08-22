@@ -5,6 +5,22 @@ document.addEventListener('DOMContentLoaded', (event) => {
     $('.add-task-btn').click(function () {
       $('#addTaskModal').modal('show');
     });
+
+    $('#userSelect').on('change', function() {
+        let selectedText = $('#userSelect option:selected').text();
+        $('#userInput').val(selectedText);
+    });
+
+    $("#allPriority").click(function (){
+      var checked = $("#allPriority").is(":checked");
+      if (checked) {
+        $("input[name='priority']").prop('checked', true);
+        $("#allPriority").prop('checked', true);
+      }else if(!checked){
+        $("input[name='priority']").prop('checked', false);
+      }
+    });
+
   });
   const boardFilterForm = document.getElementById("boardFilter");
   if (boardFilterForm) {
@@ -18,61 +34,15 @@ document.addEventListener('DOMContentLoaded', (event) => {
 function toggleDropdown(dropdownId) {
   var dropdown = document.getElementById(dropdownId);
   dropdown.classList.toggle('show');
-}
 
-window.onclick = function (event) {
-  if (!event.target.closest('.custom-dropdown')) {
-    var dropdowns = document.getElementsByClassName("dropdown-content");
-    for (var i = 0; i < dropdowns.length; i++) {
-      var openDropdown = dropdowns[i];
-      if (openDropdown.classList.contains('show')) {
-        openDropdown.classList.remove('show');
-      }
-    }
-  }
-}
-
-// When a user checks All Boards, undo other option.
-const allBoardsCheckbox = document.querySelector(
-    "input[name='boardName'][value='all']");
-const boardNameCheckboxes = document.querySelectorAll(
-    "input[name='boardName']:not([value='all'])");
-
-if (allBoardsCheckbox) {
-  allBoardsCheckbox.addEventListener('change', function () {
-    if (this.checked) {
-      boardNameCheckboxes.forEach(checkbox => checkbox.checked = false);
+  document.addEventListener('click', function handleClickOutside(event) {
+    if (!dropdown.contains(event.target) &&
+        !event.target.closest('.dropdown-toggle')) {
+      dropdown.classList.remove('show');
+      document.removeEventListener('click', handleClickOutside);
     }
   });
 }
-boardNameCheckboxes.forEach(checkbox => {
-  checkbox.addEventListener('change', function () {
-    if (this.checked) {
-      allBoardsCheckbox.checked = false;
-    }
-  });
-});
-
-// When a user checks All Priorities, undo other option.
-const allTasksCheckbox = document.querySelector(
-    "input[name='priority'][value='all']");
-const priorityCheckboxes = document.querySelectorAll(
-    "input[name='priority']:not([value='all'])");
-
-if (allTasksCheckbox) {
-  allTasksCheckbox.addEventListener('change', function () {
-    if (this.checked) {
-      priorityCheckboxes.forEach(checkbox => checkbox.checked = false);
-    }
-  });
-}
-priorityCheckboxes.forEach(checkbox => {
-  checkbox.addEventListener('change', function () {
-    if (this.checked) {
-      allTasksCheckbox.checked = false;
-    }
-  });
-});
 
 function filterBoardsAndTasks() {
   const allBoardsCheckbox = document.querySelector(
@@ -100,12 +70,14 @@ function filterBoardsAndTasks() {
     priorities = Array.from(priorityInputs).map(input => input.value);
   }
 
-  const userId = document.getElementById("userId").value;
+  const userId = $("#userId").val();
+  const projectId = $("#projectId").val();
 
   const params = new URLSearchParams();
   boardNames.forEach(name => params.append("boardName", name));
   priorities.forEach(priority => params.append("priority", priority));
   params.append("userId", userId);
+  params.append("projectId", projectId)
 
   fetch(`/board/filter?${params.toString()}`, {
     method: 'GET',
