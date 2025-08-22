@@ -18,11 +18,11 @@
                     <input type="hidden" id="projectId" name="projectId" th:value="${currentProject.projectId}">
                     <div class="form-group">
                         <label for="userInput">Board Name</label>
-                        <select class="form-control-half" id="userSelect" name="userSelect">
-                            <option value="">Select Board</option>
-                            <option value="TO_DO">To Do</option>
-                            <option value="IN_PROGRESS">In Progress</option>
-                            <option value="DONE">Done</option>
+                        <select class="form-control-half" th:field="">
+                            <option th:value="">Select Board</option>
+                            <option th:value="TO_DO">To Do</option>
+                            <option th:value="IN_PROGRESS">In Progress</option>
+                            <option th:value="DONE">Done</option>
                         </select>
                         <input type="text" class="form-control" id="userInput" name="boardName" placeholder="Type as you want">
                     </div>

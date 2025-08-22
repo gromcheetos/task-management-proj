@@ -13,11 +13,11 @@ import java.util.*;
 @Data
 @Builder
 @AllArgsConstructor
-@ToString(exclude = {"teamMembers", "boards", "projectOwner", "jobPositions"})
+@ToString(exclude = {"teamMembers", "projectOwner", "jobPositions"})
 public class Project {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "project_id")
     private Integer projectId;
     private String projectName;
@@ -26,9 +26,10 @@ public class Project {
     @ManyToMany
     @JoinTable(
             name = "project_team_members",
-            joinColumns = @JoinColumn(name = "project_id"), // FK to project
-            inverseJoinColumns = @JoinColumn(name = "user_id") // FK to user
+            joinColumns = @JoinColumn(name = "project_id"),
+            inverseJoinColumns = @JoinColumn(name = "user_id")
     )
+    @JsonManagedReference
     private Set<User> teamMembers;
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
@@ -36,7 +37,6 @@ public class Project {
     private List<Board> boards;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JsonManagedReference(value = "owned-projects")
     private User projectOwner;
 
     @OneToMany(mappedBy = "project")

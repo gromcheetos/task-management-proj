@@ -50,7 +50,7 @@ public class BoardController {
             board.setStatus(Status.valueOf(status));
             boardService.createBoard(projectId, board);
             return "redirect:/";
-        }else {
+        }else if(status == null || status.equals("")){
             Board board = new Board(boardName, description);
             board.setUser(currentUser);
             boardService.createBoard(projectId, board);
@@ -73,15 +73,14 @@ public class BoardController {
     @GetMapping("/filter")
     public String boardsByNameAndPriority(@RequestParam(value = "boardName", required = false) List<String> boardNames,
         @RequestParam(value = "priority", required = false) List<String> priorities,
-        @RequestParam("userId") Integer userId, Model model) throws UserNotFoundException {
+        @RequestParam("userId") Integer userId,
+        @RequestParam("projectId") Integer projectId,
+      Model model) throws UserNotFoundException {
 
         List<Board> boards = boardService.findBoardsByUserId(userId);
         List<TodoTask> tasks = todoTaskService.getTasksByUserId(userId);
-        // Filter boards by name if specified
         List<Board> filteredBoards = searchService.filterBoardsByBoardNames(boardNames, boards);
 
-        // TODO: check why this filteredTasks variable is empty and not used
-        // Filter tasks by priority if specified
         List<TodoTask> filteredTasks = searchService.filterTasksByPriority(priorities, tasks);
 
         if (priorities != null && !priorities.contains("all")) {
@@ -95,7 +94,8 @@ public class BoardController {
         }
 
         model.addAttribute("userBoards", filteredBoards);
-
+        model.addAttribute("userTasks", filteredTasks);
+        model.addAttribute("projectId", projectId);
         return "home :: #boardList";
     }
 

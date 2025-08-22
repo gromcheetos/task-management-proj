@@ -29,12 +29,8 @@ public class HomePageController implements ErrorController {
     @GetMapping
     public String showHomePage(Model model, HttpSession session)
             throws UserNotFoundException, ProjectNotFoundException {
-        Project currentProject = (Project) session.getAttribute("currentProject");
         User currentUser = userService.getCurrentUser();
-        if (currentUser != null && currentProject == null) {
-            log.info("No project is selected. Redirecting to /project/select");
-            return "redirect:/project/select";
-        }
+        Project currentProject = (Project) session.getAttribute("currentProject");
        return projectCommon.getHomePageUtility(model, currentProject);
     }
 

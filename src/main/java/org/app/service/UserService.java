@@ -72,17 +72,19 @@ public class UserService {
         toUpdateUser.getOwnedProjects().add(projects);
         log.info("The user is the project owner");
         toUpdateUser.getProjects().add(projects);
+        projects.getTeamMembers().add(toUpdateUser);
         log.info("The owner is also a member of the project");
         toUpdateUser.setRoles(Roles.ADMIN);
         log.info("Project owner is ADMIN");
         toUpdateUser.setProjectId(projects.getProjectId());
+        projectRepository.save(projects);
         userRepository.save(toUpdateUser);
     }
 
     public User joinProject(int userId, int projectId, String role) throws UserNotFoundException {
         User toUpdateUser = userRepository.findById(userId).orElseThrow(() -> new UserNotFoundException("No Found User"));
         Project projects = projectRepository.findById(projectId).orElseThrow(() -> new UserNotFoundException("No Found Project"));
-        toUpdateUser.setProjectId(projectId);
+        //toUpdateUser.setProjectId(projectId);
         toUpdateUser.getProjects().add(projects);
         toUpdateUser.setRoles(Roles.valueOf(role));
         return userRepository.save(toUpdateUser);

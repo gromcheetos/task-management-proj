@@ -11,6 +11,7 @@ import org.app.model.JobPosition;
 import org.app.model.Project;
 import org.app.model.User;
 import org.app.model.dto.DuplicateCheckDto;
+import org.app.model.dto.UserDto;
 import org.app.service.BoardService;
 import org.app.service.JobPositionService;
 import org.app.service.ProjectService;
@@ -21,6 +22,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Controller
 @Slf4j
@@ -48,9 +50,6 @@ public class ProjectController {
         project = projectService.createOrUpdateProject(project);
         log.info("Project created successfully");
 
-        project.getTeamMembers().add(currentUser);
-        projectService.createOrUpdateProject(project);
-        log.info("Team member added to the project");
         userService.updateUserProject(currentUser.getId(), project);
         log.info("User has new project assigned");
         session.setAttribute("currentProject", project);
@@ -58,7 +57,7 @@ public class ProjectController {
     }
 
     @PostMapping("/add/member")
-    public ResponseEntity<Project> insertTeamMember(@RequestParam("projectId") int projectId,
+    public ResponseEntity<Map<String, Object>> insertTeamMember(@RequestParam("projectId") int projectId,
         @RequestParam(value = "userId") int userId,
         @RequestParam(value = "userRole") String userRole,
         @RequestParam(value = "jobId") Integer jobId)
@@ -70,6 +69,7 @@ public class ProjectController {
         currentMembers.add(user);
         teamProject.setTeamMembers(currentMembers);
         userService.joinProject(userId, projectId, userRole);
+        log.info("Current members: {}", currentMembers);
 
         if(jobId != null){
             jobPositionService.updateJobPosition(jobId, user);
@@ -79,7 +79,7 @@ public class ProjectController {
         projectService.createOrUpdateProject(teamProject);
         log.info("[insertTeamMember] - Added member to the project");
 
-        return ResponseEntity.ok(teamProject);
+        return ResponseEntity.ok(Collections.singletonMap("projectId", teamProject.getProjectId()));
     }
 
     @GetMapping("/show")
@@ -129,10 +129,18 @@ public class ProjectController {
     }
 
     @GetMapping("/show/members")
-    public ResponseEntity<List<User>> getTeamMembers(@RequestParam int projectId){
-        List<User> members = userService.findByProjectId(projectId);
-
-        return ResponseEntity.ok(new ArrayList<>(members));
+    @ResponseBody
+    public Set<UserDto> getTeamMembers(@RequestParam int projectId) throws ProjectNotFoundException {
+        Project project = projectService.findProjectByProjectId(projectId);
+        return project.getTeamMembers().stream()
+                .map(user -> new UserDto(
+                        user.getId(),
+                        user.getUsername(),
+                        user.getName(),
+                        user.getRoles().name(),
+                        user.getJobPosition() != null ? user.getJobPosition().getTitle() : null
+                ))
+                .collect(Collectors.toSet());
     }
 
     @PostMapping("/check/duplicate/positions")

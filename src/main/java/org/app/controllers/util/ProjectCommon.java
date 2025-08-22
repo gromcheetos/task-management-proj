@@ -36,6 +36,9 @@ public class ProjectCommon {
         } else if (currentUser.getProjects().isEmpty() && currentUser.getOwnedProjects().isEmpty()) {
             log.info("The user has no projects. Redirecting to /project/show");
             return "redirect:/project/show";
+        }else if (currentProject == null) {
+            log.info("The user choose project. Redirecting to /project/select");
+            return "redirect:/project/select";
         }
         else {
             List<Project> projects = currentUser.getProjects();
