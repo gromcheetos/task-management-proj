@@ -2,19 +2,16 @@ package org.app.controllers.util;
 
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.app.exceptions.BoardNotFoundException;
 import org.app.exceptions.ProjectNotFoundException;
 import org.app.exceptions.UserNotFoundException;
-import org.app.model.Board;
-import org.app.model.JobPosition;
-import org.app.model.Project;
-import org.app.model.User;
+import org.app.model.*;
 import org.app.model.dto.JobPositionDto;
 import org.app.service.*;
 import org.springframework.stereotype.Component;
 import org.springframework.ui.Model;
 
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 @Component
 @AllArgsConstructor
@@ -27,7 +24,7 @@ public class ProjectCommon {
     private final JobPositionService jobPositionService;
     private final BoardService boardService;
 
-    public String getHomePageUtility(Model model, Project currentProject) throws UserNotFoundException, ProjectNotFoundException {
+    public String getHomePageUtility(Model model, Project currentProject) throws UserNotFoundException, ProjectNotFoundException, BoardNotFoundException {
         User currentUser = userService.getCurrentUser();
         log.info("currentProject: {}", currentProject);
         log.info("currentUser: {}", currentUser);
@@ -45,10 +42,19 @@ public class ProjectCommon {
             projects.addAll(currentUser.getOwnedProjects());
             log.info("Projects: {}", projects);
             List<Board> boards = projectService.getAllBoardsByProjectId(currentProject.getProjectId());
-            int totalTasks = taskService.getTasksByUserId(currentUser.getId()).size();
-            log.info(currentUser.getUsername() + " has " + totalTasks);
-            int completedTasks = taskService.getCompletedTasksCount(currentUser.getId());
-            log.info(currentUser.getUsername() + " competed " + completedTasks);
+
+            List<TodoTask> totalTasks = new ArrayList<>();
+            for (Board board : boards) {
+                List <TodoTask> userTasks = taskService.getTasksByBoardId(board.getBoardId());
+                log.info("Tasks for board {}: {}", board.getBoardId(), userTasks);
+                totalTasks.addAll(userTasks);
+            }
+            log.info("Total tasks: {}", totalTasks);
+            int totalTasksCount = totalTasks.size();
+            log.info(currentUser.getUsername() + " has " + totalTasksCount);
+            int completedTasks = taskService.getCompletedTasksCount(totalTasks);
+            log.info(currentUser.getUsername() + " completed " + completedTasks);
+
             Set<User> teamMembers = currentProject.getTeamMembers();
             log.info("Team members: {}", teamMembers);
             int memberCnt = teamMembers.size();
@@ -59,7 +65,7 @@ public class ProjectCommon {
             model.addAttribute("memberCnt", memberCnt);
             model.addAttribute("userBoards", boards);
             model.addAttribute("currentUser", currentUser);
-            model.addAttribute("totalTasks", totalTasks);
+            model.addAttribute("totalTasks", totalTasksCount);
             model.addAttribute("completedTasks", completedTasks);
             model.addAttribute("allProjects", projects);
         }

@@ -4,6 +4,7 @@ import jakarta.servlet.http.HttpSession;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.app.controllers.util.ProjectCommon;
+import org.app.exceptions.BoardNotFoundException;
 import org.app.exceptions.JobPositionNotFoundException;
 import org.app.exceptions.ProjectNotFoundException;
 import org.app.exceptions.UserNotFoundException;
@@ -105,7 +106,7 @@ public class ProjectController {
 
     @GetMapping("/find/{projectId}")
     public String getProjectById(@PathVariable("projectId") int id, Model model)
-        throws UserNotFoundException, ProjectNotFoundException {
+            throws UserNotFoundException, ProjectNotFoundException, BoardNotFoundException {
         Project currentProject = projectService.findProjectByProjectId(id);
         return projectCommon.getHomePageUtility(model, currentProject);
     }

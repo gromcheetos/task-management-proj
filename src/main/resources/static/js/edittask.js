@@ -50,7 +50,6 @@ function openEditTaskModal(taskElement) {
         event.preventDefault();
 
         var taskId = document.getElementById('editTaskId').value;
-        var newBoardName = document.getElementById('editTaskStatus').value;
         var title = document.getElementById('editTaskTitle').value;
         var description = document.getElementById('editTaskDescription').value;
         var priority = document.getElementById('editTaskPriority').value;
@@ -59,7 +58,6 @@ function openEditTaskModal(taskElement) {
 
         const params = new URLSearchParams({
           taskId: taskId,
-          boardName: newBoardName,
           title: title,
           description: description,
           priority: priority,
@@ -77,10 +75,11 @@ function openEditTaskModal(taskElement) {
           if (!response.ok) {
             throw new Error("Failed to update task");
           }
-          return response.json();
+          return response.text();
         })
-        .then(data => {
+        .then(() => {
           $('#editTaskModal').modal('hide');
+          location.reload();
         })
         .catch((error) => {
           console.error('Error updating task:', error);

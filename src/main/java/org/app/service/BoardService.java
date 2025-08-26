@@ -101,4 +101,8 @@ public class BoardService {
         return boardRepository.save(defaultBoard);
     }
 
+    public List<Board> findBoardsByProjectId(Integer boardId) throws BoardNotFoundException {
+        return Collections.singletonList(boardRepository.findById(boardId).orElseThrow(() -> new BoardNotFoundException("No Found Board")));
+    }
+
 }

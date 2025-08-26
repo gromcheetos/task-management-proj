@@ -42,7 +42,7 @@ public class BoardController {
                               @RequestParam(value="userSelect", required = false) String status ) throws UserNotFoundException {
         log.info("Received projectId: {}", projectId);
         User currentUser = userService.getCurrentUser();
-        if(status != null){
+        if(status != null && !status.equals("0")){
             boardName = Status.valueOf(status).toString();
             log.info("Received status: {}", status);
             Board board = new Board(boardName, description);
@@ -50,7 +50,7 @@ public class BoardController {
             board.setStatus(Status.valueOf(status));
             boardService.createBoard(projectId, board);
             return "redirect:/";
-        }else if(status == null || status.equals("")){
+        }else {
             Board board = new Board(boardName, description);
             board.setUser(currentUser);
             boardService.createBoard(projectId, board);
@@ -74,10 +74,14 @@ public class BoardController {
     public String boardsByNameAndPriority(@RequestParam(value = "boardName", required = false) List<String> boardNames,
         @RequestParam(value = "priority", required = false) List<String> priorities,
         @RequestParam("userId") Integer userId,
-        @RequestParam("projectId") Integer projectId,
-      Model model) throws UserNotFoundException {
+      @RequestParam("projectId") Integer projectId,
+      @RequestParam(value = "boardId") List<String> boardId,
+      Model model) throws UserNotFoundException, ProjectNotFoundException, BoardNotFoundException {
+        log.info("Received boardNames: {}", boardNames);
+        log.info("Received priorities: {}", priorities);
 
-        List<Board> boards = boardService.findBoardsByUserId(userId);
+        Project currentProject = projectService.findProjectByProjectId(projectId);
+        List<Board> boards = projectService.getAllBoardsByProjectId(projectId);
         List<TodoTask> tasks = todoTaskService.getTasksByUserId(userId);
         List<Board> filteredBoards = searchService.filterBoardsByBoardNames(boardNames, boards);
 
@@ -95,7 +99,7 @@ public class BoardController {
 
         model.addAttribute("userBoards", filteredBoards);
         model.addAttribute("userTasks", filteredTasks);
-        model.addAttribute("projectId", projectId);
+        model.addAttribute("currentProject", currentProject);
         return "home :: #boardList";
     }
 

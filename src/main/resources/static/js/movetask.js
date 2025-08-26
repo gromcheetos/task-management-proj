@@ -26,10 +26,8 @@ function drop(event) {
     });
 
     fetch(`/tasks/move?${params.toString()}`, {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-        }
+        method: 'POST'
+
     })
     .then(response => {
         if (!response.ok) {

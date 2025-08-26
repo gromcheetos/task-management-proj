@@ -37,28 +37,35 @@ public class TaskCRUDController {
         @RequestParam("priority") String priority,
         @RequestParam("deadline") String deadline,
         @RequestParam("userId") int userId,
-        @RequestParam("boardId") int boardId) throws UserNotFoundException, BoardNotFoundException {
-
+        @RequestParam("boardId") int boardId,
+        @RequestParam("status") String status) throws UserNotFoundException, BoardNotFoundException {
+        log.info("Received status: {}", status);
         User user = userService.getCurrentUser();
         Board board = boardService.findBoardById(boardId);
 
         LocalDate convertedDeadline = LocalDate.parse(deadline);
-
-        TodoTask todoTask = new TodoTask(title, description, Priority.valueOf(priority), convertedDeadline);
-        log.info("After creating TodoTask");
-        todoTask.setUser(user);
-        todoTask.setBoard(board);
-        taskService.insertTask(todoTask);
+        if("TO_DO".equals(status) || "IN_PROGRESS".equals(status) || "DONE".equals(status)){
+            TodoTask todoTask = new TodoTask(title, description, Priority.valueOf(priority), convertedDeadline);
+            todoTask.setStatus(Status.valueOf(status));
+            taskService.insertTask(todoTask);
+            log.info("created task with status {}", status);
+        }else{
+            TodoTask todoTask = new TodoTask(title, description, Priority.valueOf(priority), convertedDeadline);
+            todoTask.setUser(user);
+            todoTask.setBoard(board);
+            taskService.insertTask(todoTask);
+            log.info("After creating TodoTask");
+        }
         return "redirect:/";
     }
 
     @PostMapping("/move")
     @ResponseBody
     public ResponseEntity<Map<String, Object>> moveTask(
-        @RequestParam("taskId") Integer taskId,
-        @RequestParam("boardId") Integer boardId)
+        @RequestParam("taskId") int taskId,
+        @RequestParam("newBoardId") int boardId)
         throws TaskNotFoundException, BoardNotFoundException {
-
+        log.info("Received taskId: {}", taskId);
         TodoTask todoTask = taskService.moveTask(taskId, boardId);
 
         Map<String, Object> response = new HashMap<>();
@@ -72,17 +79,20 @@ public class TaskCRUDController {
     @ResponseBody
     public ResponseEntity<Map<String, Object>> updateTask(
         @RequestParam("taskId") Integer taskId,
-        @RequestParam("boardName") String boardName,
         @RequestParam("title") String title,
         @RequestParam("description") String description,
         @RequestParam("priority") String priority,
         @RequestParam("deadline") String deadline)
-            throws TaskNotFoundException, BoardNotFoundException, UserNotFoundException {
-        Status status = Status.valueOf(boardName);
+            throws TaskNotFoundException {
+        log.info("Received taskId: {}", taskId);
         LocalDate convertedDeadline = LocalDate.parse(deadline);
-        TodoTask todoTask = taskService.updateTask(taskId, title, description,
-            Priority.valueOf(priority), convertedDeadline, status,
-            Status.valueOf(boardName).toString());
+        TodoTask todoTask = taskService.getTaskById(taskId);
+        todoTask.setTitle(title);
+        todoTask.setDescription(description);
+        todoTask.setPriority(Priority.valueOf(priority));
+        todoTask.setDeadline(convertedDeadline);
+        taskService.insertTask(todoTask);
+        log.info("Updated task successfully");
         Map<String, Object> response = new HashMap<>();
         response.put("task", todoTask);
 

@@ -36,7 +36,6 @@
           </div>
           <div class="header-filters">
             <form method="get" id="boardFilter">
-              <input type="hidden" id="projectId" name="projectId" th:value="${currentProject.projectId}">
               <div class="custom-dropdown-board">
                 <button type="button" class="dropdown-toggle" onclick="toggleDropdown('boardDropdown')">
                   Select Board Category
@@ -47,7 +46,7 @@
                   </label>
                   <div th:each="board : ${userBoards}" class="board-list">
                     <label>
-                      <input type="checkbox" name="boardName" th:value="${board.boardName}"
+                      <input type="checkbox" name="boardName" th:value="${board.boardId}"
                              th:checked="${selectedBoardNames != null and selectedBoardNames.contains(board.boardName)}">
                       <span th:text="${board.boardName}"></span>
                     </label>
@@ -73,8 +72,8 @@
                   </label>
                 </div>
               </div>
-
               <input type="hidden" id="userId" name="userId" th:value="${currentUser.id}">
+              <input type="hidden" id="projectId" name="projectId" th:value="${currentProject.projectId}">
               <button type="submit">Apply</button>
             </form>
           </div>
@@ -152,6 +151,7 @@
         $("input[name='boardName']").prop('checked', false);
       }
     });
+
   });
 
 </script>

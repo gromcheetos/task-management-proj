@@ -56,4 +56,5 @@ public class ProjectService {
         Project project = projectRepository.findById(projectId).orElseThrow();
         return project.getBoards();
     }
+
 }

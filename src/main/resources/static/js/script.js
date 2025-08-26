@@ -6,9 +6,29 @@ document.addEventListener('DOMContentLoaded', (event) => {
       $('#addTaskModal').modal('show');
     });
 
+    //add board
     $('#userSelect').on('change', function() {
         let selectedText = $('#userSelect option:selected').text();
+        let selectedValue = $('#userSelect option:selected').val();
+        if(selectedValue === "0"){
+          $('#userInput').empty();
+        }
         $('#userInput').val(selectedText);
+    });
+
+    $("#addBoardForm").validate({
+      rules: {
+        boardName: {
+          required: true,
+          minlength: 3,
+          maxlength: 20
+        }
+      },
+      messages: {
+        boardName: {
+          required: "Please enter a board name",
+        }
+      }
     });
 
     $("#allPriority").click(function (){
@@ -20,7 +40,13 @@ document.addEventListener('DOMContentLoaded', (event) => {
         $("input[name='priority']").prop('checked', false);
       }
     });
-
+      document.getElementById("taskForm").addEventListener("submit", function() {
+      var boardSelect = document.getElementById("boardId");
+      var selectedOption = boardSelect.options[boardSelect.selectedIndex];
+      var boardName = selectedOption.getAttribute("data-board-name");
+      console.log("boardName:", boardName);
+      document.getElementById("status").value = boardName;
+    });
   });
   const boardFilterForm = document.getElementById("boardFilter");
   if (boardFilterForm) {
@@ -72,12 +98,14 @@ function filterBoardsAndTasks() {
 
   const userId = $("#userId").val();
   const projectId = $("#projectId").val();
+  const boardId = $("#boardId").val();
 
   const params = new URLSearchParams();
-  boardNames.forEach(name => params.append("boardName", name));
+  //boardNames.forEach(name => params.append("boardName", name));
+  boardNames.forEach(boardId => params.append("boardId", boardId));
   priorities.forEach(priority => params.append("priority", priority));
   params.append("userId", userId);
-  params.append("projectId", projectId)
+  params.append("projectId", projectId);
 
   fetch(`/board/filter?${params.toString()}`, {
     method: 'GET',
