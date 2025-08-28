@@ -2,12 +2,15 @@
     if (typeof jQuery !== 'undefined') {
 
         $(document).ready(function() {
-            const avatars = document.querySelectorAll('.avatar');
-
-            avatars.forEach(avatar => {
+            //const avatars = document.querySelectorAll('.avatar');
+            const projectId = document.getElementById('projectId').value;
+            fetch(`/project/show/members?projectId=${projectId}`)
+                .then(res => res.json())
+                .then(members => renderMembers(members));
+            /*avatars.forEach(avatar => {
                 const username = avatar.dataset.username;
                 if (username) {
-                   const initials = username
+                    const initials = username
                         .split(' ')
                         .map(word => word.charAt(0))
                         .join('')
@@ -16,7 +19,7 @@
 
                     avatar.textContent = initials;
                 }
-            });
+            });*/
 
             $("#searchBox").on("input", function () {
                 const query = $(this).val();
@@ -25,7 +28,7 @@
                     $.ajax({
                         url: "/search/users",
                         method: "GET",
-                        data: { keyword: query },
+                        data: {keyword: query},
                         success: function (data) {
                             let html = "";
                             data.forEach(item => {
@@ -63,11 +66,11 @@
                                 'Content-Type': 'application/json',
                             }
                         })
-                        .then(teamProject => {
-                            if (!teamProject.ok) {
+                        .then(projectId => {
+                            if (!projectId.ok) {
                                 throw new Error("Failed to add member");
                             }
-                            return teamProject.json();
+                            return projectId.json();
                         })
                         .then(() => {
                             return fetch(`/project/show/members?projectId=${projectId}`);
@@ -78,21 +81,30 @@
                             }
                             return response.json();
                         })
-                        .then(members => {
+                        .then(members => renderMembers(members))
+                        .catch((error) => {
+                            console.error('Error updating members:', error);
+                        });
 
-                            $('#userList').empty();
+                });
+            });
+        } else {
+            setTimeout(waitForJQuery, 100);
+        }
+            function renderMembers(memberDtos) {
+                $('#userList').empty();
 
-                            members.forEach(user => {
-                                const userInitials = user.name
-                                    .split(' ')
-                                    .map(word => word.charAt(0))
-                                    .join('')
-                                    .toUpperCase()
-                                    .substring(0, 2);
+                memberDtos.forEach(user => {
+                    const userInitials = user.name
+                        .split(' ')
+                        .map(word => word.charAt(0))
+                        .join('')
+                        .toUpperCase()
+                        .substring(0, 2);
 
-                                $('#userList').append(`
+                    $('#userList').append(`
                                     <div class="member">
-                                        <span class="avatar">${user.initials}</span>
+                                        <span class="avatar">${userInitials}</span>
                                         <div class="info">
                                             <div class="top-row">
                                                 <div class="left">
@@ -104,36 +116,26 @@
                                         </div>
                                     </div>
                                 `);
-                            });
-
-                            $('#topAvatars').empty();
-
-                            members.forEach(user => {
-                                const userInitials = user.name
-                                    .split(' ')
-                                    .map(word => word.charAt(0))
-                                    .join('')
-                                    .toUpperCase()
-                                    .substring(0, 2);
-
-                                $('#topAvatars').append(`
-                                    <div class="member-avatar">
-                                        <span class="avatar">${user.initials}</span>
-                                    </div>
-                                `);
-                            });
-
-
-                            $('#addMemberModal').modal('hide');
-                            $('#searchBox').val('');
-                        })
-                        .catch((error) => {
-                            console.error('Error updating members:', error);
-                        });
-                    });
                 });
 
-        } else {
-            setTimeout(waitForJQuery, 100);
-        }
+                $('#topAvatars').empty();
+
+                memberDtos.forEach(user => {
+                    const userInitials = user.name
+                        .split(' ')
+                        .map(word => word.charAt(0))
+                        .join('')
+                        .toUpperCase()
+                        .substring(0, 2);
+
+                    $('#topAvatars').append(`
+                                    <div class="member-avatar">
+                                        <span class="avatar">${userInitials}</span>
+                                    </div>
+                                `);
+                });
+                $('#addMemberModal').modal('hide');
+                $('#searchBox').val('');
+
+            }
     })();

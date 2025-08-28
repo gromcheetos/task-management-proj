@@ -8,7 +8,7 @@
     <div class="sidebar">
         <div class="sidebar-menu">
             <div>
-                <h3 th:text="${activeProject.projectName}"></h3>
+                <h3 th:text="${currentProject.projectName}"></h3>
             </div>
             <a sec:authorize="isAuthenticated()">Project</a>
             <ul sec:authorize="isAuthenticated()">
@@ -29,7 +29,7 @@
             <a sec:authorize="isAuthenticated()">Team</a>
             <ul sec:authorize="isAuthenticated()">
                 <li>
-                    <a id="add-member-btn" th:attr="data-project-id=${activeProject.projectId}" class="add-member-btn" >Add team member</a>
+                    <a id="add-member-btn" th:attr="data-project-id=${currentProject.projectId}" class="add-member-btn" >Add team member</a>
                 </li>
             </ul>
 

@@ -1,10 +1,7 @@
 package org.app.service;
 
-import java.time.LocalDate;
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.app.exceptions.BoardNotFoundException;
 import org.app.exceptions.TaskNotFoundException;
 import org.app.exceptions.UserNotFoundException;
@@ -16,8 +13,14 @@ import org.app.repository.BoardRepository;
 import org.app.repository.TaskRepository;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
+import java.util.Collections;
+import java.util.List;
+import java.util.Optional;
+
 @Service
 @AllArgsConstructor
+@Slf4j
 public class TodoTaskService {
 
     //@Autowired  creates and destroys objects for you, you don't need to instantiate them
@@ -40,6 +43,9 @@ public class TodoTaskService {
             .orElseThrow(() -> new BoardNotFoundException("Board not found"));
 
         toUpdateTask.setBoard(newBoard);
+        newBoard.getTasks().add(toUpdateTask);
+        boardRepository.save(newBoard);
+        log.info("Updated task: " + toUpdateTask.getTitle() + " to board: " + newBoard.getBoardName());
         return taskRepository.save(toUpdateTask);
     }
 
@@ -95,11 +101,16 @@ public class TodoTaskService {
         return taskRepository.findTodoTaskByTitle(title);
     }
 
-    public int getCompletedTasksCount(Integer userId) throws UserNotFoundException {
-        List<TodoTask> allTasks = getTasksByUserId(userId);
+    public int getCompletedTasksCount(List<TodoTask> allTasks)  {
+
         List<TodoTask> doneTasks = allTasks.stream()
             .filter(task -> task.getStatus() == Status.DONE)
             .toList();
         return doneTasks.size();
+    }
+
+    public List<TodoTask> getTasksByBoardId(Integer boardId) throws BoardNotFoundException {
+        Board board = boardRepository.findById(boardId).orElseThrow(() -> new BoardNotFoundException("Board not found"));
+        return board.getTasks();
     }
 }

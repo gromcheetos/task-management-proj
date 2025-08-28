@@ -1,6 +1,5 @@
 package org.app.mocks;
 
-import jakarta.annotation.PostConstruct;
 import org.app.exceptions.UserNotFoundException;
 import org.app.model.Board;
 import org.app.model.Project;
@@ -48,7 +47,7 @@ public class MockData {
 
     private UserRepository userRepository;
 
-    @PostConstruct
+    //@PostConstruct
     public void createMockData() throws UserNotFoundException {
         User mockUser = new User("Lara Kroft", "lara@gmail.com", "lara");
         User defaultUser = new User("John Doe", "johndoe@gmail.com", "john");

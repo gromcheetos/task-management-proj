@@ -1,6 +1,5 @@
 package org.app.mocks;
 
-import jakarta.annotation.PostConstruct;
 import org.app.model.Project;
 import org.app.model.User;
 import org.app.service.BoardService;
@@ -28,7 +27,7 @@ public class MockUserData {
 
     public static final String DEFAULT_PROJECT_NAME = "Default Project";
 
-    @PostConstruct
+    //@PostConstruct
     public void createMockData() {
         User mockUser = new User("Michael Jackson", "Michael@gmail.com", "Michael");
         List<User> mockUsers = Arrays.asList(

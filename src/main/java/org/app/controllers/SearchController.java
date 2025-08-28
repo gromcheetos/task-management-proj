@@ -3,6 +3,7 @@ package org.app.controllers;
 import lombok.AllArgsConstructor;
 import org.app.exceptions.UserNotFoundException;
 import org.app.model.Board;
+import org.app.model.TodoTask;
 import org.app.model.User;
 import org.app.service.SearchService;
 import org.app.service.TodoTaskService;
@@ -29,12 +30,13 @@ public class SearchController {
     @GetMapping("/search")
     public String searchTasks(Model model, String keyword) throws UserNotFoundException {
         User currentUser = userService.getCurrentUser();
+        List<TodoTask> allTasks = taskService.getTasksByUserId(currentUser.getId());
         if (keyword != null) {
             List<Board> boards = searchService.performSearch(keyword);
             model.addAttribute("currentUser", currentUser);
             model.addAttribute("userBoards", boards);
             model.addAttribute("totalTasks", taskService.getTasksByUserId(currentUser.getId()).size());
-            model.addAttribute("completedTasks", taskService.getCompletedTasksCount(currentUser.getId()));
+            model.addAttribute("completedTasks", taskService.getCompletedTasksCount(allTasks));
         }
 
         return "home";

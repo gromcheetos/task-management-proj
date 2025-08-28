@@ -13,17 +13,22 @@ import java.util.*;
 @Data
 @Builder
 @AllArgsConstructor
-@ToString(exclude = {"teamMembers", "boards", "projectOwner", "jobPositions"})
+@ToString(exclude = {"teamMembers", "projectOwner", "jobPositions"})
 public class Project {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "project_id")
     private Integer projectId;
     private String projectName;
     private String description;
 
-    @OneToMany
+    @ManyToMany
+    @JoinTable(
+            name = "project_team_members",
+            joinColumns = @JoinColumn(name = "project_id"),
+            inverseJoinColumns = @JoinColumn(name = "user_id")
+    )
     @JsonManagedReference
     private Set<User> teamMembers;
 
@@ -31,8 +36,7 @@ public class Project {
     @JsonManagedReference
     private List<Board> boards;
 
-    @ManyToOne
-    @JsonManagedReference(value = "owned-projects")
+    @ManyToOne(fetch = FetchType.LAZY)
     private User projectOwner;
 
     @OneToMany(mappedBy = "project")
@@ -43,6 +47,7 @@ public class Project {
         this.projectName = projectName;
         this.boards = new ArrayList<>();
         this.teamMembers = new HashSet<>();
+        this.projectOwner = new User();
     }
 
     public Project() {
@@ -56,10 +61,6 @@ public class Project {
         this.boards.add(board);
     }
 
-    protected void addTeamMember(User user) {
-        this.teamMembers.add(user);
-    }
-
     protected void removeTeamMember(User user) {
         this.teamMembers.remove(user);
     }
@@ -68,7 +69,10 @@ public class Project {
         this.boards.remove(board);
     }
 
-
+    public void addTeamMember(User user) {
+        this.teamMembers.add(user);
+        user.getProjects().add(this);
+    }
 
     @Override
     public boolean equals(Object o) {

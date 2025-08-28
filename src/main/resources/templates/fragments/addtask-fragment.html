@@ -14,10 +14,10 @@
                 </button>
             </div>
             <div class="modal-body">
-                <form th:action="@{/tasks/create}" method="post" id="addTaskForm">
+                <form th:action="@{/tasks/create}" method="post" id="taskForm">
                     <div class="form-group">
                         <label for="boardId">Board</label>
-                        <select class="form-control" id="boardId" name="boardId" onchange="updateStatus()">
+                        <select class="form-control" id="boardId" name="boardId" >
                             <option th:each="board : ${userBoards}" th:value="${board.boardId}" th:text="${board.boardName}" th:data-board-name="${board.boardName}"></option>
                         </select>
                     </div>
@@ -41,7 +41,7 @@
                     </div>
                     <div class="form-group">
                         <label for="deadline">Deadline</label>
-                        <input type="date" class="form-control" id="deadline" name="deadline">
+                        <input type="date" class="form-control" id="deadline" name="deadline" required>
                     </div>
                     <button type="submit" class="btn btn-primary">Add Task</button>
                 </form>
@@ -49,15 +49,7 @@
         </div>
     </div>
 </div>
+
 <script type="text/javascript" th:src="@{/js/script.js}"></script>
-<script>
-    function updateStatus() {
-        var boardSelect = document.getElementById("boardId");
-        var selectedOption = boardSelect.options[boardSelect.selectedIndex];
-        var boardName = selectedOption.getAttribute("data-board-name");
-        var statusInput = document.getElementById("status");
-        statusInput.value = boardName;
-    }
-</script>
 </body>
 </html>

@@ -11,4 +11,5 @@ public interface BoardRepository extends CrudRepository<Board, Integer> {
 
     List<Board> findBoardsByUserId(Integer userId);
     Board findBoardByBoardName(String boardName);
+
 }
