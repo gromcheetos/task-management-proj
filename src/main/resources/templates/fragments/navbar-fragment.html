@@ -25,8 +25,8 @@
 
     <div id="slider-menu" class="slide-right">
       <a href="javascript:void(0)" class="close-btn" id="closeBtn">&times;</a>
-      <a href="#">Profile</a>
-      <a sec:authorize="isAuthenticated()">My page</a>
+      <a th:href="@{/users/mypage}" sec:authorize="isAuthenticated()">My page</a>
+      <a th:href="@{/project/select}" sec:authorize="isAuthenticated()">Manage projects</a>
       <a th:href="@{/signup}" sec:authorize="isAnonymous()">
         Sign up</a>
       <a th:href="@{/users/login}" sec:authorize="!isAuthenticated()">

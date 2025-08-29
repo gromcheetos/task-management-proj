@@ -28,13 +28,16 @@ public class ProjectCommon {
         User currentUser = userService.getCurrentUser();
         log.info("currentProject: {}", currentProject);
         log.info("currentUser: {}", currentUser);
+        if(currentProject == null){
+            currentProject = (Project) model.getAttribute("currentProject");
+        }
         if (currentUser == null) {
             return "redirect:/login";
         } else if (currentUser.getProjects().isEmpty() && currentUser.getOwnedProjects().isEmpty()) {
             log.info("The user has no projects. Redirecting to /project/show");
             return "redirect:/project/show";
         }else if (currentProject == null) {
-            log.info("The user choose project. Redirecting to /project/select");
+            log.info("The user haven't choose project. Redirecting to /project/select");
             return "redirect:/project/select";
         }
         else {

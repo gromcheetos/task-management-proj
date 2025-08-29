@@ -7,19 +7,6 @@
             fetch(`/project/show/members?projectId=${projectId}`)
                 .then(res => res.json())
                 .then(members => renderMembers(members));
-            /*avatars.forEach(avatar => {
-                const username = avatar.dataset.username;
-                if (username) {
-                    const initials = username
-                        .split(' ')
-                        .map(word => word.charAt(0))
-                        .join('')
-                        .toUpperCase()
-                        .substring(0, 2);
-
-                    avatar.textContent = initials;
-                }
-            });*/
 
             $("#searchBox").on("input", function () {
                 const query = $(this).val();

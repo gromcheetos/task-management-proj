@@ -43,6 +43,7 @@
                         <label for="deadline">Deadline</label>
                         <input type="date" class="form-control" id="deadline" name="deadline" required>
                     </div>
+                    <input type="hidden" id="projectId" name="projectId" th:value="${currentProject.projectId}">
                     <button type="submit" class="btn btn-primary">Add Task</button>
                 </form>
             </div>

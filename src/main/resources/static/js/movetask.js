@@ -36,7 +36,9 @@ function drop(event) {
         return response.json();
     })
     .then(data => {
-        console.log('Task moved successfully:', data);
+        const projectId = data.projectId;
+        fetch(`/project/show/members?projectId=${projectId}`)
+
     })
     .catch((error) => {
         console.error('Error:', error);

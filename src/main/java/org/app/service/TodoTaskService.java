@@ -44,6 +44,10 @@ public class TodoTaskService {
 
         toUpdateTask.setBoard(newBoard);
         newBoard.getTasks().add(toUpdateTask);
+        if(newBoard.getStatus() != null){
+            toUpdateTask.setStatus(newBoard.getStatus());
+            newBoard.setStatus(newBoard.getStatus());
+        }
         boardRepository.save(newBoard);
         log.info("Updated task: " + toUpdateTask.getTitle() + " to board: " + newBoard.getBoardName());
         return taskRepository.save(toUpdateTask);
@@ -102,10 +106,10 @@ public class TodoTaskService {
     }
 
     public int getCompletedTasksCount(List<TodoTask> allTasks)  {
-
         List<TodoTask> doneTasks = allTasks.stream()
             .filter(task -> task.getStatus() == Status.DONE)
             .toList();
+        log.info("Number of completed tasks: {}", doneTasks.size());
         return doneTasks.size();
     }
 

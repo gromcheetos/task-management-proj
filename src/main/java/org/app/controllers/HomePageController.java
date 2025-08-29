@@ -30,6 +30,7 @@ public class HomePageController implements ErrorController {
     public String showHomePage(Model model, HttpSession session)
             throws UserNotFoundException, ProjectNotFoundException, BoardNotFoundException {
         Project currentProject = (Project) session.getAttribute("currentProject");
+       model.addAttribute("currentProject", model.getAttribute("currentProject"));
        return projectCommon.getHomePageUtility(model, currentProject);
     }
 

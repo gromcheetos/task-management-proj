@@ -1,16 +1,20 @@
 package org.app.controllers.tasks;
 
+import org.springframework.ui.Model;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.app.exceptions.BoardNotFoundException;
+import org.app.exceptions.ProjectNotFoundException;
 import org.app.exceptions.TaskNotFoundException;
 import org.app.exceptions.UserNotFoundException;
 import org.app.model.Board;
+import org.app.model.Project;
 import org.app.model.TodoTask;
 import org.app.model.User;
 import org.app.model.enums.Priority;
 import org.app.model.enums.Status;
 import org.app.service.BoardService;
+import org.app.service.ProjectService;
 import org.app.service.TodoTaskService;
 import org.app.service.UserService;
 import org.springframework.http.ResponseEntity;
@@ -30,15 +34,17 @@ public class TaskCRUDController {
     private final TodoTaskService taskService;
     private final UserService userService;
     private final BoardService boardService;
+    private final ProjectService projectService;
 
     @PostMapping("/create")
     public String createTask(@RequestParam("title") String title,
         @RequestParam("description") String description,
         @RequestParam("priority") String priority,
         @RequestParam("deadline") String deadline,
-        @RequestParam("userId") int userId,
+        @RequestParam("projectId") int projectId,
         @RequestParam("boardId") int boardId,
-        @RequestParam("status") String status) throws UserNotFoundException, BoardNotFoundException {
+        @RequestParam("status") String status,
+        Model model) throws UserNotFoundException, BoardNotFoundException, ProjectNotFoundException {
         log.info("Received status: {}", status);
         User user = userService.getCurrentUser();
         Board board = boardService.findBoardById(boardId);
@@ -46,7 +52,9 @@ public class TaskCRUDController {
         LocalDate convertedDeadline = LocalDate.parse(deadline);
         if("TO_DO".equals(status) || "IN_PROGRESS".equals(status) || "DONE".equals(status)){
             TodoTask todoTask = new TodoTask(title, description, Priority.valueOf(priority), convertedDeadline);
+            todoTask.setUser(user);
             todoTask.setStatus(Status.valueOf(status));
+            todoTask.setBoard(board);
             taskService.insertTask(todoTask);
             log.info("created task with status {}", status);
         }else{
@@ -56,6 +64,8 @@ public class TaskCRUDController {
             taskService.insertTask(todoTask);
             log.info("After creating TodoTask");
         }
+        Project currentProject = projectService.findProjectByProjectId(projectId);
+        model.addAttribute("currentProject", currentProject);
         return "redirect:/";
     }
 

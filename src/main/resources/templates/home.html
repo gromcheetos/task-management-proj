@@ -28,7 +28,7 @@
                      th:if="${totalTasks > 0}"
                      th:style="'width:' + (${completedTasks} * 100.0 / ${totalTasks}) + '%;'"
                      aria-valuemin="0" aria-valuemax="100"
-                     th:text="${completedTasks * 100.0 / totalTasks} + '%'">
+                     th:text="${#numbers.formatDecimal(completedTasks * 100.0 / totalTasks, 1, 2)} + '%'">
                 </div>
                 <div th:if="${totalTasks == 0}" th:text="'0%'" class="progress-bar" style="width: 0%;"></div>
               </div>

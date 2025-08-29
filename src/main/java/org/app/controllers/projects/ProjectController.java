@@ -108,6 +108,7 @@ public class ProjectController {
     public String getProjectById(@PathVariable("projectId") int id, Model model)
             throws UserNotFoundException, ProjectNotFoundException, BoardNotFoundException {
         Project currentProject = projectService.findProjectByProjectId(id);
+        model.addAttribute("currentProject", currentProject);
         return projectCommon.getHomePageUtility(model, currentProject);
     }
 

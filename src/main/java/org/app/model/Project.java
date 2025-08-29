@@ -23,7 +23,7 @@ public class Project {
     private String projectName;
     private String description;
 
-    @ManyToMany
+    @ManyToMany(cascade = { CascadeType.PERSIST, CascadeType.MERGE })
     @JoinTable(
             name = "project_team_members",
             joinColumns = @JoinColumn(name = "project_id"),
