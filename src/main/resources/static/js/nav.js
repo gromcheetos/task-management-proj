@@ -1,5 +1,5 @@
 function showProfileImageUpload() {
-  const profileImage = document.getElementById('profileImage');
+  const profileImage = document.getElementById('profileImageNav');
   const slideMenu = document.getElementById('slider-menu');
   const closeButton = document.getElementById('closeBtn');
 

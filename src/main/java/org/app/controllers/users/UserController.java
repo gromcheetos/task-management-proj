@@ -12,8 +12,15 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.util.Set;
+import java.util.UUID;
 
 @RequestMapping("/users")
 @Controller
@@ -44,7 +51,6 @@ public class UserController {
     public ResponseEntity<Set<User>> getAllUsers(@PathVariable("projectId") Integer projectId) throws UserNotFoundException {
         Set<User> userList =  projectService.getTeamMembers(projectId);
         return ResponseEntity.ok(userList);
-
     }
 
     @GetMapping("/search")
@@ -73,4 +79,21 @@ public class UserController {
             model.addAttribute("currentProject", currentProject);
             return "mypage";
     }
+
+    @PostMapping("/uploadImg")
+    public ResponseEntity<?> uploadProfile(@RequestParam("file") MultipartFile file,
+                                          @RequestParam("userId") Integer userId) throws IOException, UserNotFoundException {
+        User user = userService.getUserById(userId);
+        String fileName = UUID.randomUUID() + "_" + file.getOriginalFilename();
+        Path uploadPath = Paths.get("uploads/profile/");
+        Files.createDirectories(uploadPath);
+        Files.copy(file.getInputStream(), uploadPath.resolve(fileName),
+                StandardCopyOption.REPLACE_EXISTING);
+
+        user.setProfilePicture("/uploads/profile/" + fileName);
+        userService.saveFile(user);
+
+        return ResponseEntity.ok().build();
+    }
+
 }

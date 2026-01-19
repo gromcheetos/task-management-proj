@@ -1,4 +1,3 @@
-<!-- src/main/resources/templates/register.html -->
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
@@ -8,29 +7,60 @@
 <body>
 <div class="registration-container">
   <h1>Register</h1>
-<form th:action="@{/users/register}" method="post">
-  <div>
-    <label for="name">Full Name:</label>
-    <input type="text" id="name" name="name" required>
-  </div>
-  <div>
-    <label for="userEmail">Email:</label>
-    <input type="email" id="userEmail" name="userEmail" required>
-  </div>
-  <div>
-    <label for="username">UserName:</label>
-    <input type="text" id="username" name="username" required>
-  </div>
-  <div>
-    <label for="password">Password:</label>
-    <input type="password" id="password" name="password" required>
-  </div>
-  <div>
-    <label for="confirmPassword">Confirm Password:</label>
-    <input type="password" id="confirmPassword" name="confirmPassword" required>
-  </div>
-  <input type="submit" value="Register">
-</form>
+  <form th:action="@{/users/register}" method="post">
+    <div>
+      <label for="name"><span>*</span>Full Name:</label>
+      <input type="text" id="name" name="name" required>
+    </div>
+    <div>
+      <label for="userEmail"><span>*</span>Email:</label>
+      <input type="email" id="userEmail" name="userEmail" required>
+    </div>
+    <div class="form-group">
+      <label for="username"><span>*</span>UserName:</label>
+        <input type="text" id="username" name="username" required>
+        <button type="button" class="button" id="checkUsername"><span class="text">Check Availability</span></button>
+    </div>
+    <div class="info-text">
+      <span id="checkResult"></span>
+    </div>
+    <div>
+      <label for="password"><span>*</span>Password:</label>
+      <input type="password" id="password" name="password" required>
+    </div>
+    <div>
+      <label for="confirmPassword"><span>*</span>Confirm Password:</label>
+      <input type="password" id="confirmPassword" name="confirmPassword" required>
+    </div>
+    <input type="submit" value="Register">
+  </form>
 </div>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<script>
+  $(function () {
+    $("#checkUsername").click(function () {
+      $.ajax({
+        url: "/users/check/duplicate",
+        method: "GET",
+        data: { username: $("#username").val() },
+        success: function (data) {
+          // data: true  -> 중복 있음 (사용 불가)
+          // data: false -> 중복 없음 (사용 가능)
+
+          if (data === true) {
+            $("#checkResult").append().text("Username is already taken.").css("color", "red");
+            $("#username").css("border-color", "red");
+          } else {
+            $("#checkResult").append().text("Ready to use!").css("color", "green");
+            $("#username").css("border-color", "green");
+          }
+        }
+      });
+    });
+  });
+
+
+</script>
 </body>
 </html>

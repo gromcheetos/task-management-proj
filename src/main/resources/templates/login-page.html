@@ -18,7 +18,9 @@
     <label for="password">Password:</label>
     <input type="password" id="password" name="password" required>
   </div>
-
+  <div th:if="${param.error}" class="alert alert-danger">
+    Invalid username or password.
+  </div>
   <input type="submit" value="Login">
   <div>New user? <a th:href="@{/signup}">Sing up</a></div>
 </form>

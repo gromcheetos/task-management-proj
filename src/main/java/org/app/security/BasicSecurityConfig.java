@@ -21,7 +21,7 @@ public class BasicSecurityConfig {
             .csrf(csrf -> csrf.disable())
             .headers(headers -> headers.frameOptions(FrameOptionsConfig::disable)) // Disable frame options
             .authorizeHttpRequests(auth -> auth
-                .requestMatchers("/signup", "/users/**", "/", "/css/**", "/js/**", "/images/**")
+                .requestMatchers("/signup", "/users/**", "/", "/css/**", "/js/**", "/images/**", "/uploads/**")
                 .permitAll()
                 .anyRequest().authenticated()
             )

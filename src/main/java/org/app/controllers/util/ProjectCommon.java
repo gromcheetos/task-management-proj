@@ -42,7 +42,7 @@ public class ProjectCommon {
         }
         else {
             List<Project> projects = currentUser.getProjects();
-            projects.addAll(currentUser.getOwnedProjects());
+           // projects.addAll(currentUser.getOwnedProjects());
             log.info("Projects: {}", projects);
             List<Board> boards = projectService.getAllBoardsByProjectId(currentProject.getProjectId());
 
@@ -62,6 +62,7 @@ public class ProjectCommon {
             log.info("Team members: {}", teamMembers);
             int memberCnt = teamMembers.size();
             List<JobPosition> positions = jobPositionService.findJobPositionById(currentProject.getProjectId());
+            log.info("all projects: {}", projects);
             model.addAttribute("positions", JobPositionDto.fromEntity(positions));
             model.addAttribute("currentProject", currentProject);
             model.addAttribute("teamMembers", teamMembers);
