@@ -10,6 +10,7 @@ import org.app.exceptions.BoardNotFoundException;
 import org.app.exceptions.ProjectNotFoundException;
 import org.app.exceptions.UserNotFoundException;
 import org.app.model.Project;
+import org.app.model.User;
 import org.app.service.UserService;
 import org.springframework.boot.web.servlet.error.ErrorController;
 import org.springframework.stereotype.Controller;
@@ -29,9 +30,14 @@ public class HomePageController implements ErrorController {
     @GetMapping
     public String showHomePage(Model model, HttpSession session)
             throws UserNotFoundException, ProjectNotFoundException, BoardNotFoundException {
+        User user = userService.getCurrentUser();
         Project currentProject = (Project) session.getAttribute("currentProject");
-       model.addAttribute("currentProject", model.getAttribute("currentProject"));
-       return projectCommon.getHomePageUtility(model, currentProject);
+
+        log.info("Current project: {}", currentProject);
+        log.info("Current user: {}", userService.getCurrentUser());
+        model.addAttribute("currentUser", user);
+        model.addAttribute("currentProject", currentProject);
+        return projectCommon.getHomePageUtility(model, currentProject);
     }
 
     @RequestMapping("/error")

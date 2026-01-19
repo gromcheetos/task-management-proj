@@ -101,5 +101,13 @@ public class UserService {
         return userRepository.findAllUsersByProjectId(projectId);
     }
 
+    public User saveFile(User user){
+        return userRepository.save(user);
+    }
+
+    public boolean existsByUsername(String username) {
+        return userRepository.existsByUsername(username);
+    }
+
 }
 
