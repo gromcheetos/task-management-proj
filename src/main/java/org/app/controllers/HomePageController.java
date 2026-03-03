@@ -21,13 +21,17 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @Controller
 @Slf4j
 @AllArgsConstructor
-@RequestMapping("/")
 public class HomePageController implements ErrorController {
 
     private final ProjectCommon projectCommon;
     private final UserService userService;
 
-    @GetMapping
+    @GetMapping("/")
+    public String index() {
+    return "index";
+  }
+    
+    @GetMapping("/home")
     public String showHomePage(Model model, HttpSession session)
             throws UserNotFoundException, ProjectNotFoundException, BoardNotFoundException {
         User user = userService.getCurrentUser();
